@@ -5,46 +5,22 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        userInfo: {
-            userName: '',
-            userId: ''
-        },
-        lastPath: '',
-        loginStatus: '',
+        isLogin: false,
     },
     getters: {
-        getLastPath(state) {
-            return state.lastPath;
-        },
-        getLoginStatus(state) {
-            return state.loginStatus;
-        },
-        getUserName(state) {
-            return state.userInfo.userName;
-        },
-        getUserId(state) {
-            return state.userInfo.userId;
-        }
+        isLogin: state => state.isLogin
     },
     mutations: {
-        SET_LAST_PATH(state, lastPath) {
-            state.lastPath = lastPath;
-        },
-        SET_LOGIN_STATUS(state, status) {
-            state.loginStatus = status;
-        },
-        SET_USER_INFO(state, userInfo) {
-            state.userInfo.userId = userInfo.userid;
-            state.userInfo.userName = userInfo.username;
-        },
-        REMOVE_LOGIN_STATUS(state) {
-            state.loginStatus = false;
-            state.userInfo = {
-                userName: '',
-                userId: ''
-            };
+        userStatus(state, flag) {
+            state.isLogin = flag
+        }
+    },
+    actions: {
+        userLogin({commit}, flag) {
+            commit("userStatus", flag)
         }
     }
 })
+
 
 export default store;

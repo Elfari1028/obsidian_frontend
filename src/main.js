@@ -30,12 +30,27 @@ Vue.prototype.$axios = axios;
 Vue.prototype.$qs = qs;
 
 //axios.defaults.baseURL = "";
-axios.defaults.baseURL = "http://127.0.0.1:8000";
+axios.defaults.baseURL = "http://127.0.0.1:8000/";
 axios.defaults.withCredentials = true;
 Vue.prototype.$cookies.config('1d');
 
+router.beforeEach((to, from, next) => {
+    let getFlag = sessionStorage.getItem("USER_STATUS");
+    if (getFlag === "isLogin") {
+        store.state.isLogin = true;
+        next()
+    } else if (to.meta.isLogin && from.name !== 'Login') {
+        next({
+            name: 'Login'
+        })
+    } else {
+        next()
+    }
+})
+
 new Vue({
-  router,
-  store,
-  render: h => h(App),
+    router,
+    store,
+    render: h => h(App),
 }).$mount('#app');
+

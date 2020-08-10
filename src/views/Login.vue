@@ -57,7 +57,7 @@
 
 <script>
     import MenuBar from "../components/MenuBar";
-    import {registerAxiosPost, updateUserStatus} from "../utils/axiosUtils";
+    import {axiosConfig, updateStatus} from "../utils/axiosUtils"
     //import {getToken} from "../utils/auth";
 
     export default {
@@ -113,48 +113,28 @@
         methods: {
             submitLogin: function () {
                 console.log(this.loginForm)
-                let jumpUrl = "/WorkingSpace"
-                this.$axios.post('/account/login1/', JSON.stringify(this.loginForm), {
-                    headers: {
-                        'Content-Type': 'application/json;charset=UTF-8'
-                    }
-                }).then((res) => {
-                    console.log(res);
-                    if (res.data.status === 0)
-                    {
-                        this.$message({
-                            type: 'success',
-                            message: '登陆成功！',
-                            duration: '2000'
-                        });
-                        return true;
-                    }
-                    else {
-                        this.$message({
-                            type: 'error',
-                            message: '用户名或密码出错'
-                        })
-                        return false;
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                    this.$message({
-                        type: 'error',
-                        message: '请检查网络哦'
-                    });
-                    return false;
-                })
-                updateUserStatus()
-                this.$router.push({path: jumpUrl})
+                this.$axios.post('account/login1/', JSON.stringify(this.loginForm), axiosConfig)
+                    .then(res => {
+                        console.log(res.data)
+                        if (res.data.status !== 0) {
+                            this.$message.error("wrong password")
+                        } else {
+                            this.$store.dispatch("userLogin", true)
+                            sessionStorage.setItem("USER_STATUS", "isLogin")
+                            this.$message.success("login success")
+                            this.$router.push("/WorkingSpace")
+                        }
+                    })
             },
-            submitRegister: async function () {
+            submitRegister: function () {
                 console.log(this.registerForm)
-                await this.$refs['registerForm'].validate(valid => {
+                this.$refs['registerForm'].validate(valid => {
                     if (valid) {
-                        registerAxiosPost(this.registerForm)
+                        this.$axios.post('account/register1/', JSON.stringify(this.registerForm), axiosConfig)
                             .then(res => {
                                 console.log("============yes==========")
                                 console.log(res)
+
                                 this.$alert('注册成功', '啊哈', {
                                     center: true,
                                     callback: () => {
@@ -175,6 +155,10 @@
 
             }
         },
+        created()
+        {
+            updateStatus()
+        }
 
     }
 </script>
