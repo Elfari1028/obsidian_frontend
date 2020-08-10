@@ -25,6 +25,10 @@
                                 <el-form-item prop="username">
                                     <el-input v-model="registerForm.username" placeholder="用户名"></el-input>
                                 </el-form-item>
+                                <el-form-item prop="emailAddr">
+                                    <el-input v-model="registerForm.email"
+                                              placeholder="邮箱"></el-input>
+                                </el-form-item>
                                 <el-form-item prop="password">
                                     <el-input type="password" v-model="registerForm.password"
                                               placeholder="密码"></el-input>
@@ -62,31 +66,10 @@
         data() {
             const validateUsername = async (rule, value, callback) => {
                 const pattern = /[^0-9a-zA-Z]/g;
-                let existFlag = false;
                 if (pattern.test(value)) {
                     callback(new Error('用户名中含有非法字符,应仅使用数字和字母'))
                 } else if (/[0-9]/g.test(value[0])) {
                     callback(new Error('用户名必须以英文字母开头'))
-                } else {
-                    await this.$axios.post('/login/match/' + value)
-                        .then(res => {
-                            console.log(res)
-                            if (res.data !== 0) {
-                                existFlag = true;
-                            }
-                        }).catch(err => {
-                            console.log(err)
-                            this.$alert('好像网络出了点问题……', '啊哦', {
-                                type: 'warning',
-                                center: true,
-                            });
-                        })
-                    //console.log(existFlag)
-                    if (existFlag) {
-                        callback(new Error('用户名已存在'))
-                    } else {
-                        callback();
-                    }
                 }
             };
             const validatePassword = (rule, value, callback) => {
@@ -104,6 +87,7 @@
                 },
                 registerForm: {
                     username: '',
+                    email: '',
                     password: '',
                     checkPassword: '',
                 },
@@ -127,30 +111,41 @@
             }
         },
         methods: {
-            submitLogin: async function () {
+            submitLogin: function () {
                 console.log(this.loginForm)
-                let jumpUrl = this.$store.getters.getLastPath
-                this.$axios.post('/login', JSON.stringify(this.loginForm), {
+                let jumpUrl = "/WorkingSpace"
+                this.$axios.post('/account/login1/', JSON.stringify(this.loginForm), {
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
                     }
                 }).then((res) => {
                     console.log(res);
-                    this.$message({
-                        type: 'success',
-                        message: '登陆成功！'
-                    });
-                    return true;
+                    if (res.data.status === 0)
+                    {
+                        this.$message({
+                            type: 'success',
+                            message: '登陆成功！',
+                            duration: '2000'
+                        });
+                        return true;
+                    }
+                    else {
+                        this.$message({
+                            type: 'error',
+                            message: '用户名或密码出错'
+                        })
+                        return false;
+                    }
                 }).catch((err) => {
                     console.log(err);
                     this.$message({
                         type: 'error',
-                        message: '登陆失败！请检查用户名和密码！（也有可能是网络出错哦）'
+                        message: '请检查网络哦'
                     });
                     return false;
                 })
-                await updateUserStatus()
-                await this.$router.push({path: jumpUrl})
+                updateUserStatus()
+                this.$router.push({path: jumpUrl})
             },
             submitRegister: async function () {
                 console.log(this.registerForm)
@@ -163,7 +158,7 @@
                                 this.$alert('注册成功', '啊哈', {
                                     center: true,
                                     callback: () => {
-                                        this.$router.push({name: 'UserCenter'})
+                                        this.$router.push({name: 'WorkingSpace'})
                                     }
                                 })
                             })
@@ -190,10 +185,12 @@
     }
 
     #login_page_main {
-        background: url("../assets/img/login_bg.jpg") fixed center;
+        /*background: url("../assets/img/login_bg.jpg") fixed center;
+
+         */
         background-size: 100%;
         min-width: 1280px;
-        min-height: 700px;
+        min-height: 680px;
         margin: 0;
     }
 
@@ -206,7 +203,7 @@
         padding: 10px 20px;
         border-radius: 10px;
         background-color: rgba(228, 231, 237, 0.95);
-        transition: height 1s;
+        transition: max-height 0.5s;
     }
 
 </style>

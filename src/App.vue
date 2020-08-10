@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
     export default {
         name: 'App',
         provide() {
@@ -14,17 +13,23 @@
             }
         },
         data() {
-            return {
+            return{
                 isRouterAlive: true
             }
         },
         methods: {
-            reload() {
+            reload () {
                 this.isRouterAlive = false;
                 this.$nextTick(() => {
                     this.isRouterAlive = true;
                 })
+            },
+            saveState(){
+                sessionStorage.setItem('state',JSON.stringify(this.$store.state))
             }
+        },
+        mounted() {
+            window.addEventListener('unload',this.saveState)
         }
     }
 </script>
