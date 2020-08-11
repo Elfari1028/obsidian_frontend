@@ -11,6 +11,15 @@ const routes = [
         redirect: "Login",
     },
     {
+        path: "/Login",
+        name: "Login",
+        component: Login,
+        meta: {
+            title: "登录",
+            isLogin: false,
+        }
+    },
+    {
         path: "/WorkingSpace",
         name: "WorkingSpace",
         component: WorkingSpace,
@@ -19,15 +28,7 @@ const routes = [
             isLogin: true,
         }
     },
-    {
-        path: "/Login",
-        name: "Login",
-        component: Login,
-        meta: {
-            title: "登录",
-            isLogin: false,
-        }
-    }
+
 ];
 
 const router = new VueRouter({

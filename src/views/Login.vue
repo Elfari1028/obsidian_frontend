@@ -155,7 +155,7 @@
             }
         },
         created() {
-            if (!updateStatus()) {
+            if (updateStatus()) {
                 this.$router.push('/WorkingSpace')
             }
         }
