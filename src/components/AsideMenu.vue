@@ -35,7 +35,7 @@
 
             <el-divider class="divider"></el-divider>
 
-            <el-menu-item index="/WorkingSpace">
+            <el-menu-item index="/UserCenter">
                 <i class="el-icon-user-solid"></i>
                 <span slot="title">个人中心</span>
             </el-menu-item>

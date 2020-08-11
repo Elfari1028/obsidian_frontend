@@ -5,6 +5,7 @@ import Login from "@/views/Login";
 import TrashCan from "@/views/TrashCan";
 import History from "@/views/History";
 import Collections from "@/views/Collections";
+import UserCenter from "@/views/UserCenter";
 
 Vue.use(VueRouter);
 
@@ -55,6 +56,15 @@ const routes = [
         component: Collections,
         meta: {
             title: "我的收藏",
+            isLogin: true,
+        }
+    },
+    {
+        path: "/UserCenter",
+        name: "UserCenter",
+        component: UserCenter,
+        meta: {
+            title: "个人中心",
             isLogin: true,
         }
     },

@@ -38,14 +38,21 @@ router.beforeEach((to, from, next) => {
     let getFlag = sessionStorage.getItem("USER_STATUS");
     if (getFlag === "isLogin") {
         store.state.isLogin = true;
+        if (to.meta.title) {
+            document.title = to.meta.title
+        }
         next()
     } else if (to.meta.isLogin && from.name !== 'Login') {
         next({
             name: 'Login'
         })
     } else {
+        if (to.meta.title) {
+            document.title = to.meta.title
+        }
         next()
     }
+
 })
 
 new Vue({
