@@ -148,16 +148,16 @@
                                 this.$alert('好像网络出了点问题……', '啊哦', {
                                     type: 'warning',
                                     center: true,
-                                });
+                                })
                             })
                     }
                 })
-
             }
         },
-        created()
-        {
-            updateStatus()
+        created() {
+            if (!updateStatus()) {
+                this.$router.push('/WorkingSpace')
+            }
         }
 
     }

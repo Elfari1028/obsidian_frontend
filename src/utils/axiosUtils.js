@@ -11,14 +11,15 @@ export const axiosConfig = {
 export function updateStatus() {
     axios.post(infoUrl).then(res => {
         console.log(res.data)
-        if (res.data.status !== 200) {
+        if (res.data.status !== 0) {
             console.log("未登录")
-            sessionStorage.removeItem("USER_STATUS");
+            sessionStorage.removeItem("USER_STATUS")
+            return false
         } else {
             console.log("已登录")
-            this.$store.dispatch("userLogin", true);
-            sessionStorage.setItem("USER_STATUS", "isLogin");
-            this.$router.push('/WorkingSpace')
+            this.$store.dispatch("userLogin", true)
+            sessionStorage.setItem("USER_STATUS", "isLogin")
+            return true
         }
     })
 }
