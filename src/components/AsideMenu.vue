@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="aside_menu">
         <el-menu :default-active="$route.path"
                  active-text-color="#1A1A1A"
                  text-color="#5E5E5E"
@@ -62,6 +62,9 @@
 </script>
 
 <style>
+    .aside_menu{
+    }
+
     .divider {
         margin: 5px 0 !important;
     }

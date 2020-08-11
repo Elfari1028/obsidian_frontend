@@ -147,7 +147,6 @@
                             .then(res => {
                                 console.log("============yes==========")
                                 console.log(res)
-
                                 this.$alert('注册成功', '啊哈', {
                                     center: true,
                                     callback: () => {

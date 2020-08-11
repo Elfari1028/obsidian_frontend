@@ -1,13 +1,13 @@
 <template>
     <div class="navigate_bar">
         <el-row>
-            <el-col :span="4" :offset="0">
+            <el-col :span="6" :offset="0">
                 <div class="navigate_bar_title">
                     <img src="../assets/icon/logo.png" style="vertical-align: middle" alt="" width="40" height="40"/>
                     黑曜石文档
                 </div>
             </el-col>
-            <el-col :span="4" :offset="12">
+            <el-col :span="4" :offset="10">
                 <el-input v-model="searchKeywords" placeholder="输入关键词" @keyup.enter.native="submitSearch" ></el-input>
             </el-col>
             <el-col :span="2">

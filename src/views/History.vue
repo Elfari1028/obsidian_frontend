@@ -37,10 +37,9 @@
 </script>
 
 <style scoped>
-    #aside{
+    #aside {
         border-right: 1px solid #DEDFE6;
-        height: 100%;
-        min-height: 600px;
+        height: auto;
         padding: 10px;
     }
 </style>
