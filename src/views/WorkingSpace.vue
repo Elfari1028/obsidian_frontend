@@ -1,47 +1,39 @@
 <template>
     <div>
-        <el-button @click="logOut">注销
-        </el-button>
-        <el-button @click="test">测试
-        </el-button>
+        <el-container>
+            <el-header style="padding: 0">
+                <MenuBar/>
+            </el-header>
+            <el-container>
+                <el-aside width="200px">
+                    <AsideMenu :index='asideDefaultActive'/>
+                </el-aside>
+                <el-main>
+                    <WorkBench/>
+                </el-main>
+            </el-container>
+        </el-container>
     </div>
 
 </template>
 
 <script>
-    import axios from "axios";
+    import MenuBar from "@/components/MenuBar";
+    import AsideMenu from "@/components/AsideMenu";
+    import WorkBench from "@/components/WorkBench";
 
     export default {
         name: "WorkingSpace",
-        methods: {
-            logOut() {
-                this.$axios.post('/account/logout1/').then(res => {
-                    if (res.data.status === 0) {
-                        this.$message({
-                            type: "success",
-                            message: "注销成功！",
-                            duration: '2000'
-                        })
-                        sessionStorage.removeItem("USER_STATUS")
-                        this.$router.push('/Login')
-                    }
-
-                })
-            },
-            test() {
-                axios.post('http://127.0.0.1:8000/account/my_status/').then(res => {
-                    console.log(res)
-                    if (res.data.status !== 0) {
-                        console.log("未登录")
-                        sessionStorage.removeItem("USER_STATUS");
-                    } else {
-                        console.log("已登录")
-                        this.$store.dispatch("userLogin", true);
-                        sessionStorage.setItem("USER_STATUS", "isLogin");
-                    }
-                })
+        components: {WorkBench, AsideMenu, MenuBar},
+        data() {
+            return {
+                asideDefaultActive: '1'
             }
         },
+        methods: {},
+        created() {
+            console.log(this.$route.path)
+        }
     }
 </script>
 

@@ -155,9 +155,10 @@
             }
         },
         created() {
-            if (updateStatus()) {
+            updateStatus()
+            /*if (updateStatus()) {
                 this.$router.push('/WorkingSpace')
-            }
+            }*/
         }
 
     }
@@ -186,7 +187,7 @@
         width: 300px;
         padding: 10px 20px;
         border-radius: 10px;
-        background-color: rgba(228, 231, 237, 0.95);
+        background: rgba(200, 200, 200, 0.5);
         transition: max-height 0.5s;
     }
 
