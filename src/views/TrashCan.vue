@@ -10,6 +10,7 @@
                 </el-aside>
                 <el-main>
 
+
                 </el-main>
             </el-container>
         </el-container>
@@ -22,7 +23,7 @@
     import AsideMenu from "@/components/AsideMenu";
 
     export default {
-        name: "WorkingSpace",
+        name: "TrashCan",
         components: {AsideMenu, MenuBar},
         data() {
             return {

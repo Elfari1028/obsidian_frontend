@@ -41,5 +41,10 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+        margin: 0;
+    }
+
+    body{
+        margin: 0px;
     }
 </style>
