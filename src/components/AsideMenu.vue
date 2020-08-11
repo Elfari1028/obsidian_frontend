@@ -15,7 +15,7 @@
                 <i class="el-icon-s-order"></i>
                 <span slot="title">最近浏览</span>
             </el-menu-item>
-            <el-menu-item index="/WorkingSpace">
+            <el-menu-item index="/Collections">
                 <i class="el-icon-s-management"></i>
                 <span slot="title">我的收藏</span>
             </el-menu-item>

@@ -4,6 +4,7 @@ import WorkingSpace from "@/views/WorkingSpace";
 import Login from "@/views/Login";
 import TrashCan from "@/views/TrashCan";
 import History from "@/views/History";
+import Collections from "@/views/Collections";
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,15 @@ const routes = [
         component: History,
         meta: {
             title: "最近浏览",
+            isLogin: true,
+        }
+    },
+    {
+        path: "/Collections",
+        name: "Collections",
+        component: Collections,
+        meta: {
+            title: "我的收藏",
             isLogin: true,
         }
     },
