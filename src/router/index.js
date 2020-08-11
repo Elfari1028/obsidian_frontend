@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import WorkingSpace from "@/views/WorkingSpace";
 import Login from "@/views/Login";
 import TrashCan from "@/views/TrashCan";
+import History from "@/views/History";
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,15 @@ const routes = [
         component: TrashCan,
         meta: {
             title: "回收站",
+            isLogin: true,
+        }
+    },
+    {
+        path: "/History",
+        name: "History",
+        component: History,
+        meta: {
+            title: "最近浏览",
             isLogin: true,
         }
     },

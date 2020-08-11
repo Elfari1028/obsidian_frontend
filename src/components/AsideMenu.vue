@@ -11,7 +11,7 @@
                 <i class="el-icon-menu"></i>
                 <span slot="title">工作台</span>
             </el-menu-item>
-            <el-menu-item index="/WorkingSpace">
+            <el-menu-item index="/History">
                 <i class="el-icon-s-order"></i>
                 <span slot="title">最近浏览</span>
             </el-menu-item>
