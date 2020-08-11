@@ -8,7 +8,7 @@
                         <el-tab-pane label="账号登录" name="username-login">
                             <el-form style="margin-top: 10px">
                                 <el-form-item>
-                                    <el-input v-model="loginForm.username" placeholder="用户名"></el-input>
+                                    <el-input v-model="loginForm.username" placeholder="邮箱"></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
@@ -23,9 +23,10 @@
                         <el-tab-pane label="注册账号" name="register">
                             <el-form :model="registerForm" :rules="rules" ref="registerForm" style="margin-top: 10px">
                                 <el-form-item prop="username">
-                                    <el-input v-model="registerForm.username" placeholder="用户名"></el-input>
+                                    <el-input v-model="registerForm.username"
+                                              placeholder="用户名"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="emailAddr">
+                                <el-form-item prop="email">
                                     <el-input v-model="registerForm.email"
                                               placeholder="邮箱"></el-input>
                                 </el-form-item>
@@ -57,19 +58,27 @@
 
 <script>
     import MenuBar from "../components/MenuBar";
-    import {axiosConfig, updateStatus} from "../utils/axiosUtils"
+    import {axiosConfig, updateStatus} from "@/utils/axiosUtils"
     //import {getToken} from "../utils/auth";
 
     export default {
         name: "Login",
         components: {MenuBar},
         data() {
-            const validateUsername = async (rule, value, callback) => {
+            const validateUsername = (rule, value, callback) => {
                 const pattern = /[^0-9a-zA-Z]/g;
                 if (pattern.test(value)) {
                     callback(new Error('用户名中含有非法字符,应仅使用数字和字母'))
                 } else if (/[0-9]/g.test(value[0])) {
                     callback(new Error('用户名必须以英文字母开头'))
+                }
+            };
+            const validateEmail = (rule, value, callback) => {
+                const pattern = /[a-zA-Z][a-zA-Z0-9_]{3,17}@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/g;
+                if (pattern.test(value)) {
+                    callback();
+                } else {
+                    callback(new Error('邮箱地址格式错误'))
                 }
             };
             const validatePassword = (rule, value, callback) => {
@@ -97,6 +106,10 @@
                         {required: true, message: '请输入用户名', trigger: 'blur'},
                         {min: 5, max: 12, message: '长度在 5 到 12 个字符', trigger: 'blur'},
                         {validator: validateUsername, trigger: 'blur'}
+                    ],
+                    email: [
+                        {required: true, message: '请输入邮箱', trigger: 'blur'},
+                        {validator: validateEmail, trigger: 'blur'}
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'change'},
