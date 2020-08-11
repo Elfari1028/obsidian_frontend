@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import WorkingSpace from "@/views/WorkingSpace";
 import Login from "@/views/Login";
+import TrashCan from "@/views/TrashCan";
 
 Vue.use(VueRouter);
 
@@ -25,6 +26,15 @@ const routes = [
         component: WorkingSpace,
         meta: {
             title: "我的空间",
+            isLogin: true,
+        }
+    },
+    {
+        path: "/TrashCan",
+        name: "TrashCan",
+        component: TrashCan,
+        meta: {
+            title: "回收站",
             isLogin: true,
         }
     },

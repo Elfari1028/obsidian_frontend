@@ -5,11 +5,11 @@
                 <MenuBar/>
             </el-header>
             <el-container>
-                <el-aside width="200px">
-                    <AsideMenu :index='asideDefaultActive'/>
+                <el-aside width="200px" id="aside">
+                    <AsideMenu/>
                 </el-aside>
                 <el-main>
-                    <WorkBench/>
+
                 </el-main>
             </el-container>
         </el-container>
@@ -20,14 +20,12 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
-    import WorkBench from "@/components/WorkBench";
 
     export default {
         name: "WorkingSpace",
-        components: {WorkBench, AsideMenu, MenuBar},
+        components: {AsideMenu, MenuBar},
         data() {
             return {
-                asideDefaultActive: '1'
             }
         },
         methods: {},
@@ -38,5 +36,10 @@
 </script>
 
 <style scoped>
-
+    #aside{
+        border-right: 1px solid #DEDFE6;
+        height: 100%;
+        min-height: 600px;
+        padding: 10px;
+    }
 </style>

@@ -28,7 +28,7 @@
                     <span>团队空间</span>
                 </template>
             </el-submenu>
-            <el-menu-item index="/WorkingSpace">
+            <el-menu-item index="/TrashCan">
                 <i class="el-icon-delete-solid"></i>
                 <span slot="title">回收站</span>
             </el-menu-item>
@@ -62,7 +62,11 @@
 </script>
 
 <style>
-    .divider{
+    .divider {
         margin: 5px 0 !important;
+    }
+
+    .el-menu {
+        border: 0 !important;
     }
 </style>
