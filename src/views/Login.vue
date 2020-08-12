@@ -14,8 +14,8 @@
                                     <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-button type="primary" style="float: right" @click="submitLogin">登录<i
-                                            class="el-icon-arrow-right"></i>
+                                    <el-button  type="info" style="float: right" @click="submitLogin">登录
+                                        <i class="el-icon-arrow-right"></i>
                                     </el-button>
                                 </el-form-item>
                             </el-form>
@@ -39,7 +39,7 @@
                                               placeholder="确认密码"></el-input>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-button type="primary" style="float: right" @click="submitRegister">注册<i
+                                    <el-button type="info" style="float: right" @click="submitRegister">注册<i
                                             class="el-icon-arrow-right"></i>
                                     </el-button>
                                 </el-form-item>
