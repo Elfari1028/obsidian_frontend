@@ -30,8 +30,9 @@
                 </template>
 				
 				<el-menu-item-group>
-					<el-menu-item index="/TeamSpace/1">火锅小分队</el-menu-item>
-					<el-menu-item index="/TeamSpace/2">烧烤小分队</el-menu-item>
+					<span v-for="Team in Team_list" :key=Team.Team_id>
+					<el-menu-item v-bind:index="'/TeamSpace/'+Team.Team_id">{{ Team.Team_name }}</el-menu-item>
+					</span>
 				</el-menu-item-group>
 
             </el-submenu>
@@ -54,6 +55,20 @@
 <script>
     export default {
         name: "AsideMenu",
+		data () {
+			return {
+				Team_list: [
+					{
+						Team_id: 1,
+						Team_name: '火锅小分队'
+					},
+					{
+						Team_id: 2,
+						Team_name: '烧烤小分队'
+					}
+				]
+			}
+		},
         methods: {
             handleOpen() {
 

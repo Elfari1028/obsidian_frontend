@@ -11,7 +11,7 @@
 				</el-aside>
 				<el-main>
 		
-					<h1>{{ Team_id }}</h1>
+					<h1>Team_id: {{ Team_id }}</h1>
 		
 				</el-main>
 			</el-container>
