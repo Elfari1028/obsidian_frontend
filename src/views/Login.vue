@@ -1,6 +1,6 @@
 <template>
     <div id="login_page">
-        <MenuBar return="True" show-search="True" active="6"/>
+        <MenuBar :hide="1"/>
         <el-container>
             <el-main id="login_page_main">
                 <div id="login_block">
@@ -66,11 +66,27 @@
         components: {MenuBar},
         data() {
             const validateUsername = (rule, value, callback) => {
-                const pattern = /[^0-9a-zA-Z]/g;
+                const pattern = /[^0-9a-zA-Z_]/g;
                 if (pattern.test(value)) {
-                    callback(new Error('用户名中含有非法字符,应仅使用数字和字母'))
+                    callback(new Error('用户名中含有非法字符,应仅使用数字/字母/下划线组合'))
                 } else if (/[0-9]/g.test(value[0])) {
                     callback(new Error('用户名必须以英文字母开头'))
+                } else {
+                    this.$axios.post('account/username_used/', JSON.stringify({username: value}), axiosConfig)
+                        .then(res => {
+                            console.log(res.data)
+                            if (res.data.success === 0) {
+                                callback()
+                            } else if (res.data.success === 1) {
+                                callback(new Error('用户名已存在'))
+                            } else {
+                                callback(new Error('未知错误,请联系管理员'))
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            callback(new Error('网络好像出问题了'))
+                        })
                 }
             };
             const validateEmail = (rule, value, callback) => {
@@ -80,6 +96,24 @@
                 } else {
                     callback(new Error('邮箱地址格式错误'))
                 }
+                this.$axios.post('account/email_used/', JSON.stringify({email: value}), axiosConfig)
+                    .then(res => {
+                        console.log(res.data)
+                        switch (res.data.success) {
+                            case 0:
+                                callback()
+                                break
+                            case 1:
+                                callback(new Error('邮箱已存在'))
+                                break
+                            default:
+                                callback(new Error(res.data.exec))
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        callback(new Error('网络好像出问题了'))
+                    })
             };
             const validatePassword = (rule, value, callback) => {
                 if (value !== this.registerForm.password) {
