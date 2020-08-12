@@ -147,6 +147,7 @@ export default {
 		
 		var _this = this
 		
+		//获取团队成员
 		this.loadGroupMember()
 		
 		//获取当前用户id
