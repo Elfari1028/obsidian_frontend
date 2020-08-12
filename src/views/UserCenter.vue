@@ -5,7 +5,7 @@
                 <MenuBar/>
             </el-header>
             <el-container>
-                <el-aside width="200px" id="aside">
+                <el-aside width="200px" id="aside_left">
                     <AsideMenu/>
                 </el-aside>
                 <el-main>
@@ -16,7 +16,7 @@
                                 </el-avatar>
                             </el-form-item>
                             <el-form-item label="用户名">
-                                <el-input :disabled="!onEdit" v-model="userInfo.username"></el-input>
+                                <el-input :disabled="true" v-model="userInfo.username"></el-input>
                             </el-form-item>
                             <el-form-item label="性别">
                                 <el-radio-group :disabled="!onEdit" v-model="userInfo.sex">
@@ -76,7 +76,7 @@
 </script>
 
 <style scoped>
-    #aside {
+    #aside_left {
         border-right: 1px solid #DEDFE6;
         height: auto;
         padding: 10px;

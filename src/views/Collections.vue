@@ -5,7 +5,7 @@
                 <MenuBar/>
             </el-header>
             <el-container>
-                <el-aside width="200px" id="aside">
+                <el-aside width="200px" id="aside_left">
                     <AsideMenu/>
                 </el-aside>
                 <el-main>
@@ -37,7 +37,7 @@
 </script>
 
 <style scoped>
-    #aside {
+    #aside_left {
         border-right: 1px solid #DEDFE6;
         height: auto;
         padding: 10px;

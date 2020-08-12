@@ -8,7 +8,7 @@
                         <el-tab-pane label="账号登录" name="username-login">
                             <el-form style="margin-top: 10px">
                                 <el-form-item>
-                                    <el-input v-model="loginForm.username" placeholder="邮箱"></el-input>
+                                    <el-input v-model="loginForm.email" placeholder="邮箱/用户名"></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
@@ -91,7 +91,7 @@
             return {
                 labelPosition: "right",
                 loginForm: {
-                    username: '',
+                    email: '',
                     password: ''
                 },
                 registerForm: {

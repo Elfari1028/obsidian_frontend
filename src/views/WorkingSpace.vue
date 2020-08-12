@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main_page">
         <el-dialog
                 title="分享文件"
                 :visible.sync="dialogVisible"
@@ -16,10 +16,10 @@
             <el-header style="padding: 0">
                 <MenuBar/>
             </el-header>
-            <el-container >
-                <el-aside width="200px" id="aside">
+            <el-container>
+                <el-aside width="200px" id="aside_left">
                     <AsideMenu/>
-                </el-aside>
+                </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}">
                     <el-scrollbar style="height: 100%">
                         <el-card class="doc_item" v-for="(doc,index) in docList" :key="index"
@@ -49,7 +49,10 @@
                         </span>
                         </el-card>
                     </el-scrollbar>
-                </el-main>
+                </el-main><!--主体-->
+                <el-aside width="200px" id="aside_right">
+
+                </el-aside>
             </el-container>
         </el-container>
     </div>
@@ -59,12 +62,14 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
+    import $ from 'jquery'
 
     export default {
         name: "WorkingSpace",
         components: {AsideMenu, MenuBar},
         data() {
             return {
+                isScreenWide: false,
                 dialogVisible: false,
                 shareUrl: '',
                 spaceHeight: window.innerHeight - 80 + 'px',
@@ -226,6 +231,14 @@
             window.onresize = () => {
                 return (() => {
                     this.spaceHeight = window.innerHeight - 80 + 'px'
+                    if (!this.isScreenWide && window.innerWidth > 1500) {
+                        this.isScreenWide = !this.isScreenWide
+                        $(".doc_item").css("width","30%")
+                    }
+                    if (this.isScreenWide && window.innerWidth <= 1500) {
+                        this.isScreenWide = !this.isScreenWide
+                        $(".doc_item").css("width","45%")
+                    }
                 })()
             }
         }
@@ -233,8 +246,11 @@
 </script>
 
 <style scoped>
+    .main_page {
+        min-width: 1200px;
+    }
 
-    #aside {
+    #aside_left {
         border-right: 1px solid #DEDFE6;
         height: auto;
         padding: 10px;
@@ -244,7 +260,6 @@
         display: block;
         float: left;
         width: 45%;
-        max-width: 400px;
         height: 100px;
         margin: 10px;
     }
