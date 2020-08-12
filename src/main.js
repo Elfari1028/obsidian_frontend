@@ -12,6 +12,7 @@ import {Message, MessageBox, Loading} from 'element-ui';
 import 'mavon-editor/dist/css/index.css';
 import "element-ui/lib/theme-chalk/index.css";
 import './utils/axiosUtils'
+import CKEditor from '@ckeditor/ckeditor5-vue';
 
 Vue.config.productionTip = false;
 
@@ -19,7 +20,7 @@ Vue.use(ElementUI, {locale});
 Vue.use(mavonEditor);
 Vue.use(VueCookies);
 Vue.use(Loading.directive);
-
+Vue.use(CKEditor);
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
