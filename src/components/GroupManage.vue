@@ -2,9 +2,10 @@
 	<div id = 'GroupManage' :style="{height: getHeight()}">
 		<div id = 'forAll'>
 
+
+			<!-- 邀请新成员 -->
 			<el-popover
-				type="primary"
-				placement="right"
+				placement='bottom'
 				trigger="click"
 				style="margin: 6px;"
 				v-model="visible1"
@@ -20,9 +21,9 @@
 
 			</el-popover>
 
+			<!-- 加入新团队 -->
 			<el-popover
-				type="primary"
-				placement="right"
+				placement='bottom'
 				trigger="click"
 				style="margin: 6px;"
 				v-model="visible2"
@@ -38,11 +39,12 @@
 			
 			</el-popover>
 			
+			<!-- 退出当前团队 -->
 			<el-popconfirm
 				title="确定退出当前团队吗？"
 				style="margin: 6px;"
 				@onConfirm="quitTeam"
-			>
+				>
 				
 				<el-button slot="reference" type="danger" size="small">退出当前团队</el-button>
 			
@@ -53,13 +55,71 @@
 		<div v-if="isAdmin" id = 'forAdmin'>
 			
 			<br>
-			<el-button type="success" size="small" round>允许加入申请</el-button>
 			
+			<!-- 查看加入申请 -->
+			<el-popover
+				placement='bottom'
+				trigger="click"
+				style="margin: 6px;"
+				v-model="visible3"
+				>
+				
+				<el-table
+					:data="ApplyUserData"
+					id = 'requestPeopleTable'
+					>
+					
+					<el-table-column
+						label="头像"
+						width="80px"
+						>
+				
+						<template slot-scope="scope">
+							<el-avatar >
+								<img :src="scope.row.User_avatar" style="width: 100%; height: 100%;">
+							</el-avatar>
+						</template>
+				
+					</el-table-column>
+					
+					<el-table-column
+						label="昵称"
+						width="80px"
+						prop="User_name"
+						>
+					</el-table-column>
+					
+					<el-table-column
+						v-if="isAdmin"
+						label="操作"
+						width="190px"
+						>
+						<template slot-scope="scope">
+							<el-button
+								size="mini"
+								type="success"
+								@click='allowMember(scope.row.User_id)'
+								>允许加入</el-button>
+							<el-button
+								size="mini"
+								type="danger"
+								@click='denyMember(scope.row.User_id)'
+								>拒绝加入</el-button>
+						</template>
+					</el-table-column>
+					
+				</el-table>
+				
+				<el-button slot="reference" type="success" size="small" @click='loadRequestTableData' round>查看加入申请</el-button>
+			
+			</el-popover>
+			
+			<!-- 解散当前团队 -->
 			<el-popconfirm
 				title="确定解散当前团队吗？"
 				style="margin: 6px;"
 				@onConfirm="dismissTeam"
-			>
+				>
 				
 				<el-button slot="reference" type="danger" size="small" round>解散当前团队</el-button>
 			
@@ -73,7 +133,7 @@
 <script>
 	/*
 	* 
-	* 传入参数 Team_id = '123'
+	* 传入参数如 Team_id = '123'
 	* 
 	* 
 	*/
@@ -87,7 +147,20 @@ export default{
 			inputUID: '',
 			inputTID: '',
 			visible1: false,
-			visible2: false
+			visible2: false,
+			visible3: false,
+			ApplyUserData: [
+				{
+					User_id: 1,
+					User_avatar: require('../assets/loading/avatar/1.jpg'),
+					User_name: 'Song'
+				},
+				{
+					User_id: 2,
+					User_avatar: require('../assets/loading/avatar/2.jpg'),
+					User_name: 'Never'
+				}
+			]
 		}
 	},
 	methods: {
@@ -114,8 +187,14 @@ export default{
 					var res = response.data
 					
 					if (res.success === false) {
-						this.$message.error(res.exc)
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('邀请成功')
 					}
+				})
+				.catch(err => {
+					_this.$message.error('邀请成员出了点问题')
+					console.log(err)
 				})
 				
 			this.inputUID = ''
@@ -136,8 +215,14 @@ export default{
 					var res = response.data
 					
 					if (res.success === false) {
-						this.$message.error(res.exc)
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('已发送申请')
 					}
+				})
+				.catch(err => {
+					_this.$message.error('申请加入团队出了点问题')
+					console.log(err)
 				})
 				
 			this.inputTID = ''
@@ -156,9 +241,17 @@ export default{
 					var res = response.data
 					
 					if (res.success === false) {
-						this.$message.error(res.exc)
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('已退出团队')
 					}
 				})
+				.catch(err => {
+					_this.$message.error('退出团队出了点问题')
+					console.log(err)
+				})
+				
+			this.$router.push('/WorkingSpace')
 		},
 		dismissTeam: function () {
 			console.log('解散团队')
@@ -173,13 +266,101 @@ export default{
 					var res = response.data
 					
 					if (res.success === false) {
-						this.$message.error(res.exc)
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('已解散团队')
 					}
 				})
+				.catch(err => {
+					_this.$message.error('解散团队出了点问题')
+					console.log(err)
+				})
+				
+			this.$router.push('/WorkingSpace')
 		},
+		allowMember: function (User_id) {
+			
+			var _this = this
+			
+			this.visible3 = false
+			
+			console.log('允许用户id：' + User_id + '进入团队')
+			
+			this.$axios
+				.post('添加团队成员接口', JSON.stringify({
+					Team_id: _this.Team_id,
+					User_id: User_id
+				}))
+				.then((response) => {
+					var res = response.data
+					
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('已允许成员进入')
+					}
+				})
+				.catch(err => {
+					_this.$message.error('添加团队成员出了点问题')
+					console.log(err)
+				})
+				
+			this.loadApplyUserData()
+		},
+		denyMember: function (User_id) {
+			var _this = this
+			
+			this.visible3 = false
+			
+			console.log('拒绝用户id：' + User_id + '进入团队')
+			
+			this.$axios
+				.post('拒绝加入申请接口', JSON.stringify({
+					Team_id: _this.Team_id,
+					User_id: User_id
+				}))
+				.then((response) => {
+					var res = response.data
+					
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('已拒绝成员进入')
+					}
+				})
+				.catch(err => {
+					_this.$message.error('拒绝成员进入出了点问题')
+					console.log(err)
+				})
+				
+			this.loadApplyUserData()
+		},
+		loadApplyUserData: function () {
+			var _this = this 
+			
+			console.log('正在获取申请人员列表')
+			
+			this.$axios
+				.post('获得申请加入的人员列表接口', JSON.stringify({
+					Team_id: _this.Team_id
+				}))
+				.then((response) => {
+					var res = response.data
+					
+					_this.ApplyUserData = res.User_list
+					
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					}
+				})
+				.catch(err => {
+					_this.$message.error('获取申请人员列表出了点问题')
+					console.log(err)
+				})
+		}
 	},
 	created () {
-		console.log(this.Team_id)
+		console.log('this team id:' + this.Team_id)
 		
 		var _this = this
 		
@@ -192,6 +373,34 @@ export default{
 				if (res.success === false) {
 					this.$message.error(res.exc)
 				}
+			})
+			.catch(err => {
+				_this.$message.error('获得当前用户id接口出了点问题')
+				console.log(err)
+			})
+			
+		//获取身份，设置isAdmin
+		this.$axios
+			.post('获取成员在团队中的身份接口', JSON.stringify({
+				Team_id: _this.Team_id,
+				User_id: _this.User_id
+			}))
+			.then((response) => {
+				var res = response.data
+				
+				if (res.User_status === 0) {
+					_this.isAdmin = true
+				} else {
+					_this.isAdmin = false
+				}
+				
+				if (res.success === false) {
+					this.$message.error(res.exc)
+				}
+			})
+			.catch(err => {
+				_this.$message.error('获取成员在团队中的身份出了点问题')
+				console.log(err)
 			})
 	}
 }
