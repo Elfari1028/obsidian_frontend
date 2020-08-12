@@ -7,6 +7,7 @@ import TrashCan from "@/views/TrashCan";
 import History from "@/views/History";
 import Collections from "@/views/Collections";
 import UserCenter from "@/views/UserCenter";
+import TeamSpace from "../views/TeamSpace.vue"
 
 Vue.use(VueRouter);
 
@@ -74,6 +75,16 @@ const routes = [
             isLogin: true,
         }
     },
+	{
+		path: "/TeamSpace/:Team_id",
+		name: "TeamSpace",
+		component: TeamSpace,
+		meta: {
+			title: "团队空间",
+			isLogin: true,
+		}
+		
+	}
 
 ];
 

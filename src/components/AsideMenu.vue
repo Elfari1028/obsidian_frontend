@@ -23,11 +23,19 @@
             <el-divider class="divider"></el-divider>
 
             <el-submenu index="/TeamSpace">
+				
                 <template slot="title">
                     <i class="el-icon-s-grid"></i>
                     <span>团队空间</span>
                 </template>
+				
+				<el-menu-item-group>
+					<el-menu-item index="/TeamSpace/1">火锅小分队</el-menu-item>
+					<el-menu-item index="/TeamSpace/2">烧烤小分队</el-menu-item>
+				</el-menu-item-group>
+
             </el-submenu>
+			
             <el-menu-item index="/TrashCan">
                 <i class="el-icon-delete-solid"></i>
                 <span slot="title">回收站</span>
@@ -57,7 +65,7 @@
         created()
         {
             console.log(this.$route.path)
-        }
+        },
     }
 </script>
 
