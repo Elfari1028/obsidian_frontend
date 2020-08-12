@@ -3,7 +3,7 @@
 		<p>This is page is for testing.</p>
 		
 		<h1>MemberCard</h1>
-		<center><MemberCard></MemberCard></center>
+		<center><MemberCard Team_id='123'></MemberCard></center>
 		
 		<h1>GroupManage</h1>
 		<center><GroupManage Team_id='123'></GroupManage></center>
