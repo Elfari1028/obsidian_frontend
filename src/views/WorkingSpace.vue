@@ -22,17 +22,17 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}">
                     <el-scrollbar style="height: 100%">
-                        <el-card class="doc_item" v-for="(doc,index) in docList" :key="index"
-                                 @click="toDocument(doc.doc_id)">
+                        <el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
                             <div slot="header" style="height: 10px">
                                 <i class="el-icon-document" style="float: left"></i>
-                                <span class="card_header_font">{{doc.title}}</span>
+                                <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
                                 <el-dropdown trigger="click" style="float: right">
-                                <span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
-                                    ···
-                                </span>
+                                    <span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
+                                        <i class="el-icon-more"></i>
+                                    </span>
                                     <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开</el-dropdown-item>
+                                        <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
+                                        </el-dropdown-item>
                                         <el-dropdown-item @click.native="delDocument(doc.doc_id)"
                                                           style="color: #ff0000">删除
                                         </el-dropdown-item>
@@ -41,17 +41,22 @@
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
-                            <span class="card_body_font card_body">
-                            {{doc.workspace}}
-                        </span>
-                            <span class="card_time_font card_body">
-                            最后修改于：{{doc.time}}
-                        </span>
+                            <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
+                                <span class="card_body_font card_body">
+                                    {{doc.workspace}}
+                                </span>
+                                <span class="card_time_font card_body">
+                                    最后修改于：{{doc.time}}
+                                </span>
+                            </div>
                         </el-card>
                     </el-scrollbar>
                 </el-main><!--主体-->
                 <el-aside width="250px" id="aside_right">
                     <div id="bench_toolbar">
+                        <div id="toolbar_title">我的文档</div>
+                        <el-divider></el-divider>
+                        <el-button size="small" type="info" circle icon="el-icon-refresh"></el-button>
                         <el-button size="small" type="info" round icon="el-icon-plus">
                             新建文档
                         </el-button>
@@ -189,7 +194,7 @@
             delDocument(doc_id) {
                 console.log(doc_id)
                 this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
-                    if (res.data.success) {
+                    if (res.data.success === 0) {
                         this.$alert("文件已移入回收站")
                     } else {
                         this.$alert(res.data.exec)
@@ -199,7 +204,7 @@
             shareDocument(doc_id) {
                 console.log(doc_id)
                 this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
-                    if (res.data.success) {
+                    if (res.data.success === 0) {
                         this.shareUrl = res.data.url;
                         this.dialogVisible = true;
                     }
@@ -237,11 +242,11 @@
                     this.spaceHeight = window.innerHeight - 80 + 'px'
                     if (!this.isScreenWide && window.innerWidth > 1500) {
                         this.isScreenWide = !this.isScreenWide
-                        $(".doc_item").css("width","30%")
+                        $(".doc_item").css("width", "30%")
                     }
                     if (this.isScreenWide && window.innerWidth <= 1500) {
                         this.isScreenWide = !this.isScreenWide
-                        $(".doc_item").css("width","45%")
+                        $(".doc_item").css("width", "45%")
                     }
                 })()
             }
@@ -250,8 +255,13 @@
 </script>
 
 <style scoped>
-    #bench_toolbar{
-        padding: 20px 0;
+    #toolbar_title{
+        margin: 10px;
+        color: dimgray;
+        font-size: 16px;
+    }
+
+    #bench_toolbar {
     }
 
     .main_page {
@@ -264,13 +274,17 @@
         padding: 10px;
     }
 
-    #aside_right{
+    #aside_right {
         border-left: 1px solid #DEDFE6;
         height: auto;
         padding: 10px;
     }
 
     .doc_item {
+        -webkit-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
         display: block;
         float: left;
         width: 45%;
@@ -279,6 +293,7 @@
     }
 
     .card_header_font {
+        cursor: pointer;
         font-size: 16px;
         color: dimgray;
     }
