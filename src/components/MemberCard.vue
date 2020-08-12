@@ -39,10 +39,16 @@
 				width="80px"
 				>
 				<template slot-scope="scope">
-					<el-button
-						size="mini"
-						type="danger"
-						@click="deleteMember(scope.row.User_id)">踢出</el-button>
+
+				<el-popconfirm
+					title="确定踢出该队员吗？"
+					@onConfirm="deleteMember(scope.row.User_id)"
+					>
+					
+					<el-button slot="reference" type="danger" size="mini">踢出</el-button>
+				
+				</el-popconfirm>
+
 				</template>
 			</el-table-column>
 			

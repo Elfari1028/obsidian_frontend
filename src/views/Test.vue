@@ -4,9 +4,9 @@
 		
 		<h1>MemberCard</h1>
 		<center><MemberCard Team_id='123'></MemberCard></center>
-		<!-- 
+		
 		<h1>GroupManage</h1>
-		<center><GroupManage Team_id='123'></GroupManage></center> -->
+		<center><GroupManage Team_id='123'></GroupManage></center>
 		
 		
 	</div>
@@ -14,13 +14,13 @@
 
 <script>
 import MemberCard from '../components/MemberCard.vue'	
-// import GroupManage from '../components/GroupManage.vue'
+import GroupManage from '../components/GroupManage.vue'
 	
 export default {
 	name: 'Test',
 	components: {
 		MemberCard,
-		// GroupManage
+		GroupManage
 	}
 }
 </script>
