@@ -110,7 +110,7 @@
 					
 				</el-table>
 				
-				<el-button slot="reference" type="success" size="small" @click='loadRequestTableData' round>查看加入申请</el-button>
+				<el-button slot="reference" type="success" size="small" @click='loadApplyUserData' round>查看加入申请</el-button>
 			
 			</el-popover>
 			
