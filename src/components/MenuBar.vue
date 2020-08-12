@@ -7,27 +7,30 @@
                     黑曜石文档
                 </div>
             </el-col>
-            <el-col :span="4" :offset="10">
-                <el-input v-model="searchKeywords" placeholder="输入关键词" @keyup.enter.native="submitSearch" ></el-input>
+            <el-col v-if="!(hide===1)" :span="4" :offset="10">
+                <el-input v-model="searchKeywords" placeholder="输入关键词" @keyup.enter.native="submitSearch"></el-input>
             </el-col>
-            <el-col :span="2">
-<!--                notice-->
+            <el-col v-if="!(hide===1)" :span="2">
+                <i class="el-icon-message-solid notice"></i>
             </el-col>
-            <el-col :span="2">
-<!--                avatar -->
+            <el-col v-if="!(hide===1)" :span="2">
+                <!--                avatar -->
             </el-col>
         </el-row>
     </div>
 </template>
 
 <script>
+    /**
+     * 使用时请绑定 :hide="1" 以隐藏右侧通知等功能
+     */
     import {updateStatus} from "@/utils/axiosUtils";
 
     export default {
         name: "MenuBar",
         components: {},
         props: {
-            hideSearch: String,
+            hide: Number,
         },
         data() {
             return {
@@ -38,12 +41,10 @@
         created() {
             updateStatus()
         },
-        computed: {
-
-        }
+        computed: {}
         ,
         methods: {
-            submitSearch:function() {
+            submitSearch: function () {
                 console.log('submit!');
                 console.log(this.searchKeywords);
             },
@@ -58,6 +59,13 @@
 </script>
 
 <style>
+    .notice {
+        font-size: 25px;
+        vertical-align: middle;
+        height: 40px;
+        line-height: 40px !important;
+    }
+
     .navigate_bar {
         position: fixed;
         background: rgba(200, 200, 200, 0.5);
@@ -66,11 +74,11 @@
         z-index: 3;
         padding-top: 5px;
         padding-bottom: 5px;
-        box-shadow: 2px 2px 2px 2px rgba(200,200,200,0.7);
+        box-shadow: 2px 2px 2px 2px rgba(200, 200, 200, 0.7);
     }
 
     .navigate_bar_title {
-        font-family: tahoma, arial, 'Hiragino Sans GB',STXingkai, "Microsoft YaHei", SimSun, sans-serif;
+        font-family: tahoma, arial, 'Hiragino Sans GB', STXingkai, "Microsoft YaHei", SimSun, sans-serif;
         font-size: 25px;
         max-height: 40px;
         overflow: visible;

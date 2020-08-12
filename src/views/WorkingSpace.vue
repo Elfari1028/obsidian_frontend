@@ -50,8 +50,12 @@
                         </el-card>
                     </el-scrollbar>
                 </el-main><!--主体-->
-                <el-aside width="200px" id="aside_right">
-
+                <el-aside width="250px" id="aside_right">
+                    <div id="bench_toolbar">
+                        <el-button size="small" type="info" round icon="el-icon-plus">
+                            新建文档
+                        </el-button>
+                    </div>
                 </el-aside>
             </el-container>
         </el-container>
@@ -246,12 +250,22 @@
 </script>
 
 <style scoped>
+    #bench_toolbar{
+        padding: 20px 0;
+    }
+
     .main_page {
         min-width: 1200px;
     }
 
     #aside_left {
         border-right: 1px solid #DEDFE6;
+        height: auto;
+        padding: 10px;
+    }
+
+    #aside_right{
+        border-left: 1px solid #DEDFE6;
         height: auto;
         padding: 10px;
     }
