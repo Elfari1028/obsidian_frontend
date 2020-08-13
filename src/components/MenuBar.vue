@@ -38,19 +38,17 @@
             return {
                 searchInput: "",
                 searchKeywords: "",
-                username: "",
+
             };
         },
         created() {
             updateStatus()
-            this.username = this.$store.getters.getUsername
-            if(this.username === "")
-            {
-                this.username = "wyhchriszixikdl"
+        },
+        computed: {
+            username(){
+                return this.$store.getters.getUsername
             }
         },
-        computed: {}
-        ,
         methods: {
             submitSearch: function () {
                 console.log('submit!');
@@ -59,8 +57,7 @@
         },
         watch: {
             $route() {
-                //this.isLogin = this.$store.getters.getLoginStatus;
-                //this.userName = this.$store.getters.getUserName;
+                this.username = this.$store.getters.getUsername;
             }
         }
     };
@@ -93,11 +90,11 @@
         word-break: keep-all;
     }
 
-    .menubar_username{
+    .menubar_username {
         line-height: 40px;
-        -webkit-user-select:none;
-        -moz-user-select:none;
-        -ms-user-select:none;
-        user-select:none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 </style>
