@@ -4,7 +4,7 @@
 			<el-header style="padding: 0">
 				<MenuBar/>
 			</el-header>
-			
+
 			<el-container>
 				
 				<!-- 左边栏 -->
@@ -76,8 +76,9 @@
 						</el-popover>
 					</div>
 				</el-aside>
+
 			</el-container>
-				
+
 		</el-container>
 	</div>
 </template>
@@ -374,6 +375,13 @@
     .card_body_font {
         color: dimgray;
     }
+
+	#aside_left {
+		border-right: 1px solid #DEDFE6;
+		height: auto;
+		padding: 10px;
+	}
+
 </style>
 
 <style>
