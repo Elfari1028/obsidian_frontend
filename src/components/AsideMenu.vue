@@ -22,7 +22,7 @@
 
             <el-divider class="divider"></el-divider>
 
-            <el-submenu index="/TeamSpace" :disabled="isLoading" @click.native="getTeamList">
+            <el-submenu index="/TeamSpace" :disabled="isLoading">
                 <template slot="title">
                     <i class="el-icon-s-grid"></i>
                     <span>团队空间</span>
@@ -30,8 +30,8 @@
 
                 <el-menu-item-group v-loading="isLoading">
                     <div v-if="isLoading" style="height: 50px;width: 100%"></div>
-                    <span v-for="team in team_list" :key=team.team_id>
-                        <el-menu-item v-bind:index="'/TeamSpace/'+team.team_id">{{ team.team_name }}</el-menu-item>
+                    <span v-for="Team in Team_list" :key=Team.Team_id>
+                        <el-menu-item v-bind:index="'/TeamSpace/'+Team.Team_id">{{ Team.Team_name }}</el-menu-item>
 					</span>
                 </el-menu-item-group>
 
@@ -55,12 +55,22 @@
 <script>
     export default {
         name: "AsideMenu",
-        data() {
-            return {
-                isLoading: false,
-                team_list: []
-            }
-        },
+		data () {
+			return {
+				Team_list: [
+					{
+						Team_id: 1,
+						Team_name: '火锅小分队'
+					},
+					{
+						Team_id: 2,
+						Team_name: '烧烤小分队'
+					}
+				],
+				User_id: '',
+				isLoading: false,
+			}
+		},
         methods: {
             handleOpen() {
                 console.log(this.$route.path)
@@ -68,7 +78,32 @@
             handleClose() {
 
             },
-            getTeamList() {
+			loadTeamList: function () {
+				console.log('加载团队列表')
+				
+				var _this = this
+				
+				this.$axios
+					.post('获取团队列表接口', JSON.stringify({
+						User_id: _this.User_id
+					}))
+					.then((response) => {
+						var res = response.data
+						
+						_this.Team_list = res.Team_list
+						
+						if (res.success === false) {
+							_this.$message.error(res.exc)
+						}
+					})
+					.catch(err => {
+						_this.$message.error('获取团队列表出了点问题')
+						console.log(err)
+					})
+				
+			},
+			/*
+			getTeamList() {
                 console.log('bing')
                 this.team_list = []
                 this.isLoading = true
@@ -85,11 +120,32 @@
                     })
                     this.isLoading = false
                 })
-
             }
+			*/
         },
         created() {
             console.log(this.$route.path)
+			
+			var _this = this
+			
+			//获得当前用户id
+			this.$axios
+				.get('获得当前用户id接口')
+				.then((response) => {
+					var res = response.data
+			
+					_this.User_id = res.User_id
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					}
+				})
+				.catch(err => {
+					_this.$message.error('获得当前用户id接口出了点问题')
+					console.log(err)
+				})
+				
+			//加载团队列表
+			this.loadTeamList()
         },
     }
 </script>

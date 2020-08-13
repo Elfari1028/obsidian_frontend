@@ -548,7 +548,7 @@ export default{
 #GroupManage {
 	/* outline:#00ff00 dotted thick; */
 	padding: 1px;
-	width: 260px;
-	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+	width: 232px;
+	/* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) */
 }
 </style>
