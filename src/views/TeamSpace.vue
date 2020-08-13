@@ -4,18 +4,18 @@
 			<el-header style="padding: 0">
 				<MenuBar/>
 			</el-header>
-			
+
 			<el-container>
 				<el-aside width="200px" id="aside_left">
 					<AsideMenu/>
 				</el-aside>
 				<el-main>
-		
+
 					<h1>Team_id: {{ Team_id }}</h1>
-		
+
 				</el-main>
 			</el-container>
-				
+
 		</el-container>
 	</div>
 </template>
