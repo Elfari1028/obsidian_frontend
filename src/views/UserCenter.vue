@@ -5,7 +5,7 @@
                 <MenuBar/>
             </el-header>
             <el-container>
-                <el-aside width="200px" id="aside_left">
+                <el-aside width="225px" id="aside_left">
                     <AsideMenu/>
                 </el-aside>
                 <el-main>

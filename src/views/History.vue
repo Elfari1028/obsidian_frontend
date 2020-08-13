@@ -17,7 +17,7 @@
                 <MenuBar/>
             </el-header>
             <el-container>
-                <el-aside width="200px" id="aside_left">
+                <el-aside width="225px" id="aside_left">
                     <AsideMenu/>
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
