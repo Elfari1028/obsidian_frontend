@@ -10,11 +10,13 @@
             <el-col v-if="!(hide===1)" :span="4" :offset="10">
                 <el-input v-model="searchKeywords" placeholder="输入关键词" @keyup.enter.native="submitSearch"></el-input>
             </el-col>
-            <el-col v-if="!(hide===1)" :span="2">
+            <el-col v-if="!(hide===1)" :span="1">
                 <i class="el-icon-message-solid notice"></i>
             </el-col>
             <el-col v-if="!(hide===1)" :span="2">
-                <!--                avatar -->
+                <div class="menubar_username">{{this.username}}</div>
+            </el-col>
+            <el-col v-if="!(hide===1)" :span="1">
             </el-col>
         </el-row>
     </div>
@@ -36,10 +38,16 @@
             return {
                 searchInput: "",
                 searchKeywords: "",
+                username: "",
             };
         },
         created() {
             updateStatus()
+            this.username = this.$store.getters.getUsername
+            if(this.username === "")
+            {
+                this.username = "wyhchriszixikdl"
+            }
         },
         computed: {}
         ,
@@ -83,5 +91,13 @@
         max-height: 40px;
         overflow: visible;
         word-break: keep-all;
+    }
+
+    .menubar_username{
+        line-height: 40px;
+        -webkit-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
     }
 </style>

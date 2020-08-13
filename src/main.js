@@ -38,7 +38,7 @@ Vue.prototype.$cookies.config('1d');
 // router.beforeEach((to, from, next) => {
 //     let getFlag = sessionStorage.getItem("USER_STATUS");
 //     if (getFlag === "isLogin") {
-//         store.state.isLogin = true;
+//         updateStatus()
 //         if (to.meta.title) {
 //             document.title = to.meta.title
 //         }

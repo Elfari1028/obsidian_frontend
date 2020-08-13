@@ -45,5 +45,10 @@
 	}
 </script>
 
-<style>
+<style scoped>
+	#aside_left {
+		border-right: 1px solid #DEDFE6;
+		height: auto;
+		padding: 10px;
+	}
 </style>
