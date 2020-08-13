@@ -163,7 +163,7 @@
                 this.$axios.post('account/login1/', JSON.stringify(this.loginForm), axiosConfig)
                     .then(res => {
                         console.log(res.data)
-                        if (res.data.status !== 0) {
+                        if (!res.data.success) {
                             this.$message.error("wrong password")
                         } else {
                             this.$store.dispatch("userLogin", true)

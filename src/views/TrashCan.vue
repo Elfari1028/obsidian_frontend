@@ -17,7 +17,7 @@
                 <MenuBar/>
             </el-header>
             <el-container>
-                <el-aside width="200px" id="aside_left">
+                <el-aside width="225px" id="aside_left">
                     <AsideMenu/>
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
@@ -85,7 +85,7 @@
         methods: {
             updateList() {
                 this.isLoading = true
-                this.$axios.get('').then(res => {
+                this.$axios.get('bin/get-private-docs').then(res => {
                     console.log(res)
                     this.docList = []
                     const list = res.data.list
@@ -111,7 +111,7 @@
             },
             restoreDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+                this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id})).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文件已恢复")
                     } else {
@@ -126,7 +126,7 @@
                     cancelButtonText: '取消',
                     type: "warning"
                 }).then(() => {
-                    this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+                    this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id})).then(res => {
                         if (res.data.success === 0) {
                             this.$alert("文件已删除")
                         } else {

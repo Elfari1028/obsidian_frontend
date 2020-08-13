@@ -8,6 +8,9 @@ import History from "@/views/History";
 import Collections from "@/views/Collections";
 import UserCenter from "@/views/UserCenter";
 import TeamSpace from "../views/TeamSpace.vue"
+import AvatarTest from "@/views/AvatarTest";
+
+import CommentCard from "../components/CommentCard.vue";
 
 Vue.use(VueRouter);
 
@@ -43,11 +46,11 @@ const routes = [
             isLogin: true,
         }
     },
-	{
-		path: "/Test",
-		name: "Test",
-		component: Test
-	},
+    {
+        path: "/Test",
+        name: "Test",
+        component: Test
+    },
     {
         path: "/History",
         name: "History",
@@ -75,16 +78,35 @@ const routes = [
             isLogin: true,
         }
     },
-	{
-		path: "/TeamSpace/:Team_id",
-		name: "TeamSpace",
-		component: TeamSpace,
-		meta: {
-			title: "团队空间",
-			isLogin: true,
-		}
-		
-	}
+    {
+        path: "/TeamSpace/:Team_id",
+        name: "TeamSpace",
+        component: TeamSpace,
+        meta: {
+            title: "团队空间",
+            isLogin: true,
+        }
+
+    },
+    {
+        path: "/temp/commentCard",
+        name: "CommentCard",
+        component: CommentCard,
+        meta: {
+            title: "评论",
+            isLogin: true,
+        }
+
+    },
+    {
+        path: "/AvatarTest",
+        name: "AvatarTest",
+        component: AvatarTest,
+        meta: {
+            title: "团队空间",
+            isLogin: true
+        }
+    }
 
 ];
 

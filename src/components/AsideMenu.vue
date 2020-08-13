@@ -3,7 +3,7 @@
         <el-menu :default-active="$route.path"
                  active-text-color="#1A1A1A"
                  text-color="#5E5E5E"
-                 @open="handleOpen"
+                 @open="getTeamList"
                  @close="handleClose"
                  router
                  mode="vertical">
@@ -33,6 +33,7 @@
                     <span v-for="Team in Team_list" :key=Team.Team_id>
                         <el-menu-item v-bind:index="'/TeamSpace/'+Team.Team_id">{{ Team.Team_name }}</el-menu-item>
 					</span>
+                    <span><el-menu-item :disabled="true" style="cursor: default;">空空如也</el-menu-item></span>
                 </el-menu-item-group>
 
             </el-submenu>
@@ -57,6 +58,7 @@
         name: "AsideMenu",
 		data () {
 			return {
+				Team_list: [],
 				Team_list: [
 					{
 						Team_id: 123,
@@ -78,6 +80,7 @@
             handleClose() {
 
             },
+            /*
 			loadTeamList: function () {
 				console.log('加载团队列表')
 				
@@ -101,29 +104,24 @@
 						console.log(err)
 					})
 				
-			},
-			/*
+			},*/
 			getTeamList() {
                 console.log('bing')
-                this.team_list = []
+                this.Team_list = []
                 this.isLoading = true
                 this.$axios.get('').then(res => {
                     console.log(res.data)
-                    this.team_list = res.data.list
+                    this.Team_list = res.data.list
                     this.isLoading = false
                 }).catch(err => {
                     console.log(err)
                     this.$message('请检查网络')
-                    this.team_list.push({
-                        team_id: 1,
-                        team_name: '哈哈哈哈'
-                    })
                     this.isLoading = false
                 })
             }
-			*/
         },
         created() {
+            /*
             console.log(this.$route.path)
 			
 			var _this = this
@@ -146,6 +144,7 @@
 				
 			//加载团队列表
 			this.loadTeamList()
+             */
         },
     }
 </script>
