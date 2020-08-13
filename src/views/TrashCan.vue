@@ -20,7 +20,7 @@
                 <el-aside width="200px" id="aside_left">
                     <AsideMenu/>
                 </el-aside><!--左边栏-->
-                <el-main :style="{height: spaceHeight}">
+                <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
                         <el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
                             <div slot="header" style="height: 10px">
@@ -51,10 +51,11 @@
                     <div id="bench_toolbar">
                         <div id="toolbar_title">回收站</div>
                         <el-divider></el-divider>
-                        <el-button size="small" type="info" circle icon="el-icon-refresh"></el-button>
-                        <el-button size="small" type="danger" round icon="el-icon-delete">
-                            清空
-                        </el-button>
+                        <el-button size="small" type="info" circle
+                                   icon="el-icon-refresh"
+                                   @click="updateList"></el-button>
+                        <el-button size="small" type="danger"
+                                   round icon="el-icon-delete">清空</el-button>
                     </div>
                 </el-aside>
             </el-container>
@@ -75,111 +76,39 @@
             return {
                 isScreenWide: false,
                 dialogVisible: false,
+                isLoading: false,
                 shareUrl: '',
                 spaceHeight: window.innerHeight - 80 + 'px',
-                docList: [
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: 'TITLE_DEBUG',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    }
-                ]
+                docList: []
             }
         },
         methods: {
+            updateList() {
+                this.isLoading = true
+                this.$axios.get('').then(res => {
+                    console.log(res)
+                    this.docList = []
+                    const list = res.data.list
+                    for (let i = 0; i < list.length; i++) {
+                        this.docList.push(list[i])
+                    }
+                    this.isLoading = false
+                }).catch(err => {
+                    console.log(err)
+                    this.docList = []
+                    this.$message('网络出了些问题')
+                    for (let i = 0; i < 16; i++) {
+                        this.docList.push({
+                            doc_id: 3321,
+                            title: 'TITLE_DEBUG',
+                            team_id: 55443,
+                            workspace: 'TEAM_DEBUG',
+                            time: '2020/8/10 20:03:02'
+                        })
+                    }
+                    this.isLoading = false;
+                })
+            },
             restoreDocument(doc_id) {
                 console.log(doc_id)
                 this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
@@ -241,14 +170,7 @@
         },
         created() {
             console.log(this.$route.path)
-            this.$axios.get('').then(res => {
-                console.log(res)
-                this.docList = [];
-                const list = res.data.list
-                for (let i = 0; i < list.length; i++) {
-                    this.docList.push(list[i])
-                }
-            })
+            this.updateList()
         },
         mounted() {
             window.onresize = () => {
