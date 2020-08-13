@@ -37,7 +37,7 @@ export default {
     this.documentData.id = this.docID;
     if (this.docID === -1) this.editorData = "<p>在这里开始输入。</p>";
     else
-      this.$axios
+      axios
         .post("http://39.97.104.62/api/document/obtain_content", {
           doc_id: this.docID,
         })
@@ -96,7 +96,7 @@ export default {
         language: "en",
         autosave: {
           save(editor) {
-            return saveData(editor.getData());
+            return this.saveData(editor.getData());
           },
         },
         fontSize: {
@@ -139,7 +139,7 @@ export default {
       });
     },
     keepSessionAlive() {
-      this.$axios
+      axios
         .post("http://39.97.104.62/api/document/keepalive", {
           doc_id: this.docID,
           document:this.documentData,
@@ -192,7 +192,7 @@ export default {
       editor.ui.getEditableElement().classList.add("ck-container-area");
       editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
         //let val = editor.getData();
-        var CancelToken = this.$axios.CancelToken;
+        var CancelToken = axios.CancelToken;
         var source = CancelToken.source();
         return {
           abort: () => {
@@ -213,7 +213,7 @@ export default {
                   var formData = new FormData();
                   formData.append("doc_id", self.docID);
                   formData.append("image", file);
-                  this.$axios
+                  axios
                     .post(
                       "http://39.97.104.62/api/document/upload_image",
                       formData,
