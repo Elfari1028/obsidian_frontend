@@ -8,7 +8,7 @@ import History from "@/views/History";
 import Collections from "@/views/Collections";
 import UserCenter from "@/views/UserCenter";
 import TeamSpace from "../views/TeamSpace.vue"
-
+import CommentCard from "../components/CommentCard.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -85,7 +85,16 @@ const routes = [
 		}
 		
 	}
-
+    ,{
+		path: "/temp/commentCard",
+		name: "CommentCard",
+		component: CommentCard,
+		meta: {
+			title: "评论",
+			isLogin: true,
+		}
+		
+	}
 ];
 
 const router = new VueRouter({
