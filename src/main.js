@@ -13,7 +13,7 @@ import 'mavon-editor/dist/css/index.css';
 import "element-ui/lib/theme-chalk/index.css";
 import './utils/axiosUtils'
 import CKEditor from '@ckeditor/ckeditor5-vue';
-import {updateStatus} from "@/utils/axiosUtils";
+// import {updateStatus} from "@/utils/axiosUtils";
 
 Vue.config.productionTip = false;
 
@@ -37,14 +37,15 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/";
 axios.defaults.withCredentials = true;
 Vue.prototype.$cookies.config('1d');
 
- router.beforeEach((to, from, next) => {
-     let getFlag = sessionStorage.getItem("USER_STATUS");
-     if (getFlag === "isLogin") {
-         updateStatus()
-         if (to.meta.title) {
-            document.title = to.meta.title
-         }
-         next()
+ router.beforeEach(
+    //  (to, from, next) => {
+    //  let getFlag = sessionStorage.getItem("USER_STATUS");
+    //  if (getFlag === "isLogin") {
+        //  updateStatus()
+        //  if (to.meta.title) {
+        //     document.title = to.meta.title
+        //  }
+        //  next()
 //     } else if (to.meta.isLogin && from.name !== 'Login') {
 //         next({
 //             name: 'Login'
@@ -54,8 +55,9 @@ Vue.prototype.$cookies.config('1d');
 //             document.title = to.meta.title
 //         }
 //         next()
-     }
- })
+    //  }
+//  }
+ )
 
 new Vue({
     router,

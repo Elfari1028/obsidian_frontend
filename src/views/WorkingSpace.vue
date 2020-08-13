@@ -59,11 +59,12 @@
                         <el-button size="small" type="info" circle
                                    icon="el-icon-refresh"
                                    @click="updateList"></el-button>
-                        <el-button size="small" type="info"
+                        <el-button size="small" type="info" @click="openCreateDocPopup"
                                    round icon="el-icon-plus">新建文档</el-button>
                     </div>
                 </el-aside>
             </el-container>
+            <CreateDocPopup ref="create_doc" />
         </el-container>
     </div>
 
@@ -72,11 +73,12 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
+    import CreateDocPopup from "@/components/CreateDocPopup"
     import $ from 'jquery'
 
     export default {
         name: "WorkingSpace",
-        components: {AsideMenu, MenuBar},
+        components: {AsideMenu, MenuBar,"CreateDocPopup":CreateDocPopup},
         data() {
             return {
                 isScreenWide: false,
@@ -88,6 +90,9 @@
             }
         },
         methods: {
+            openCreateDocPopup(){
+                this.$refs.create_doc.openDialog();
+            },
             updateList() {
                 this.isLoading = true
                 this.$axios.get('doc/list_all_my_docs/').then(res => {

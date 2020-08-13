@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="6" :offset="0">
                 <div class="navigate_bar_title">
-                    <img src="../assets/icon/logo.png" style="vertical-align: middle" alt="" width="40" height="40"/>
+                    <img src="../assets/icon/obsidian.png" style="vertical-align: middle" alt="" width="40" height="40"/>
                     黑曜石文档
                 </div>
             </el-col>
@@ -79,15 +79,18 @@
         z-index: 3;
         padding-top: 5px;
         padding-bottom: 5px;
-        box-shadow: 2px 2px 2px 2px rgba(200, 200, 200, 0.7);
+        box-shadow: 2px 2px 5px 1px rgba(200, 200, 200, 0.7);
     }
 
     .navigate_bar_title {
-        font-family: tahoma, arial, 'Hiragino Sans GB', STXingkai, "Microsoft YaHei", SimSun, sans-serif;
-        font-size: 25px;
+        font-family: tahoma, arial, 'Hiragino Sans GB', NSimSun, "Microsoft YaHei", SimSun, sans-serif;
+        color: black;
+        font-weight: 200;
+        font-size: 20px;
         max-height: 40px;
         overflow: visible;
         word-break: keep-all;
+        vertical-align: center;
     }
 
     .menubar_username {

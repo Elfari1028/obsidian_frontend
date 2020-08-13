@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       editor: DecoupledEditor,
-      editorData: "",
+      editorData: "<h2>Lorem and Ipsum are getting married</h2><p>Let's congratulate them with our most sincere wishes!</p><h3>Wedding plans</h3><h4>Time</h4><p>July 30th. 2020. Please arrive before 14:00.</p><h4>Place</h4><p>Lockhart Church, North Town.</p><img src='https://atlas.thc.texas.gov/atlasimg/Markers/5055009770_Caldwell.jpg'/><h4>Dress Code</h4><p>Men:Please wear your best suits, please. Preferably blue.</p>",
       editorDisabled: false,
       documentData: {
         id: "",
@@ -253,8 +253,8 @@ export default {
 .ckedit {
   border: 1px solid var(--ck-color-base-border);
   border-radius: var(--ck-border-radius);
-  min-height: 90vh;
-  max-height: 90vh;
+  min-height: 82vh;
+  max-height: 82vh;
   min-width: 100hh;
   max-width: 100hh;
   display: flex;
