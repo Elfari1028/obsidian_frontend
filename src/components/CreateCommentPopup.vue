@@ -1,7 +1,7 @@
 <template>
   <div class="CreateCommentPopup">
     <el-dialog title="发表评论" :visible.sync="dialogVisible" width="30%">
-      <el-input type="textarea" v-model="content" laceholder="回复内容"></el-input>
+      <el-input type="textarea" v-model="content" placeholder="回复内容"></el-input>
       <br />
       <br />
       <el-row>
@@ -16,9 +16,6 @@
 import axios from "axios";
 export default {
   name: "CreateCommentPopup",
-  created: function () {
-
-  },
   methods: {
     openDialog() {
       this.dialogVisible = true;
@@ -32,7 +29,12 @@ export default {
       .then(function (response) {
         const res = response.data;
         if (res.success === true) {
-          this.templates = response.data.list;
+          this.$notify({
+            title: "通信失败!",
+            type: "warning",
+            message: res.exc,
+            duration: 5000,
+          });
         } else {
           this.$notify({
             title: "通信失败!",
@@ -55,7 +57,8 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      comment:"",
+      comments:"",
+      content:"",
     };
   },
 };

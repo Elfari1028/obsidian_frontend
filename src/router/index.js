@@ -9,8 +9,7 @@ import Collections from "@/views/Collections";
 import UserCenter from "@/views/UserCenter";
 import TeamSpace from "../views/TeamSpace.vue"
 import AvatarTest from "@/views/AvatarTest";
-
-import CommentCard from "../components/CommentCard.vue";
+import DocumentView from '@/views/DocumentView';
 
 Vue.use(VueRouter);
 
@@ -89,11 +88,11 @@ const routes = [
 
     },
     {
-        path: "/temp/commentCard",
-        name: "CommentCard",
-        component: CommentCard,
+        path: "/document/:doc_id",
+        name: "DocumentView",
+        component: DocumentView,
         meta: {
-            title: "评论",
+            title: "文档",
             isLogin: true,
         }
 

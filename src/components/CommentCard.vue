@@ -96,7 +96,7 @@ export default {
   text-align: left;
   vertical-align: middle;
   margin-left: 5px;
-  margin-right: px;
+  margin-right: 5px;
 }
 .comment-avatar {
   width: 50px;
