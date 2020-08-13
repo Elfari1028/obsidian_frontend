@@ -14,7 +14,7 @@
                                     <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-button  type="info" style="float: right" @click="submitLogin">登录
+                                    <el-button type="info" style="float: right" @click="submitLogin">登录
                                         <i class="el-icon-arrow-right"></i>
                                     </el-button>
                                 </el-form-item>
@@ -184,7 +184,15 @@
                                 this.$alert('注册成功', '啊哈', {
                                     center: true,
                                     callback: () => {
-                                        this.$router.push({name: 'WorkingSpace'})
+                                        this.$axios.post('account/login1/', JSON.stringify(this.loginForm), axiosConfig)
+                                            .then(res => {
+                                                console.log(res.data)
+                                                if (res.data.success) {
+                                                    this.$store.dispatch("userLogin", true)
+                                                    sessionStorage.setItem("USER_STATUS", "isLogin")
+                                                    this.$router.push("/WorkingSpace")
+                                                }
+                                            })
                                     }
                                 })
                             })
