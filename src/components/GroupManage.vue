@@ -108,7 +108,26 @@
 				<el-button slot="reference" type="danger" size="small">退出当前团队</el-button>
 			
 			</el-popconfirm>
+	
+			<br><br>
+		
+			<!-- 创建新的团队 -->
+			<el-popover
+				placement='bottom'
+				trigger="click"
+				style="margin: 6px;"
+				v-model="visible5"
+				>
+				
+				<el-input v-model="inputTName" placeholder="请输入创建的团队名称"></el-input>
+				<center>
+				<br>
+				<el-button type="primary" size="mini" @click="createNewTeam">确定</el-button>
+				</center>
+				
+				<el-button slot="reference" type="primary" size="small">创建新的团队</el-button>
 			
+			</el-popover>
 		</div>
 		
 		<div v-if="isAdmin" id = 'forAdmin'>
@@ -205,10 +224,12 @@ export default{
 			User_id: '',
 			inputUID: '',
 			inputTID: '',
+			inputTName: '',
 			visible1: false,
 			visible2: false,
 			visible3: false,
 			visible4: false,
+			visible5: false,
 			ApplyUserData: [
 				{
 					User_id: 1,
@@ -238,10 +259,38 @@ export default{
 	methods: {
 		getHeight: function () {
 			if (this.isAdmin) {
-				return '290px'
+				return '350px'
 			} else {
-				return '210px'
+				return '255px'
 			}
+		},
+		createNewTeam: function () {
+			
+			console.log('创建团队：'+this.inputTName)
+			
+			this.visible5 = false
+			var _this = this
+			
+			this.$axios
+				.post('创建团队接口', JSON.stringify({
+					User_id: _this.User_id
+				}))
+				.then((response) => {
+					var res = response.data
+					
+					if (res.success === true) {
+						_this.$message.success('创建团队成功')
+						_this.$router.push('/TeamSpace/'+res.Team_id)
+					} else {
+						_this.$message.error(res.exc)
+					}
+				})
+				.catch(err => {
+					_this.$message.error('创建团队出了点问题')
+					console.log(err)
+				})
+			
+			this.inputTName = ''
 		},
 		inviteNewMember: function () {
 			
