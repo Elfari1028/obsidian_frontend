@@ -33,7 +33,7 @@
                     <span v-for="Team in Team_list" :key=Team.Team_id>
                         <el-menu-item v-bind:index="'/TeamSpace/'+Team.Team_id">{{ Team.Team_name }}</el-menu-item>
 					</span>
-                    <span><el-menu-item :disabled="true" style="cursor: default;">空空如也</el-menu-item></span>
+                    <!-- <span><el-menu-item :disabled="true" style="cursor: default;">空空如也</el-menu-item></span> -->
                 </el-menu-item-group>
 
             </el-submenu>
@@ -58,7 +58,6 @@
         name: "AsideMenu",
 		data () {
 			return {
-				Team_list: [],
 				Team_list: [
 					{
 						Team_id: 123,
@@ -107,7 +106,6 @@
 			},*/
 			getTeamList() {
                 console.log('bing')
-                this.Team_list = []
                 this.isLoading = true
                 this.$axios.get('').then(res => {
                     console.log(res.data)
