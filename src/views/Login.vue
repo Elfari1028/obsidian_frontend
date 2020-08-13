@@ -164,7 +164,7 @@
                     .then(res => {
                         console.log(res.data)
                         if (!res.data.success) {
-                            this.$message.error("wrong password")
+                            this.$message.error(res.data.exec)
                         } else {
                             this.$store.dispatch("userLogin", true)
                             sessionStorage.setItem("USER_STATUS", "isLogin")

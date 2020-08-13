@@ -58,7 +58,6 @@
         name: "AsideMenu",
 		data () {
 			return {
-				Team_list: [],
 				Team_list: [
 					{
 						Team_id: 123,
