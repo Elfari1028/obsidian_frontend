@@ -361,6 +361,9 @@
 				if (!this.isTrashCan) {
 					//获取回收站文件
 					this.loadTrashList()
+				} else {
+					//获取团队文件
+					this.loadDocList()
 				}
 				
 				this.isTrashCan = !this.isTrashCan
