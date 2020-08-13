@@ -66,7 +66,8 @@
 						Team_id: 2,
 						Team_name: '烧烤小分队'
 					}
-				]
+				],
+				User_id: ''
 			}
 		},
         methods: {
@@ -75,11 +76,56 @@
             },
             handleClose() {
 
-            }
+            },
+			loadTeamList: function () {
+				console.log('加载团队列表')
+				
+				var _this = this
+				
+				this.$axios
+					.post('获取团队列表接口', JSON.stringify({
+						User_id: _this.User_id
+					}))
+					.then((response) => {
+						var res = response.data
+						
+						_this.Team_list = res.Team_list
+						
+						if (res.success === false) {
+							_this.$message.error(res.exc)
+						}
+					})
+					.catch(err => {
+						_this.$message.error('获取团队列表出了点问题')
+						console.log(err)
+					})
+				
+			}
         },
         created()
         {
             console.log(this.$route.path)
+			
+			var _this = this
+			
+			//获得当前用户id
+			this.$axios
+				.get('获得当前用户id接口')
+				.then((response) => {
+					var res = response.data
+			
+					_this.User_id = res.User_id
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					}
+				})
+				.catch(err => {
+					_this.$message.error('获得当前用户id接口出了点问题')
+					console.log(err)
+				})
+				
+			//加载团队列表
+			this.loadTeamList()
         },
     }
 </script>

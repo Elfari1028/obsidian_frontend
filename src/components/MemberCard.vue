@@ -1,58 +1,68 @@
 <template>
 	<div id = 'MemberCard' v-bind:style="{width: getWidth()}">
-
-		<el-table
-			:data="Member_list"
-			id = 'MemberTable'
-			>
-			
-			<el-table-column
-				label="头像"
-				width="80px"
+		<!-- <h1>{{Team_id}}</h1> -->
+		
+		<!-- <el-popover
+			placement="left"
+			width="400"
+			trigger="click"
+			> -->
+		
+			<el-table
+				:data="Member_list"
+				id = 'MemberTable'
 				>
-
-				<template slot-scope="scope">
-					<el-avatar >
-						<img :src="scope.row.User_avatar" style="width: 100%; height: 100%;">
-					</el-avatar>
-				</template>
-
-			</el-table-column>
-			
-			<el-table-column
-				label="昵称"
-				width="80px"
-				prop="User_name"
-				>
-			</el-table-column>
-			
-			<el-table-column
-				label="身份"
-				width="80px"
-				prop="User_status"
-				>
-			</el-table-column>
-			
-			<el-table-column
-				v-if="isAdmin"
-				label="操作"
-				width="80px"
-				>
-				<template slot-scope="scope">
-
-				<el-popconfirm
-					title="确定踢出该队员吗？"
-					@onConfirm="deleteMember(scope.row.User_id)"
-					>
-					
-					<el-button slot="reference" type="danger" size="mini">踢出</el-button>
 				
-				</el-popconfirm>
+				<el-table-column
+					label="头像"
+					width="80px"
+					>
 
-				</template>
-			</el-table-column>
-			
-		</el-table>
+					<template slot-scope="scope">
+						<el-avatar >
+							<img :src="scope.row.User_avatar" style="width: 100%; height: 100%;">
+						</el-avatar>
+					</template>
+
+				</el-table-column>
+				
+				<el-table-column
+					label="昵称"
+					width="80px"
+					prop="User_name"
+					>
+				</el-table-column>
+				
+				<el-table-column
+					label="身份"
+					width="80px"
+					prop="User_status"
+					>
+				</el-table-column>
+				
+				<el-table-column
+					v-if="isAdmin"
+					label="操作"
+					width="80px"
+					>
+					<template slot-scope="scope">
+
+					<el-popconfirm
+						title="确定踢出该队员吗？"
+						@onConfirm="deleteMember(scope.row.User_id)"
+						>
+						
+						<el-button slot="reference" type="danger" size="mini">踢出</el-button>
+					
+					</el-popconfirm>
+
+					</template>
+				</el-table-column>
+				
+			</el-table>
+	
+			<!-- <el-button slot="reference">团队成员</el-button>
+		</el-popover> -->
 	</div>
 </template>
 
@@ -196,6 +206,6 @@ export default {
 <style scoped>
 #MemberTable {
 	/* outline:#00ff00 dotted thick; */
-	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+	/* box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) */
 }
 </style>
