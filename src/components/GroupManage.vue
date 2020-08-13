@@ -1,6 +1,9 @@
 <template>
 	<div id = 'GroupManage' :style="{height: getHeight()}">
 		<div id = 'forAll'>
+			<el-divider content-position="left">当前团队ID</el-divider>
+			<center><h3>{{Team_id}}</h3></center>
+			
 			<el-divider content-position="left">个人团队管理</el-divider>
 		
 			<!-- 邀请新成员 -->
@@ -235,9 +238,9 @@ export default{
 	methods: {
 		getHeight: function () {
 			if (this.isAdmin) {
-				return '235px'
+				return '290px'
 			} else {
-				return '155px'
+				return '210px'
 			}
 		},
 		inviteNewMember: function () {
