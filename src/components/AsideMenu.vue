@@ -40,7 +40,7 @@
 
             <el-menu-item index="/TrashCan">
                 <i class="el-icon-delete-solid"></i>
-                <span slot="title">回收站</span>
+                <span slot="title">个人回收站</span>
             </el-menu-item>
 
             <el-divider class="divider"></el-divider>
@@ -59,6 +59,16 @@
 		data () {
 			return {
 				Team_list: [],
+				Team_list: [
+					{
+						Team_id: 123,
+						Team_name: '火锅小分队'
+					},
+					{
+						Team_id: 234,
+						Team_name: '烧烤小分队'
+					}
+				],
 				User_id: '',
 				isLoading: false,
 			}
@@ -111,6 +121,7 @@
             }
         },
         created() {
+            /*
             console.log(this.$route.path)
 			
 			var _this = this
@@ -133,6 +144,7 @@
 				
 			//加载团队列表
 			this.loadTeamList()
+             */
         },
     }
 </script>

@@ -12,7 +12,8 @@
 					<AsideMenu/>
 				</el-aside>
 				
-				<el-main :style="{height: spaceHeight}">
+				<!-- 主界面 -->
+				<el-main v-if='!isTrashCan' :style="{height: spaceHeight}">
 					
 					<el-scrollbar style="height: 100%">
 						<el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
@@ -49,10 +50,40 @@
 					
 				</el-main><!--主体-->
 				
+				<!-- 回收站 -->
+				<el-main v-if='isTrashCan' :style="{height: spaceHeight}">
+					<el-scrollbar style="height: 100%">
+						<el-card class="doc_item" v-for="(doc,index) in trashList" :key="index">
+							<div slot="header" style="height: 10px">
+								<i class="el-icon-document" style="float: left"></i>
+								<span class="card_header_font">{{doc.title}}</span>
+								<el-dropdown trigger="click" style="float: right">
+									<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
+										<i class="el-icon-more"></i>
+									</span>
+									<el-dropdown-menu slot="dropdown">
+										<el-dropdown-item @click.native="restoreDocument(doc.doc_id)">恢复
+										</el-dropdown-item>
+										<el-dropdown-item @click.native="delDocument(doc.doc_id)"
+														style="color: #ff0000">删除
+										</el-dropdown-item>
+									</el-dropdown-menu>
+								</el-dropdown>
+							</div>
+							<div>
+								<span class="card_body_font card_body">
+									{{doc.workspace}}
+								</span>
+							</div>
+						</el-card>
+					</el-scrollbar>
+				</el-main>
+				
 				<!-- 右边栏 -->
 				<el-aside width="250px" id="aside_right">
 					<div id="bench_toolbar">
 						<div id="toolbar_title">{{Team_name}}</div>
+						
 						<el-divider></el-divider>
 						
 						<el-popover
@@ -74,6 +105,14 @@
 							
 							<el-button slot="reference">团队管理</el-button>
 						</el-popover>
+					
+						<el-divider></el-divider>
+						
+						<el-button id="trashCanButton" type="info" @click='switchTrashCan'>
+							<i class='el-icon-delete-solid'></i>
+							切换到团队回收站
+						</el-button>
+						
 					</div>
 				</el-aside>
 
@@ -100,6 +139,7 @@
 				Team_name: '火锅小分队',
 				isScreenWide: false,
 				dialogVisible: false,
+				isTrashCan: false,
 				shareUrl: '',
 				spaceHeight: window.innerHeight - 80 + 'px',
 				docList: [
@@ -201,6 +241,29 @@
 						workspace: 'TEAM_DEBUG',
 						time: '2020/8/10 20:03:02'
 					}
+				],
+				trashList: [
+					{
+						doc_id: 3321,
+						title: 'Trash_DEBUG',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 20:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: 'Trash_DEBUG',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 20:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: 'Trash_DEBUG',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 20:03:02'
+					},
 				]
 			}
 		},
@@ -216,6 +279,16 @@
 				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
 					if (res.data.success === 0) {
 						this.$alert("文件已移入回收站")
+					} else {
+						this.$alert(res.data.exec)
+					}
+				})
+			},
+			restoreDocument(doc_id) {
+				console.log(doc_id)
+				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+					if (res.data.success === 0) {
+						this.$alert("文件已恢复")
 					} else {
 						this.$alert(res.data.exec)
 					}
@@ -263,7 +336,37 @@
 						_this.$message.error('获取团队文件出了点问题')
 						console.log(err)
 					})
-			}
+			},
+			loadTrashList: function () {
+				var _this = this
+				console.log('正在获取团队回收站文件')
+				this.$axios
+					.post('获取团队回收站文件接口' ,JSON.stringify({
+						Team_id: _this.Team_id
+					}))
+					.then(response => {
+					var res = response.data
+					_this.trashList = res.File_list
+					
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					}
+					})
+					.catch(err => {
+						_this.$message.error('获取团队回收站文件出了点问题')
+						console.log(err)
+					})
+			},
+			switchTrashCan: function () {
+				if (!this.isTrashCan) {
+					//获取回收站文件
+					this.loadTrashList()
+				}
+				
+				this.isTrashCan = !this.isTrashCan
+				
+				document.getElementById('trashCanButton').innerHTML = this.isTrashCan==true ? "<i class='el-icon-menu'></i>切换到团队主页面" : "<i class='el-icon-delete-solid'></i>切换到团队回收站"
+			},
 		},
 		created() {
 			this.Team_id = this.$route.params.Team_id
