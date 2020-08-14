@@ -1,5 +1,18 @@
 <template>
     <div class="navigate_bar">
+		<!-- 搜索结果 -->
+		<el-drawer
+			:title="'“'+searchKeywords+'”'+'搜索结果'"
+			:visible.sync="visible"
+			direction="rtl"
+			z-index="0"
+			size="450px"
+			>
+		
+			<SearchResult></SearchResult>
+		
+		</el-drawer>
+		
         <el-row>
             <el-col :span="6" :offset="0">
                 <div class="navigate_bar_title">
@@ -8,7 +21,9 @@
                 </div>
             </el-col>
             <el-col v-if="!(hide===1)" :span="4" :offset="10">
-                <el-input v-model="searchKeywords" placeholder="输入关键词" @keyup.enter.native="submitSearch"></el-input>
+				
+				<el-input v-model="searchKeywords" placeholder="搜索当前页面" @keyup.enter.native="submitSearch"></el-input>
+				
             </el-col>
             <el-col v-if="!(hide===1)" :span="1">
                 <i class="el-icon-message-solid notice"></i>
@@ -19,6 +34,7 @@
             <el-col v-if="!(hide===1)" :span="1">
             </el-col>
         </el-row>
+
     </div>
 </template>
 
@@ -27,18 +43,21 @@
      * 使用时请绑定 :hide="1" 以隐藏右侧通知等功能
      */
     import {updateStatus} from "@/utils/axiosUtils";
+	import SearchResult from "./SearchResult.vue"
 
     export default {
         name: "MenuBar",
-        components: {},
+        components: {SearchResult},
         props: {
             hide: Number,
+			test: String,
+			docList: Array
         },
         data() {
             return {
                 searchInput: "",
                 searchKeywords: "",
-
+				visible: false
             };
         },
         created() {
@@ -53,6 +72,8 @@
             submitSearch: function () {
                 console.log('submit!');
                 console.log(this.searchKeywords);
+				this.visible = true
+				
             },
         },
         watch: {

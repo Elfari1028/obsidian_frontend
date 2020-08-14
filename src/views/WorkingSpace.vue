@@ -22,7 +22,9 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
+						
                         <el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
+							
                             <div slot="header" style="height: 10px">
                                 <i class="el-icon-document" style="float: left"></i>
                                 <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
@@ -41,6 +43,7 @@
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
+							
                             <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
                                 <span class="card_body_font card_body">
                                     {{doc.workspace}}
@@ -49,7 +52,9 @@
                                     最后修改于：{{doc.time}}
                                 </span>
                             </div>
+							
                         </el-card>
+						
                     </el-scrollbar>
                 </el-main><!--主体-->
                 <el-aside width="250px" id="aside_right">
