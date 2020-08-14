@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from "@/vuex/store";
 
-const baseUrl = 'http://127.0.0.1:8000/'
+export const baseUrl = 'http://127.0.0.1:8000/'
 const infoUrl = baseUrl + 'account/my_status/'
 
 export const axiosConfig = {
