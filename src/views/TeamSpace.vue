@@ -74,6 +74,9 @@
 								<span class="card_body_font card_body">
 									{{doc.workspace}}
 								</span>
+								<span class="card_time_font card_body">
+									最后修改于：{{doc.time}}
+								</span>
 							</div>
 						</el-card>
 					</el-scrollbar>
@@ -109,17 +112,17 @@
 						<el-divider></el-divider>
 						
 						<el-dropdown trigger="click" @command="handleCommand">
-						<el-button type="info">
-							<i class='el-icon-s-fold'></i>
-							对当前文件排序
-						</el-button>
-						
-						<el-dropdown-menu slot="dropdown">
-							<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-							<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-							<el-dropdown-item command='timeUp'>按时间升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-							<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-						</el-dropdown-menu>
+							<el-button type="info">
+								<i class='el-icon-s-fold'></i>
+								对当前文件排序
+							</el-button>
+							
+							<el-dropdown-menu slot="dropdown">
+								<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
+								<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
+								<el-dropdown-item command='timeUp'>按时间升序<i class='el-icon-caret-top'></i></el-dropdown-item>
+								<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
+							</el-dropdown-menu>
 						</el-dropdown>
 						
 						<br><br>

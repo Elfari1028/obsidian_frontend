@@ -61,6 +61,23 @@
                                    @click="updateList"></el-button>
                         <el-button size="small" type="info" @click="openCreateDocPopup"
                                    round icon="el-icon-plus">新建文档</el-button>
+							
+						<br><br>	
+							
+						<el-dropdown trigger="click" @command="handleCommand">
+							<el-button type="info">
+								<i class='el-icon-s-fold'></i>
+								对当前文件排序
+							</el-button>
+							
+							<el-dropdown-menu slot="dropdown">
+								<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
+								<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
+								<el-dropdown-item command='timeUp'>按时间升序<i class='el-icon-caret-top'></i></el-dropdown-item>
+								<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
+							</el-dropdown-menu>
+						</el-dropdown>
+						
                     </div>
                 </el-aside>
             </el-container>
@@ -110,10 +127,10 @@
                     for (let i = 0; i < 16; i++) {
                         this.docList.push({
                             doc_id: 3321,
-                            title: 'TITLE_DEBUG',
+                            title: 'TITLE_DEBUG' + i,
                             team_id: 55443,
                             workspace: 'TEAM_DEBUG',
-                            time: '2020/8/10 20:03:02'
+                            time: '2020/8/10 20:03:' + i
                         })
                     }
                     this.isLoading = false;
@@ -157,7 +174,47 @@
                     message: "链接已复制成功",
                     type: 'warning'
                 });
-            }
+            },
+			sortDocList: function (list, method) {
+				if (method === 'titleDown') {
+					list.sort(function(a,b){
+						var x = a.title.toLowerCase()
+						var y = b.title.toLowerCase()
+						if (x > y) {return -1}
+						if (x < y) {return 1}
+						return 0
+					})
+				} else if (method === 'titleUp') {
+					list.sort(function(a,b){
+						var x = a.title.toLowerCase()
+						var y = b.title.toLowerCase()
+						if (x < y) {return -1}
+						if (x > y) {return 1}
+						return 0
+					})
+				}
+				
+				if (method === 'timeDown') {
+					list.sort(function(a,b){
+						var x = new Date(a.time)
+						var y = new Date(b.time)
+						if (x < y) {return -1}
+						if (x > y) {return 1}
+						return 0
+					})
+				} else if (method === 'timeUp') {
+					list.sort(function(a,b){
+						var x = new Date(a.time)
+						var y = new Date(b.time)
+						if (x > y) {return -1}
+						if (x < y) {return 1}
+						return 0
+					})
+				}
+			},
+			handleCommand: function (command) {
+				this.sortDocList(this.docList, command)
+			}
         },
         created() {
             console.log(this.$route.path)
