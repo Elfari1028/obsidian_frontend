@@ -22,7 +22,12 @@ export function updateStatus() {
         } else {
             console.log("已登录"+res.data.username)
             store.dispatch("userLogin", true)
-            store.dispatch("userInfo", res.data.username)
+            axios.get('account/get_avatar/').then(result => {
+                store.dispatch("userInfo",{
+                    username: res.data.username,
+                    avatarUrl: baseUrl.substring(0, baseUrl.length - 1) + result.data.url
+                })
+            })
             console.log("检测:"+store.getters.getUsername)
             sessionStorage.setItem("USER_STATUS", "isLogin")
             return true
