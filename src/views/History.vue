@@ -14,7 +14,7 @@
         </el-dialog>
         <el-container>
             <el-header style="padding: 0">
-                <MenuBar/>
+                <MenuBar :docList='docList' docType='isHistory'/>
             </el-header>
             <el-container>
                 <el-aside width="225px" id="aside_left">
@@ -118,7 +118,7 @@
                     for (let i = 0; i < 16; i++) {
                         this.docList.push({
                             doc_id: 3321,
-                            title: 'TITLE_DEBUG' + i,
+                            title: '最近浏览' + i,
                             team_id: 55443,
                             workspace: 'TEAM_DEBUG',
                             time: '2020/8/10 20:03:' + i

@@ -1,8 +1,17 @@
 <template>
 	<div :style="{height: spaceHeight}" style="margin: 10px;">
 		<el-scrollbar id='SearchResult' style="height: 100%">
-			
-		<ResultCard v-for="(doc,index) in docList" :key="index" :doc='doc'></ResultCard>
+		
+<!-- 
+									使用两个ResultCard是为了修复组件复用的bug
+-->
+		<div v-if='!isTrash'>
+		<ResultCard v-for="(doc,index) in docList" :key="index" :doc='doc' :docType='docType'></ResultCard>
+		</div>
+		
+		<div v-if='isTrash'>
+		<ResultCardforTrash v-for="(doc,index) in docList" :key="index" :doc='doc'></ResultCardforTrash>
+		</div>
 		
 		</el-scrollbar>
 
@@ -10,93 +19,46 @@
 </template>
 
 <script>
+	/*
+	* 传入字符串
+	* docType: 'isDefault' or 'isTrash' ...
+	*/
+   
 import ResultCard from './ResultCard.vue'	
+import ResultCardforTrash from'./ResultCardforTrash.vue'
 	
 export default {
 	name: 'SearchResult',
-	// props: {
-	// 	docList: Array
-	// },
+	props: {
+		docList: Array,
+		docType: String,
+	},
 	data () {
 		return{
 			spaceHeight: window.innerHeight - 100 + 'px',
-			docList: [
-				{
-					doc_id: 3321,
-					title: 'b',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/10 20:03:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'a',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/01 20:03:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'j',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/9/10 20:03:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'f',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/10 20:04:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'w',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/11 20:03:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'b',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/10 20:03:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'a',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/01 20:03:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'j',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/9/10 20:03:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'f',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/10 20:04:02'
-				},
-				{
-					doc_id: 3321,
-					title: 'w',
-					team_id: 55443,
-					workspace: 'TEAM_DEBUG',
-					time: '2020/8/11 20:03:02'
-				},
-			],
+			isTrash: false
 		}
 	},
 	components: {
-		ResultCard
-	}
+		ResultCard, ResultCardforTrash
+	},
+	created() {
+		if (this.docType === 'isTrash'){
+			this.isTrash = true
+		} else {
+			this.isTrash = false
+		}
+	},
+	watch: {
+		docType: function() {
+			console.log('docType in SearchResult: ' + this.docType)
+			if (this.docType === 'isTrash'){
+				this.isTrash = true
+			} else {
+				this.isTrash = false
+			}
+		}
+	},
 }
 </script>
 <style>

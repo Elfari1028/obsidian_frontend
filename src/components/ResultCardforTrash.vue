@@ -14,30 +14,11 @@
 						<i class="el-icon-more"></i>
 					</span>
 					
-					<el-dropdown-menu v-if='isDefault' slot="dropdown">
-						<el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
+					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item @click.native="restoreDocument(doc.doc_id)">恢复
 						</el-dropdown-item>
 						<el-dropdown-item @click.native="delDocument(doc.doc_id)"
 										style="color: #ff0000">删除
-						</el-dropdown-item>
-						<el-dropdown-item @click.native="shareDocument(doc.doc_id)">分享
-						</el-dropdown-item>
-					</el-dropdown-menu>
-					
-					<el-dropdown-menu v-if='isCollection' slot="dropdown">
-						<el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
-						</el-dropdown-item>
-						<el-dropdown-item @click.native="delCollection(doc.doc_id)"
-										style="color: #ff0000">移出
-						</el-dropdown-item>
-						<el-dropdown-item @click.native="shareDocument(doc.doc_id)">分享
-						</el-dropdown-item>
-					</el-dropdown-menu>
-					
-					<el-dropdown-menu v-if='isHistory' slot="dropdown">
-						<el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
-						</el-dropdown-item>
-						<el-dropdown-item @click.native="shareDocument(doc.doc_id)">分享
 						</el-dropdown-item>
 					</el-dropdown-menu>
 					
@@ -60,34 +41,10 @@
 </template>
 
 <script>
-	/*
-	* 传入字符串
-	* docType: 'isDefault' ...
-	*/
-	
 export default {
 	name: 'ResultCard',
 	props: {
-		docType: String,
 		doc: Object,
-	},
-	data () {
-		return {
-			isDefault: false,
-			isCollection: false,
-			isHistory: false,
-		}
-	},
-	mounted() {
-		console.log("docType in card "+this.docType)
-		
-		if (this.docType === 'isCollection') {
-			this.isCollection = true
-		} else if (this.docType === 'isHistory') {
-			this.isHistory = true
-		} else if (this.docType === 'isDefault') {
-			this.isDefault = true
-		}
 	},
 }
 </script>

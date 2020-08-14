@@ -3,14 +3,14 @@
 
 		<!-- 搜索结果 -->
 		<el-drawer
-			:title="'“'+searchKeywords+'”'+'搜索结果'"
+			:title="'“'+searchKeywords+'”'+'的搜索结果'"
 			:visible.sync="visible"
 			direction="rtl"
 			z-index="2"
 			size="450px"
 			>
 		
-			<SearchResult></SearchResult>
+			<SearchResult :docList='resultList' :docType='docType'></SearchResult>
 		
 		</el-drawer>
 
@@ -53,13 +53,14 @@
         props: {
             hide: Number,
 			test: String,
-			docList: Array
+			docList: Array,
+			docType: String,
         },
         data() {
             return {
-                searchInput: "",
                 searchKeywords: "",
-				visible: false
+				visible: false,
+				resultList: []
             };
         },
         created() {
@@ -75,9 +76,15 @@
         },
         methods: {
             submitSearch: function () {
-                console.log('submit!');
-                console.log(this.searchKeywords);
-                console.log(this.avatarUrl);
+                console.log('正在搜索' + this.searchKeywords);
+				this.resultList = []
+				
+				for (let i = 0; i < this.docList.length; i++) {
+					if ( this.docList[i].title.indexOf(this.searchKeywords) != -1 ) {
+						this.resultList.push(this.docList[i])
+					}
+				}
+				
 				this.visible = true
             },
         },
