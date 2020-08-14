@@ -6,18 +6,25 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         isLogin: false,
-        username: ''
+        userInfo: {
+            username: '',
+            avatarUrl: ''
+        }
     },
     getters: {
         isLogin: state => state.isLogin,
-        getUsername: state => state.username
+        getUsername: state => state.userInfo.username,
+        getUserAvatar: state => state.userInfo.avatarUrl
     },
     mutations: {
         USER_STATUS(state, flag) {
             state.isLogin = flag
         },
         USERNAME(state, val) {
-            state.username = val
+            state.userInfo.username = val
+        },
+        USER_AVATAR(state, val) {
+            state.userInfo.avatarUrl = val
         }
     },
     actions: {
@@ -25,8 +32,9 @@ const store = new Vuex.Store({
             commit("USER_STATUS", flag)
         },
         userInfo({commit}, val) {
-            commit("USERNAME", val)
-        }
+            commit("USERNAME", val.username)
+            commit("USER_AVATAR", val.avatarUrl)
+        },
     }
 })
 

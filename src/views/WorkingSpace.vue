@@ -54,7 +54,7 @@
                             </div>
 							
                         </el-card>
-						
+                        <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
                 <el-aside width="250px" id="aside_right">
@@ -144,7 +144,7 @@
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: ''
+                    path: '/document/'+doc_id
                 })
             },
             delDocument(doc_id) {
@@ -299,6 +299,12 @@
 
     .card_body_font {
         color: dimgray;
+    }
+
+    .list_empty_notice{
+        color: darkgrey;
+        height: inherit;
+        padding-top: 20%;
     }
 </style>
 

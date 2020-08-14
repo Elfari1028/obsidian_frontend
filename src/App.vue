@@ -45,6 +45,7 @@
     }
 
     body{
-        margin: 0px;
+        margin: 0;
+        min-width: 1100px;
     }
 </style>

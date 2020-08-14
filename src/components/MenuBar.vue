@@ -1,39 +1,40 @@
 <template>
     <div class="navigate_bar">
+
 		<!-- 搜索结果 -->
 		<el-drawer
 			:title="'“'+searchKeywords+'”'+'搜索结果'"
 			:visible.sync="visible"
 			direction="rtl"
-			z-index="0"
+			z-index="2"
 			size="450px"
 			>
 		
 			<SearchResult></SearchResult>
 		
 		</el-drawer>
-		
-        <el-row>
-            <el-col :span="6" :offset="0">
-                <div class="navigate_bar_title">
-                    <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
-                    黑曜石文档
-                </div>
-            </el-col>
-            <el-col v-if="!(hide===1)" :span="4" :offset="10">
-				
-				<el-input v-model="searchKeywords" placeholder="搜索当前页面" @keyup.enter.native="submitSearch"></el-input>
-				
-            </el-col>
-            <el-col v-if="!(hide===1)" :span="1">
-                <i class="el-icon-message-solid notice"></i>
-            </el-col>
-            <el-col v-if="!(hide===1)" :span="2">
-                <div class="menubar_username">{{this.username}}</div>
-            </el-col>
-            <el-col v-if="!(hide===1)" :span="1">
-            </el-col>
-        </el-row>
+
+        <div class="navigate_bar_title">
+            <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
+            黑曜石文档
+        </div>
+        <div style="display: flex;position: absolute;right: 0">
+            <div class="navigate_bar_function_item" style="max-width: 400px">
+                <el-input v-model="searchKeywords"
+                          placeholder="搜索当前页面"
+                          @keyup.enter.native="submitSearch">
+                    <el-button slot="append" icon="el-icon-search" @click="submitSearch"></el-button>
+                </el-input>
+            </div>
+            <span style="width: 16px"></span>
+            <NoticeBox class="navigate_bar_function_item"/>
+            <span style="width: 10px"></span>
+            <div class="menubar_username navigate_bar_function_item">
+                <el-avatar :size="'small'"
+                           :src="avatarUrl"
+                           style="font-size: 30px;vertical-align: middle;margin-right: 10px"></el-avatar>
+            </div>
+        </div>
 
     </div>
 </template>
@@ -44,10 +45,11 @@
      */
     import {updateStatus} from "@/utils/axiosUtils";
 	import SearchResult from "./SearchResult.vue"
+    import NoticeBox from "@/components/NoticeBox";
 
     export default {
         name: "MenuBar",
-        components: {SearchResult},
+        components: {NoticeBox, SearchResult},
         props: {
             hide: Number,
 			test: String,
@@ -66,25 +68,32 @@
         computed: {
             username(){
                 return this.$store.getters.getUsername
+            },
+            avatarUrl(){
+                return this.$store.getters.getUserAvatar
             }
         },
         methods: {
             submitSearch: function () {
                 console.log('submit!');
                 console.log(this.searchKeywords);
+                console.log(this.avatarUrl);
 				this.visible = true
-				
             },
         },
         watch: {
             $route() {
                 this.username = this.$store.getters.getUsername;
+                this.avatarUrl = this.$store.getters.getUserAvatar;
             }
         }
     };
 </script>
 
 <style>
+    .navigate_bar_function_item{
+    }
+
     .notice {
         font-size: 25px;
         vertical-align: middle;
@@ -93,6 +102,7 @@
     }
 
     .navigate_bar {
+        display: flex;
         position: fixed;
         background: rgba(200, 200, 200, 0.5);
         border: 0;
@@ -112,9 +122,12 @@
         overflow: visible;
         word-break: keep-all;
         vertical-align: center;
+        float: left;
+        margin-left: 50px;
     }
 
     .menubar_username {
+        min-width: 80px;
         line-height: 40px;
         -webkit-user-select: none;
         -moz-user-select: none;

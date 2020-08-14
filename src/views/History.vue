@@ -47,6 +47,7 @@
                                 </span>
                             </div>
                         </el-card>
+                        <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">快去找几个文档看看</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
                 <el-aside width="250px" id="aside_right">
@@ -55,7 +56,7 @@
                         <el-divider></el-divider>
                         <el-button size="mini" type="info" round
                                    icon="el-icon-refresh"
-                                   @click="updateList">刷新</el-button>
+                                   @click="updateHistory">刷新</el-button>
 
 						<br><br>
 							
@@ -100,9 +101,9 @@
             }
         },
         methods: {
-            updateList() {
+            updateHistory() {
                 this.isLoading = true
-                this.$axios.get('').then(res => {
+                this.$axios.get('doc/get_recent_read/').then(res => {
                     console.log(res)
                     this.docList = []
                     const list = res.data.list
@@ -129,7 +130,7 @@
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: ''
+                    path: '/document/'+doc_id
                 })
             },
             shareDocument(doc_id) {
@@ -198,7 +199,7 @@
         },
         created() {
             console.log(this.$route.path)
-            this.updateList()
+            this.updateHistory()
         },
         mounted() {
             window.onresize = () => {
@@ -277,6 +278,12 @@
 
     .card_body_font {
         color: dimgray;
+    }
+
+    .list_empty_notice{
+        color: darkgrey;
+        height: inherit;
+        padding-top: 20%;
     }
 </style>
 

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from "@/vuex/store";
 
-const baseUrl = 'http://127.0.0.1:8000/'
+export const baseUrl = 'http://127.0.0.1:8000/'
 const infoUrl = baseUrl + 'account/my_status/'
 
 export const axiosConfig = {
@@ -22,7 +22,12 @@ export function updateStatus() {
         } else {
             console.log("已登录"+res.data.username)
             store.dispatch("userLogin", true)
-            store.dispatch("userInfo", res.data.username)
+            axios.get('account/get_avatar/').then(result => {
+                store.dispatch("userInfo",{
+                    username: res.data.username,
+                    avatarUrl: baseUrl.substring(0, baseUrl.length - 1) + result.data.url
+                })
+            })
             console.log("检测:"+store.getters.getUsername)
             sessionStorage.setItem("USER_STATUS", "isLogin")
             return true

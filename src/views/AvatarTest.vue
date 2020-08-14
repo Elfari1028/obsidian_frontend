@@ -1,14 +1,18 @@
 <template>
     <el-form>
-        <el-upload class="avatar_uploader"
-                   action="http://127.0.0.1:8000/account/Avatar/"
-                   :show-file-list="false"
-                   :on-success="handleAvatarSuccess"
-                   :before-upload="beforeAvatarUpload"
-                   :with-credentials="true">
-            <img v-if="imageUrl" :src="this.imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+        <div style="width: 100px;height: 100px">
+            <el-upload class="avatar_uploader"
+                       action="http://127.0.0.1:8000/account/upload_avatar/"
+                       :show-file-list="false"
+                       :on-success="handleAvatarSuccess"
+                       :before-upload="beforeAvatarUpload"
+                       :with-credentials="true"
+                       :name="'avatar'">
+                <el-avatar v-if="imageUrl!==''" shape="square" :size="100" :src="this.imageUrl"></el-avatar>
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </div>
+
     </el-form>
 
 </template>
