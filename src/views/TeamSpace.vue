@@ -108,6 +108,22 @@
 					
 						<el-divider></el-divider>
 						
+						<el-dropdown trigger="click" @command="handleCommand">
+						<el-button type="info">
+							<i class='el-icon-s-fold'></i>
+							对当前文件排序
+						</el-button>
+						
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
+							<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
+							<el-dropdown-item command='timeUp'>按时间升序<i class='el-icon-caret-top'></i></el-dropdown-item>
+							<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
+						</el-dropdown-menu>
+						</el-dropdown>
+						
+						<br><br>
+						
 						<el-button id="trashCanButton" type="info" @click='switchTrashCan'>
 							<i class='el-icon-delete-solid'></i>
 							切换到团队回收站
@@ -145,124 +161,61 @@
 				docList: [
 					{
 						doc_id: 3321,
-						title: 'TITLE_DEBUG',
+						title: 'b',
 						team_id: 55443,
 						workspace: 'TEAM_DEBUG',
 						time: '2020/8/10 20:03:02'
 					},
 					{
 						doc_id: 3321,
-						title: 'TITLE_DEBUG',
+						title: 'a',
 						team_id: 55443,
 						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
+						time: '2020/8/01 20:03:02'
 					},
 					{
 						doc_id: 3321,
-						title: 'TITLE_DEBUG',
+						title: 'j',
 						team_id: 55443,
 						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
+						time: '2020/9/10 20:03:02'
 					},
 					{
 						doc_id: 3321,
-						title: 'TITLE_DEBUG',
+						title: 'f',
 						team_id: 55443,
 						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
+						time: '2020/8/10 20:04:02'
 					},
 					{
 						doc_id: 3321,
-						title: 'TITLE_DEBUG',
+						title: 'w',
 						team_id: 55443,
 						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
+						time: '2020/8/11 20:03:02'
 					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'TITLE_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					}
 				],
 				trashList: [
 					{
 						doc_id: 3321,
-						title: 'Trash_DEBUG',
+						title: 'adsv',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 21:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: 'kds',
 						team_id: 55443,
 						workspace: 'TEAM_DEBUG',
 						time: '2020/8/10 20:03:02'
 					},
 					{
 						doc_id: 3321,
-						title: 'Trash_DEBUG',
+						title: 'sds',
 						team_id: 55443,
 						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: 'Trash_DEBUG',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
+						time: '2020/8/10 20:03:03'
 					},
 				]
 			}
@@ -370,6 +323,50 @@
 				
 				document.getElementById('trashCanButton').innerHTML = this.isTrashCan==true ? "<i class='el-icon-menu'></i>切换到团队主页面" : "<i class='el-icon-delete-solid'></i>切换到团队回收站"
 			},
+			sortDocList: function (list, method) {
+				if (method === 'titleDown') {
+					list.sort(function(a,b){
+						var x = a.title.toLowerCase()
+						var y = b.title.toLowerCase()
+						if (x > y) {return -1}
+						if (x < y) {return 1}
+						return 0
+					})
+				} else if (method === 'titleUp') {
+					list.sort(function(a,b){
+						var x = a.title.toLowerCase()
+						var y = b.title.toLowerCase()
+						if (x < y) {return -1}
+						if (x > y) {return 1}
+						return 0
+					})
+				}
+				
+				if (method === 'timeDown') {
+					list.sort(function(a,b){
+						var x = new Date(a.time)
+						var y = new Date(b.time)
+						if (x < y) {return -1}
+						if (x > y) {return 1}
+						return 0
+					})
+				} else if (method === 'timeUp') {
+					list.sort(function(a,b){
+						var x = new Date(a.time)
+						var y = new Date(b.time)
+						if (x > y) {return -1}
+						if (x < y) {return 1}
+						return 0
+					})
+				}
+			},
+			handleCommand: function (command) {
+				if (this.isTrashCan) {
+					this.sortDocList(this.trashList, command)
+				} else {
+					this.sortDocList(this.docList, command)
+				}
+			}
 		},
 		created() {
 			this.Team_id = this.$route.params.Team_id
