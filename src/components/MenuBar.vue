@@ -3,7 +3,7 @@
         <el-row>
             <el-col :span="6" :offset="0">
                 <div class="navigate_bar_title">
-                    <img src="../assets/icon/obsidian.png" style="vertical-align: middle" alt="" width="40" height="40"/>
+                    <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
                     黑曜石文档
                 </div>
             </el-col>
