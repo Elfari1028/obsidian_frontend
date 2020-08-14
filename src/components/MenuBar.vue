@@ -74,13 +74,6 @@
     .navigate_bar_function_item{
     }
 
-    .notice {
-        font-size: 25px;
-        vertical-align: middle;
-        height: 40px;
-        line-height: 40px !important;
-    }
-
     .navigate_bar {
         display: flex;
         position: fixed;
