@@ -3,7 +3,7 @@
 
 		<!-- 搜索结果 -->
 		<el-drawer
-			:title="'“'+searchKeywords+'”'+'的搜索结果'"
+			:title="spaceType+'“'+searchKeywords+'”的搜索结果'"
 			:visible.sync="visible"
 			direction="rtl"
 			z-index="2"
@@ -60,11 +60,22 @@
             return {
                 searchKeywords: "",
 				visible: false,
-				resultList: []
+				resultList: [],
+				spaceType: ''
             };
         },
         created() {
             updateStatus()
+			
+			if (this.docType === 'isDefault'){
+				this.spaceType = '工作台中'
+			} else if (this.docType === 'isCollection'){
+				this.spaceType = '收藏夹中'
+			} else if (this.docType === 'isTrash'){
+				this.spaceType = '回收站中'
+			} else if (this.docType === 'isHistory'){
+				this.spaceType = '浏览历史中'
+			}
         },
         computed: {
             username(){
@@ -92,7 +103,18 @@
             $route() {
                 this.username = this.$store.getters.getUsername;
                 this.avatarUrl = this.$store.getters.getUserAvatar;
-            }
+            },
+			docType() {
+				if (this.docType === 'isDefault'){
+					this.spaceType = '工作台中'
+				} else if (this.docType === 'isCollection'){
+					this.spaceType = '收藏夹中'
+				} else if (this.docType === 'isTrash'){
+					this.spaceType = '回收站中'
+				} else if (this.docType === 'isHistory'){
+					this.spaceType = '浏览历史中'
+				}
+			}
         }
     };
 </script>
