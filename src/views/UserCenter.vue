@@ -18,11 +18,20 @@
                             <el-form-item label="用户名">
                                 <el-input :disabled="true" v-model="userInfo.username"></el-input>
                             </el-form-item>
+                            <el-form-item label="邮箱">
+                                <el-input :disabled="!onEdit" v-model="userInfo.email"></el-input>
+                            </el-form-item>
                             <el-form-item label="性别">
                                 <el-radio-group :disabled="!onEdit" v-model="userInfo.sex">
                                     <el-radio :label="0">男</el-radio>
                                     <el-radio :label="1">女</el-radio>
                                 </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="电话">
+                                <el-input :disabled="!onEdit" v-model="userInfo.tel"></el-input>
+                            </el-form-item>
+                            <el-form-item label="年龄">
+                                <el-input :disabled="!onEdit" v-model="userInfo.age"></el-input>
                             </el-form-item>
                             <el-form-item label="个人简介">
                                 <el-input :disabled="!onEdit" type="textarea" :rows="5" v-model="userInfo.mood"></el-input>
@@ -53,9 +62,12 @@
                 onEdit: false,
                 userInfo: {
                     username: 'test',
+                    email: 'test@test.com',
                     avatarUrl: '',
                     sex: 0,
-                    mood: 'test mood hahahahaha'
+                    mood: 'test mood hahahahaha',
+                    tel: '136xxxxxxxx',
+                    age: 21
                 },
             }
         },

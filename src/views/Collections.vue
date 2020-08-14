@@ -50,6 +50,7 @@
                                 </span>
                             </div>
                         </el-card>
+                        <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">收藏夹空空如也</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
                 <el-aside width="250px" id="aside_right">
@@ -58,7 +59,7 @@
                         <el-divider></el-divider>
                         <el-button size="mini" type="info" round
                                    icon="el-icon-refresh"
-                                   @click="updateList">刷新</el-button>
+                                   @click="updateCollections">刷新</el-button>
 
 						<br><br>
 							
@@ -103,7 +104,7 @@
             }
         },
         methods: {
-            updateList() {
+            updateCollections() {
                 this.isLoading = true
                 this.$axios.get('').then(res => {
                     console.log(res)
@@ -132,7 +133,7 @@
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: ''
+                    path: '/document/'+doc_id
                 })
             },
             delDocument(doc_id) {
@@ -211,7 +212,7 @@
         },
         created() {
             console.log(this.$route.path)
-            this.updateList()
+            this.updateCollections()
         },
         mounted() {
             window.onresize = () => {
@@ -290,6 +291,12 @@
 
     .card_body_font {
         color: dimgray;
+    }
+
+    .list_empty_notice{
+        color: darkgrey;
+        height: inherit;
+        padding-top: 20%;
     }
 </style>
 

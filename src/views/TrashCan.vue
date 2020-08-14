@@ -48,6 +48,7 @@
 								</span>
                             </div>
                         </el-card>
+                        <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
                 <el-aside width="250px" id="aside_right">
@@ -58,7 +59,8 @@
                                    icon="el-icon-refresh"
                                    @click="updateList"></el-button>
                         <el-button size="small" type="danger"
-                                   round icon="el-icon-delete">清空</el-button>
+                                   round icon="el-icon-delete">清空
+                        </el-button>
 
 						<br><br>
 							
@@ -305,6 +307,12 @@
 		font-size: 10px;
 		color: dimgray;
 	}
+
+    .list_empty_notice{
+        color: darkgrey;
+        height: inherit;
+        padding-top: 20%;
+    }
 </style>
 
 <style>
