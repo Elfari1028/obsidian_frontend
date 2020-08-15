@@ -14,7 +14,7 @@
         </el-dialog>
         <el-container>
             <el-header style="padding: 0">
-                <MenuBar/>
+                <MenuBar :docList='docList' docType='isDefault'/>
             </el-header>
             <el-container>
                 <el-aside width="225px" id="aside_left">
@@ -22,7 +22,9 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
+						
                         <el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
+							
                             <div slot="header" style="height: 10px">
                                 <i class="el-icon-document" style="float: left"></i>
                                 <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
@@ -41,6 +43,7 @@
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
+							
                             <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
                                 <span class="card_body_font card_body">
                                     {{doc.workspace}}
@@ -49,6 +52,7 @@
                                     最后修改于：{{doc.time}}
                                 </span>
                             </div>
+							
                         </el-card>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
                     </el-scrollbar>
@@ -128,7 +132,7 @@
                     for (let i = 0; i < 16; i++) {
                         this.docList.push({
                             doc_id: 3321,
-                            title: 'TITLE_DEBUG' + i,
+                            title: '个人工作台' + i,
                             team_id: 55443,
                             workspace: 'TEAM_DEBUG',
                             time: '2020/8/10 20:03:' + i

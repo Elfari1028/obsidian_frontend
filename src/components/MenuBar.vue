@@ -1,5 +1,19 @@
 <template>
     <div class="navigate_bar">
+
+		<!-- 搜索结果 -->
+		<el-drawer
+			:title="spaceType+'“'+searchKeywords+'”的搜索结果'"
+			:visible.sync="visible"
+			direction="rtl"
+			z-index="2"
+			size="450px"
+			>
+		
+			<SearchResult :docList='resultList' :docType='docType'></SearchResult>
+		
+		</el-drawer>
+
         <div class="navigate_bar_title">
             <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
             黑曜石文档
@@ -7,7 +21,7 @@
         <div style="display: flex;position: absolute;right: 0">
             <div class="navigate_bar_function_item" style="max-width: 400px">
                 <el-input v-model="searchKeywords"
-                          placeholder="输入关键词"
+                          placeholder="搜索当前页面"
                           @keyup.enter.native="submitSearch">
                     <el-button slot="append" icon="el-icon-search" @click="submitSearch"></el-button>
                 </el-input>
@@ -21,6 +35,7 @@
                            style="font-size: 30px;vertical-align: middle;margin-right: 10px"></el-avatar>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -29,22 +44,38 @@
      * 使用时请绑定 :hide="1" 以隐藏右侧通知等功能
      */
     import {updateStatus} from "@/utils/axiosUtils";
+	import SearchResult from "./SearchResult.vue"
     import NoticeBox from "@/components/NoticeBox";
 
     export default {
         name: "MenuBar",
-        components: {NoticeBox},
+        components: {NoticeBox, SearchResult},
         props: {
             hide: Number,
+			test: String,
+			docList: Array,
+			docType: String,
         },
         data() {
             return {
-                searchInput: "",
                 searchKeywords: "",
+				visible: false,
+				resultList: [],
+				spaceType: ''
             };
         },
         created() {
             updateStatus()
+			
+			if (this.docType === 'isDefault'){
+				this.spaceType = '工作台中'
+			} else if (this.docType === 'isCollection'){
+				this.spaceType = '收藏夹中'
+			} else if (this.docType === 'isTrash'){
+				this.spaceType = '回收站中'
+			} else if (this.docType === 'isHistory'){
+				this.spaceType = '浏览历史中'
+			}
         },
         computed: {
             username(){
@@ -56,16 +87,34 @@
         },
         methods: {
             submitSearch: function () {
-                console.log('submit!');
-                console.log(this.searchKeywords);
-                console.log(this.avatarUrl)
+                console.log('正在搜索' + this.searchKeywords);
+				this.resultList = []
+				
+				for (let i = 0; i < this.docList.length; i++) {
+					if ( this.docList[i].title.indexOf(this.searchKeywords) != -1 ) {
+						this.resultList.push(this.docList[i])
+					}
+				}
+				
+				this.visible = true
             },
         },
         watch: {
             $route() {
                 this.username = this.$store.getters.getUsername;
                 this.avatarUrl = this.$store.getters.getUserAvatar;
-            }
+            },
+			docType() {
+				if (this.docType === 'isDefault'){
+					this.spaceType = '工作台中'
+				} else if (this.docType === 'isCollection'){
+					this.spaceType = '收藏夹中'
+				} else if (this.docType === 'isTrash'){
+					this.spaceType = '回收站中'
+				} else if (this.docType === 'isHistory'){
+					this.spaceType = '浏览历史中'
+				}
+			}
         }
     };
 </script>

@@ -2,29 +2,23 @@
 	<div id = 'Test'>
 		<p>This is page is for testing.</p>
 		
-		<h1>MemberCard</h1>
-		<center><MemberCard Team_id='123'></MemberCard></center>
+		<MenuBar/>
 		
-		<h1>GroupManage</h1>
-		<center><GroupManage Team_id='123'></GroupManage></center>
 		
-		<!-- <h1>DocEditor</h1> -->
-		<!-- <DocEditor></DocEditor> -->
-		
+		<br><br><br><br>
+		<SearchResult></SearchResult>
 	</div>
 </template>
 
 <script>
-import MemberCard from '../components/MemberCard.vue'	
-import GroupManage from '../components/GroupManage.vue'
-// import DocEditor from '../components/DocEditor.vue'
+import SearchResult from '../components/SearchResult.vue'
+import MenuBar from "../components/MenuBar.vue"
 	
 export default {
 	name: 'Test',
 	components: {
-		MemberCard,
-		GroupManage,
-		// DocEditor
+		SearchResult,
+		MenuBar
 	}
 }
 </script>
