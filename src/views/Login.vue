@@ -171,7 +171,7 @@
                     .then(res => {
                         console.log(res.data)
                         if (!res.data.success) {
-                            this.$message.error(res.data.exec)
+                            this.$message.error(res.data.exc)
                         } else {
                             this.$store.dispatch("userLogin", true)
                             sessionStorage.setItem("USER_STATUS", "isLogin")

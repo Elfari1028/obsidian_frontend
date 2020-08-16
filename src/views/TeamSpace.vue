@@ -239,7 +239,7 @@
 					if (res.data.success === 0) {
 						this.$alert("文件已移入回收站")
 					} else {
-						this.$alert(res.data.exec)
+						this.$alert(res.data.exc)
 					}
 				})
 			},
@@ -249,7 +249,7 @@
 					if (res.data.success === 0) {
 						this.$alert("文件已恢复")
 					} else {
-						this.$alert(res.data.exec)
+						this.$alert(res.data.exc)
 					}
 				})
 			},

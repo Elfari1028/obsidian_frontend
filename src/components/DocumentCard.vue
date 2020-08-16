@@ -119,7 +119,7 @@
                     if (res.data.success === 0) {
                         this.$alert("文档已移出收藏")
                     } else {
-                        this.$alert(res.data.exec)
+                        this.$alert(res.data.exc)
                     }
                 })
             },
@@ -142,7 +142,7 @@
                     if (res.data.success === 0) {
                         this.$alert("文件已移入回收站")
                     } else {
-                        this.$alert(res.data.exec)
+                        this.$alert(res.data.exc)
                     }
                 })
             },
@@ -152,7 +152,7 @@
                     if (res.data.success === 0) {
                         this.$alert("文件已恢复")
                     } else {
-                        this.$alert(res.data.exec)
+                        this.$alert(res.data.exc)
                     }
                 })
             },
@@ -167,7 +167,7 @@
                         if (res.data.success === 0) {
                             this.$alert("文件已删除")
                         } else {
-                            this.$alert(res.data.exec)
+                            this.$alert(res.data.exc)
                         }
                     }).catch(err => {
                         console.log(err)
