@@ -10,15 +10,16 @@
                 </el-aside>
                 <el-main>
                     <div id="info_form" v-loading="isLoading" :disabled="isLoading">
-                        <el-form ref="form" :rules="rules" :model="userInfo" label-width="80px">
+                        <el-form :rules="infoRules" :model="userInfo" label-width="80px" ref="infoForm">
                             <el-form-item label="头像">
                                 <el-avatar :size="100"
-                                           :src="userInfo.avatarUrl"
+                                           :src="avatarUrl"
                                            :alt="userInfo.username"
-                                           style="font-size: 30px;vertical-align: middle;margin-right: 30px">{{userInfo.username}}
+                                           style="font-size: 30px;vertical-align: middle;margin-right: 30px">
+                                    {{userInfo.username}}
                                 </el-avatar>
                                 <el-button @click.prevent="isUploadingAvatar = true" size="small">修改头像</el-button>
-                                <el-dialog title="分享文件" width="500px"
+                                <el-dialog title="上传头像" width="500px"
                                            :visible.sync="isUploadingAvatar">
                                     <el-upload action="http://127.0.0.1:8000/account/upload_avatar/"
                                                :show-file-list="false"
@@ -58,12 +59,36 @@
                                           v-model="userInfo.mood"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button v-if="onEdit" type="primary" @click="saveEdit">保存信息</el-button>
+                                <el-button type="primary" @click="changePass">修改密码</el-button>
+                                <el-button v-if="onEdit" type="primary" @click="saveInfo">保存信息</el-button>
                                 <el-button v-if="!onEdit" type="primary" @click="changeInfo">修改信息</el-button>
+                                <el-button type="warning" @click="logout">退出登录</el-button>
                             </el-form-item>
                         </el-form>
-                    </div>
+                        <el-dialog title="修改密码" width="500px"
+                                   :close-on-click-modal="false"
+                                   :visible.sync="showPassChangeDialog">
+                            <el-form :model="passForm" :rules="passRules" ref="passForm">
+                                <el-form-item prop="oldPassword">
+                                    <el-input placeholder="旧密码" type="password"
+                                              v-model="passForm.oldPassword"></el-input>
+                                </el-form-item>
+                                <el-form-item prop="newPassword">
+                                    <el-input placeholder="新密码" type="password"
+                                              v-model="passForm.newPassword"></el-input>
+                                </el-form-item>
+                                <el-form-item prop="checkPassword">
+                                    <el-input placeholder="确认密码" type="password"
+                                              v-model="passForm.checkPassword"></el-input>
+                                </el-form-item>
+                            </el-form>
 
+                            <span slot="footer" class="dialog-footer">
+                                <el-button type="default" @click="exitPassChange">取 消</el-button>
+                                <el-button type="primary" @click="commitPassword">确 定</el-button>
+                            </span>
+                        </el-dialog>
+                    </div>
                 </el-main>
             </el-container>
         </el-container>
@@ -75,41 +100,148 @@
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
     import config from "@/config";
+    import {encryption} from "@/utils/encryptUtils";
 
     export default {
         name: "UserCenter",
         components: {AsideMenu, MenuBar},
         data() {
+            const validateEmail = (rule, value, callback) => {
+                const pattern = /[a-zA-Z][a-zA-Z0-9_]{3,17}@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/g;
+                if (pattern.test(value)) {
+                    callback();
+                } else {
+                    callback(new Error('邮箱地址格式错误'))
+                }
+                this.$axios.post('account/email_used/', JSON.stringify({email: value}), config.axiosHeaders)
+                    .then(res => {
+                        console.log(res.data)
+                        if (res.data.success === true) {
+                            callback();
+                        } else callback(new Error("res.data.exc"));
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        callback(new Error('网络好像出问题了'))
+                    })
+            };
+            const validatePassword = (rule, value, callback) => {
+                if (value !== this.passForm.newPassword) {
+                    callback(new Error('两次输入密码不一致'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 onEdit: false,
                 isUploadingAvatar: false,
                 uploadUrl: '',
+                avatarUrl: '',
                 isLoading: false,
+                showPassChangeDialog: false,
                 userInfo: {
                     username: 'test',
                     email: 'test@test.com',
-                    avatarUrl: '',
                     sex: 0,
                     mood: 'test mood hahahahaha',
                     tel: '136xxxxxxxx',
                     age: 21
                 },
-                rules: {}
+                passForm: {
+                    oldPassword: '',
+                    newPassword: '',
+                    checkPassword: ''
+                },
+                encodePassForm: {},
+                infoRules: {
+                    email: [
+                        {required: true, message: '请输入邮箱', trigger: 'blur'},
+                        {validator: validateEmail, trigger: 'blur'}
+                    ],
+                },
+                passRules: {
+                    oldPassword: [
+                        {required: true, message: '请输入原密码', trigger: 'change'},
+                    ],
+                    newPassword: [
+                        {required: true, message: '请输入新密码', trigger: 'change'},
+                        {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'change'}
+                    ],
+                    checkPassword: [
+                        {required: true, message: '请再次输入验证密码', trigger: 'change'},
+                        {validator: validatePassword, trigger: 'change'}
+                    ]
+                },
             }
         },
         methods: {
+            logout() {
+                this.$axios.post('account/logout1/').then((res) => {
+                    if (res.data.success) {
+                        this.$message('已退出登录')
+                        // this.$router.push({
+                        //     name: 'Login'
+                        // })
+                    }
+                })
+            },
             commitAvatar() {
-                this.userInfo.avatarUrl = this.uploadUrl
+                this.avatarUrl = this.uploadUrl
+                this.isUploadingAvatar = false;
             },
             changeInfo() {
                 this.onEdit = !this.onEdit
             },
-            saveEdit() {
-                this.onEdit = !this.onEdit
-                //post
+            saveInfo() {
+                this.$refs['infoForm'].validate(valid => {
+                    if (valid) {
+                        this.$axios.post('account/modify_information/', JSON.stringify(this.userInfo)).then(res => {
+                            if (res.data.success) {
+                                this.onEdit = !this.onEdit
+                            } else {
+                                this.$notify(res.data.exc)
+                            }
+                        }).catch(err => {
+                            console.log(err)
+                            this.$notify('网络出现了些问题？')
+                        })
+                    }
+                })
+            },
+            changePass() {
+                this.passForm = {
+                    oldPassword: '',
+                    newPassword: '',
+                    checkPassword: ''
+                }
+                this.showPassChangeDialog = true
+            },
+            exitPassChange() {
+                this.showPassChangeDialog = false
+            },
+            commitPassword() {
+                this.$refs['passForm'].validate(valid => {
+                    if (valid) {
+                        encryption(this.passForm, this.encodePassForm)
+                        this.$axios.post('account/modify_password/', JSON.stringify(this.encodePassForm), config.axiosHeaders)
+                            .then(res => {
+                                console.log(res)
+                                if (res.data.success) {
+                                    this.showPassChangeDialog = false
+                                    this.$message('密码修改成功')
+                                } else {
+                                    this.$message(res.data.exc)
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err)
+                                this.$message('网络似乎出了点问题')
+                            })
+                    }
+                })
             },
             handleAvatarSuccess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw)
+                this.uploadUrl = URL.createObjectURL(file.raw)
             },
             beforeAvatarUpload(file) {
                 const formatValid = ((file.type === 'image/jpeg') || (file.type === 'image/png'))
@@ -129,15 +261,15 @@
             this.isLoading = true
             await this.$axios.get('account/get_avatar/').then(res => {
                 if (res.data.success) {
-                    this.userInfo.avatarUrl = config.baseUrl.substring(0, config.baseUrl.length - 1) + res.data.url
+                    this.avatarUrl = config.baseUrl.substring(0, config.baseUrl.length - 1) + res.data.url
                 } else {
-                    this.userInfo.avatarUrl = ''
+                    this.avatarUrl = ''
                 }
-                console.log(this.userInfo.avatarUrl)
+                console.log(this.avatarUrl)
             }).catch(err => {
                 console.log(err)
             })
-            await this.$axios.get('').then(res => {
+            await this.$axios.get('account/get_information/').then(res => {
                 if (res.data.success) {
                     this.userInfo.username = res.data.username
                     this.userInfo.email = res.data.email
@@ -146,7 +278,7 @@
                     this.userInfo.mood = res.data.mood
                     this.userInfo.tel = res.data.tel
                 } else {
-                    this.$notify(res.data.exec)
+                    this.$notify(res.data.exc)
                 }
             }).catch(err => {
                 console.log(err)
