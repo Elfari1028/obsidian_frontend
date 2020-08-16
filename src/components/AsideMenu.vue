@@ -33,8 +33,21 @@
                     <span v-for="Team in Team_list" :key=Team.Team_id>
                         <el-menu-item v-bind:index="'/TeamSpace/'+Team.Team_id">{{ Team.Team_name }}</el-menu-item>
 					</span>
-                    <span v-if="Team_list.length===0"><el-menu-item :disabled="true"
-                                                                    style="cursor: default;">空空如也</el-menu-item></span>
+					
+                    <span v-if="Team_list.length===0">
+						
+						<el-popover
+							placement="right"
+							trigger="click"
+							>
+							
+							<GroupInit></GroupInit>
+							
+							<el-button slot="reference" size="small">加入新团队</el-button>
+							
+						</el-popover>
+					</span>
+					
                 </el-menu-item-group>
 
             </el-submenu>
@@ -55,19 +68,23 @@
 </template>
 
 <script>
+	import GroupInit from './GroupInit.vue'	
     export default {
         name: "AsideMenu",
+		components: {
+			GroupInit
+		},
 		data () {
 			return {
 				Team_list: [
-					{
-						Team_id: 123,
-						Team_name: '火锅小分队'
-					},
-					{
-						Team_id: 234,
-						Team_name: '烧烤小分队'
-					}
+					// {
+					// 	Team_id: 123,
+					// 	Team_name: '火锅小分队'
+					// },
+					// {
+					// 	Team_id: 234,
+					// 	Team_name: '烧烤小分队'
+					// }
 				],
 				User_id: '',
 				isLoading: false,
