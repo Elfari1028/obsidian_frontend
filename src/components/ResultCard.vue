@@ -41,6 +41,14 @@
 						</el-dropdown-item>
 					</el-dropdown-menu>
 					
+					<el-dropdown-menu v-if='isTrash' slot="dropdown">
+						<el-dropdown-item @click.native="restoreDocument(doc.doc_id)">恢复
+						</el-dropdown-item>
+						<el-dropdown-item @click.native="delDocument(doc.doc_id)"
+										style="color: #ff0000">删除
+						</el-dropdown-item>
+					</el-dropdown-menu>
+					
 				</el-dropdown>
 				
 			</div>
@@ -61,8 +69,9 @@
 
 <script>
 	/*
-	* 传入字符串
-	* docType: 'isDefault' ...
+	* 传入参数
+	* docType: 'isDefault'/'isCollection'/'isTrash'/'isHistory'
+	* doc: 所展示的文档
 	*/
 	
 export default {
@@ -76,6 +85,7 @@ export default {
 			isDefault: false,
 			isCollection: false,
 			isHistory: false,
+			isTrash: false
 		}
 	},
 	mounted() {
@@ -83,6 +93,8 @@ export default {
 		
 		if (this.docType === 'isCollection') {
 			this.isCollection = true
+		} else if (this.docType === 'isTrash') {
+			this.isTrash = true
 		} else if (this.docType === 'isHistory') {
 			this.isHistory = true
 		} else if (this.docType === 'isDefault') {
