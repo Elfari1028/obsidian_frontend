@@ -151,7 +151,7 @@ export default {
 		},
 		applyForNewTeam: function () {
 			
-			console.log('申请团队，团队id：'+parseInt(_this.inputTID))
+			console.log('申请团队，团队id：'+parseInt(this.inputTID))
 			
 			this.visible2 = false
 			var _this = this
