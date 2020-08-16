@@ -78,12 +78,12 @@
 			return {
 				Team_list: [
 					{
-						Team_id: 123,
-						Team_name: '火锅小分队'
+						team_id: 123,
+						team_name: '火锅小分队'
 					},
 					{
-						Team_id: 234,
-						Team_name: '烧烤小分队'
+						team_id: 234,
+						team_name: '烧烤小分队'
 					}
 				],
 				User_id: '',
