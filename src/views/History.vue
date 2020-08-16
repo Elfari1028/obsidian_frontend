@@ -73,7 +73,6 @@
                 isScreenWide: false,
                 dialogVisible: false,
                 isLoading: false,
-                shareUrl: '',
                 spaceHeight: window.innerHeight - 80 + 'px',
                 docList: []
             }
@@ -226,55 +225,9 @@
         padding: 10px;
     }
 
-    .doc_item {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        display: block;
-        float: left;
-        width: 45%;
-        height: 100px;
-        margin: 10px;
-    }
-
-    .card_header_font {
-        cursor: pointer;
-        font-size: 16px;
-        color: dimgray;
-    }
-
-    .card_body {
-        display: block;
-        margin: 5px;
-    }
-
-    .card_time_font {
-        font-size: 10px;
-        color: dimgray;
-    }
-
-    .card_body_font {
-        color: dimgray;
-    }
-
     .list_empty_notice{
         color: darkgrey;
         height: inherit;
         padding-top: 20%;
-    }
-</style>
-
-<style>
-    .el-card__body {
-        padding: 8px 5px !important;
-    }
-
-    .el-card__header {
-        padding: 15px !important;
-    }
-
-    body .el-scrollbar__wrap {
-        overflow-x: hidden;
     }
 </style>
