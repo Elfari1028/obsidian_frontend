@@ -10,8 +10,11 @@
         </el-aside>
         <el-container>
           <el-main id="doc-container">
-            <div id="doc-title">{{doc_title}}</div>
-            <el-button id="edit-button" size="small" type="plain" icon="el-icon-edit"></el-button>
+            <div id="doc-title">  <el-input :value="doc_title_input" v-if="edit_mode===true" @input="update_title_input"></el-input> <div v-if="edit_mode===false">{{doc_title}}</div></div>
+           
+            <el-button id="edit-button" size="small" type="plain" v-if="edit_mode===false" icon="el-icon-edit" @click="edit_mode=true"></el-button>   
+            <el-button id="edit-button" size="small" type="plain" v-if="edit_mode===true" icon="el-icon-check" @click="update_title"></el-button>
+            <el-button id="edit-button" size="small" type="plain" v-if="edit_mode===true" icon="el-icon-close" @click="cancel_update_title"></el-button>
             <br/>
             <DocEditor id="doc-editor" :docID="doc_id" />
           </el-main>
@@ -28,8 +31,6 @@
               <el-button class="action-button" type="plain" plain icon="el-icon-refresh" @click="updateList">刷新文档</el-button>
               <br/>
               <el-button class="action-button"  type="plain" plain icon="el-icon-time" @click="openChangelogDrawer">编辑记录</el-button>
-              <br/>
-              <el-button class="action-button" type="warning" plain icon="el-icon-share" @click="updateList">分享链接</el-button>
               <br/>
               <AuthPopupButton />
               <el-button class="action-button"  type="danger" plain icon="el-icon-delete" @click="updateList">删除文件</el-button>
@@ -51,6 +52,7 @@ import DocEditor from "@/components/DocEditor";
 import CommentDrawer from "@/components/CommentDrawer";
 import ChangelogDrawer from "@/components/ChangelogDrawer";
 import AuthPopupButton from "@/components/AuthPopupButton";
+import config from "@/config"
 export default {
   name: "DocumentView",
   components: {
@@ -65,6 +67,8 @@ export default {
     return {
       doc_id: "",
       doc_title:"Lorem Ipsum",
+      doc_title_input: this.doc_title,
+      edit_mode: false,
     };
   },
   methods: {
@@ -74,9 +78,49 @@ export default {
     openChangelogDrawer() {
       this.$refs.changelogDrawer.openDrawer();
     },
+    update_title(){
+      this.$axios.post("/doc/modify_title/",{doc_id:this.doc_id,new_title:this.doc_title_input},config.axiosHeaders).then((response) => {
+          if (response.status === 200) {
+            if (response.data.success === true) {
+              this.doc_title = this.doc_title_input;   
+              this.$message.confirm("修改成功！");
+              return; 
+            }
+            else{
+              this.doc_title_input = this.doc_title;
+              this.$notify({
+                title: "操作失败！",
+                message: "错误信息:" + response.data.exc,
+              });
+            }
+          } else {
+            this.doc_title_input = this.doc_title;
+            this.$notify({
+              title: "网络异常，连接失败！",
+              message: "错误代码：" + response.status,
+            });
+          }
+        })
+        .catch((error) => {
+          this.doc_title_input = this.doc_title;
+          this.$notify({
+            title: "网络异常，连接失败！",
+            message: "错误代码：" + error.response.status,
+          });
+        });
+        this.edit_mode = false;
+    },
+    cancel_update_title(){
+      this.doc_title_input = this.doc_title;
+      this.edit_mode = false;
+    },
+    update_title_input(text){
+      this.doc_title_input=text;
+      // console.log(text);
+    }
   },
   created() {
-    console.log(this.$route.path);
+    this.doc_title_input = this.doc_title;
   },
 };
 </script>
