@@ -2,7 +2,7 @@
     <div class="main_page">
         <el-container>
             <el-header style="padding: 0">
-                 <MenuBar :docList='docList' docType='isCollection'/>
+                <MenuBar :docList='docList' docType='isCollection'/>
             </el-header>
             <el-container>
                 <el-aside width="225px" id="aside_left">
@@ -10,7 +10,8 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
-                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isCollection'"/>
+                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc"
+                                      :doc-type="'isCollection'"/>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">收藏夹空空如也</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
@@ -20,16 +21,17 @@
                         <el-divider></el-divider>
                         <el-button size="mini" type="info" round
                                    icon="el-icon-refresh"
-                                   @click="updateCollections">刷新</el-button>
+                                   @click="updateCollections">刷新
+                        </el-button>
 
 						<br><br>
-							
+
 						<el-dropdown trigger="click" @command="handleCommand">
 							<el-button type="info">
 								<i class='el-icon-s-fold'></i>
 								对当前文件排序
 							</el-button>
-							
+
 							<el-dropdown-menu slot="dropdown">
 								<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
 								<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
@@ -37,7 +39,7 @@
 								<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
-						
+
                     </div>
                 </el-aside>
             </el-container>
@@ -66,12 +68,16 @@
         methods: {
             updateCollections() {
                 this.isLoading = true
-                this.$axios.get('').then(res => {
+                this.$axios.get('favorite/get/').then(res => {
                     console.log(res)
                     this.docList = []
-                    const list = res.data.list
-                    for (let i = 0; i < list.length; i++) {
-                        this.docList.push(list[i])
+                    if (res.data.success) {
+                        const list = res.data.list
+                        for (let i = 0; i < list.length; i++) {
+                            this.docList.push(list[i])
+                        }
+                    } else {
+                        this.$notify(res.data.exc)
                     }
                     this.isLoading = false
                 }).catch(err => {
@@ -108,7 +114,7 @@
 						return 0
 					})
 				}
-				
+
 				if (method === 'timeDown') {
 					list.sort(function(a,b){
 						var x = new Date(a.time)
@@ -182,7 +188,7 @@
         padding: 10px;
     }
 
-    .list_empty_notice{
+    .list_empty_notice {
         color: darkgrey;
         height: inherit;
         padding-top: 20%;
