@@ -155,7 +155,7 @@
 		inject:['reload'],
 		data() {
 			return {
-				Team_id: '',
+				Team_id: -1,
 				Team_name: '火锅小分队',
 				isScreenWide: false,
 				dialogVisible: false,

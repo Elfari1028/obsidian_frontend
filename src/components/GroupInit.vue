@@ -33,19 +33,19 @@
 			
 				<el-table-column
 					label="团队名称"
-					prop="Team_name"
+					prop="team_name"
 					width="100px"
 					>
 				</el-table-column>
 				<el-table-column
 					label="团队ID"
-					prop="Team_id"
+					prop="team_id"
 					width="100px"
 					>
 				</el-table-column>
 				<el-table-column
 					label="邀请人"
-					prop="User_name"
+					prop="user_name"
 					width="100px"
 					>
 				</el-table-column>
@@ -57,12 +57,12 @@
 						<el-button
 							size="mini"
 							type="success"
-							@click='agreeInvitation(scope.row.Team_id)'
+							@click='agreeInvitation(scope.row.team_id)'
 							>接受邀请</el-button>
 						<el-button
 							size="mini"
 							type="danger"
-							@click='rejectInvitation(scope.row.Team_id)'
+							@click='rejectInvitation(scope.row.team_id)'
 							>拒绝邀请</el-button>
 					</template>
 				</el-table-column>
@@ -99,7 +99,7 @@ export default {
 	name: 'GroupInit',
 	data () {
 		return {
-			User_id: '',
+			User_id: -1,
 			inputTID: '',
 			inputTName: '',
 			visible2: false,
@@ -151,14 +151,14 @@ export default {
 		},
 		applyForNewTeam: function () {
 			
-			console.log('申请团队，团队id：'+this.inputTID)
+			console.log('申请团队，团队id：'+parseInt(this.inputTID))
 			
 			this.visible2 = false
 			var _this = this
 	
 			this.$axios
 				.post('account/apply_to_join/', JSON.stringify({
-					team_id: _this.inputTID,
+					team_id: parseInt(_this.inputTID),
 					user_id: _this.User_id
 				}))
 				.then((response) => {
@@ -234,7 +234,7 @@ export default {
 				.post('account/deal_with_invitation/', JSON.stringify({
 					team_id: Team_id,
 					user_id: _this.User_id,
-					accepted: true
+					accepted: false
 				}))
 				.then((response) => {
 					var res = response.data

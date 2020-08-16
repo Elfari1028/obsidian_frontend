@@ -39,25 +39,25 @@ axios.defaults.withCredentials = true;
 Vue.prototype.$cookies.config('1d');
 
  router.beforeEach(
-    //  (to, from, next) => {
-    //  let getFlag = sessionStorage.getItem("USER_STATUS");
-    //  if (getFlag === "isLogin") {
-        //  updateStatus()
-        //  if (to.meta.title) {
-        //     document.title = to.meta.title
-        //  }
-        //  next()
-//     } else if (to.meta.isLogin && from.name !== 'Login') {
-//         next({
-//             name: 'Login'
-//         })
-//     } else {
-//         if (to.meta.title) {
-//             document.title = to.meta.title
-//         }
-//         next()
-    //  }
-//  }
+ //     (to, from, next) => {
+ //     let getFlag = sessionStorage.getItem("USER_STATUS");
+ //     if (getFlag === "isLogin") {
+ //         updateStatus()
+ //         if (to.meta.title) {
+ //            document.title = to.meta.title
+ //         }
+ //         next()
+ //    } else if (to.meta.isLogin && from.name !== 'Login') {
+ //        next({
+ //            name: 'Login'
+ //        })
+ //    } else {
+ //        if (to.meta.title) {
+ //            document.title = to.meta.title
+ //        }
+ //        next()
+ //     }
+ // }
  )
 
 new Vue({
