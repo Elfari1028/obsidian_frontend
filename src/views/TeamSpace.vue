@@ -147,6 +147,7 @@
 	import MemberCard from "@/components/MemberCard.vue"
 	import GroupManage from "@/components/GroupManage.vue"
 	import $ from 'jquery'
+	import config from "@/config";
 	
 	export default {
 		name: "TeamSpace",
@@ -234,7 +235,7 @@
 			},
 			delDocument(doc_id) {
 				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
 					if (res.data.success === 0) {
 						this.$alert("文件已移入回收站")
 					} else {
@@ -244,7 +245,7 @@
 			},
 			restoreDocument(doc_id) {
 				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
 					if (res.data.success === 0) {
 						this.$alert("文件已恢复")
 					} else {
@@ -254,7 +255,7 @@
 			},
 			shareDocument(doc_id) {
 				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
 					if (res.data.success === 0) {
 						this.shareUrl = res.data.url;
 						this.dialogVisible = true;

@@ -112,7 +112,7 @@
             },
             shareDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+                this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.shareUrl = res.data.url;
                         this.dialogVisible = true;
