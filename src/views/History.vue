@@ -1,17 +1,5 @@
 <template>
     <div class="main_page">
-        <el-dialog
-                title="分享文件"
-                :visible.sync="dialogVisible"
-                width="500px">
-            <el-input v-model="shareUrl" readonly="true" id="url_input">
-                <template slot="prepend">URL:</template>
-                <el-button slot="append" icon="el-icon-document" @click="copyUrl()"></el-button>
-            </el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog>
         <el-container>
             <el-header style="padding: 0">
                 <MenuBar :docList='docList' docType='isHistory'/>
@@ -71,7 +59,6 @@
         data() {
             return {
                 isScreenWide: false,
-                dialogVisible: false,
                 isLoading: false,
                 spaceHeight: window.innerHeight - 80 + 'px',
                 docList: []

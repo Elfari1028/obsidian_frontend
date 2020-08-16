@@ -14,18 +14,13 @@
             </span>
         </el-dialog>
         <el-card class="doc_item">
-
             <div slot="header" style="height: 10px">
                 <i class="el-icon-document" style="float: left"></i>
-
                 <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
-
                 <el-dropdown trigger="click" style="float: right">
-
 					<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
 						<i class="el-icon-more"></i>
 					</span>
-
                     <el-dropdown-menu v-if='isDefault' slot="dropdown">
                         <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
                         </el-dropdown-item>
@@ -60,11 +55,8 @@
                                           style="color: #ff0000">删除
                         </el-dropdown-item>
                     </el-dropdown-menu>
-
                 </el-dropdown>
-
             </div>
-
             <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
 				<span class="card_body_font card_body">
 					{{doc.workspace}}
@@ -73,9 +65,7 @@
 					最后修改于：{{doc.time}}
 				</span>
             </div>
-
         </el-card>
-
     </div>
 </template>
 
@@ -99,7 +89,8 @@
                 isCollection: false,
                 isHistory: false,
                 isTrash: false,
-                shareUrl: ''
+                shareUrl: '',
+                dialogVisible: false
             }
         },
         mounted() {
