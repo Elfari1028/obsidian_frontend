@@ -500,17 +500,3 @@
 	}
 
 </style>
-
-<style>
-    .el-card__body {
-        padding: 8px 5px !important;
-    }
-
-    .el-card__header {
-        padding: 15px !important;
-    }
-
-    body .el-scrollbar__wrap {
-        overflow-x: hidden;
-    }
-</style>

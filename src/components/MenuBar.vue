@@ -1,6 +1,5 @@
 <template>
     <div class="navigate_bar">
-
 		<!-- 搜索结果 -->
 		<el-drawer
 			:title="spaceType+'“'+searchKeywords+'”的搜索结果'"
@@ -13,7 +12,6 @@
 			<SearchResult :docList='resultList' :docType='docType'></SearchResult>
 		
 		</el-drawer>
-
         <div class="navigate_bar_title">
             <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
             黑曜石文档
@@ -126,13 +124,13 @@
     .navigate_bar {
         display: flex;
         position: fixed;
-        background: rgba(200, 200, 200, 0.5);
+        background: rgb(220, 220, 220);
         border: 0;
         width: 100%;
         z-index: 3;
         padding-top: 5px;
         padding-bottom: 5px;
-        box-shadow: 2px 2px 5px 1px rgba(200, 200, 200, 0.7);
+        box-shadow: 2px 2px 5px 1px rgb(200, 200, 200);
     }
 
     .navigate_bar_title {
