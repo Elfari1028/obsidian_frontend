@@ -19,21 +19,20 @@
             <div id="bench_toolbar">
               <div id="toolbar_title">文档操作</div> 
               <el-divider></el-divider>
-              <el-button id="action-button"  type="success" icon="el-icon-lock" @click="updateList">保存文档</el-button>
+              <el-button class="action-button"  type="success" icon="el-icon-lock" @click="updateList">保存文档</el-button>
               <br/>
-            <el-button id="action-button"  type="warning" icon="el-icon-star-off" @click="updateList">收藏文档</el-button>
+            <el-button class="action-button"  type="warning" icon="el-icon-star-off" @click="updateList">收藏文档</el-button>
               <br/>
-            <el-button id="action-button"  type="primary"  icon="el-icon-chat-line-square" @click="openCommentDrawer">评论面板</el-button>        
+            <el-button class="action-button"  type="primary"  icon="el-icon-chat-line-square" @click="openCommentDrawer">评论面板</el-button>        
               <br/>
-              <el-button id="action-button" type="plain" plain icon="el-icon-refresh" @click="updateList">刷新文档</el-button>
+              <el-button class="action-button" type="plain" plain icon="el-icon-refresh" @click="updateList">刷新文档</el-button>
               <br/>
-              <el-button id="action-button"  type="plain" plain icon="el-icon-time" @click="openChangelogDrawer">编辑记录</el-button>
+              <el-button class="action-button"  type="plain" plain icon="el-icon-time" @click="openChangelogDrawer">编辑记录</el-button>
               <br/>
-              <el-button id="action-button" type="warning" plain icon="el-icon-share" @click="updateList">分享链接</el-button>
+              <el-button class="action-button" type="warning" plain icon="el-icon-share" @click="updateList">分享链接</el-button>
               <br/>
-              <el-button id="action-button"  type="warning" plain icon="el-icon-lock" @click="updateList">设置权限</el-button>
-              <br/>
-              <el-button id="action-button"  type="danger" plain icon="el-icon-delete" @click="updateList">删除文件</el-button>
+              <AuthPopupButton />
+              <el-button class="action-button"  type="danger" plain icon="el-icon-delete" @click="updateList">删除文件</el-button>
               <br/>
             </div>
           </el-aside>
@@ -51,6 +50,7 @@ import AsideMenu from "@/components/AsideMenu";
 import DocEditor from "@/components/DocEditor";
 import CommentDrawer from "@/components/CommentDrawer";
 import ChangelogDrawer from "@/components/ChangelogDrawer";
+import AuthPopupButton from "@/components/AuthPopupButton";
 export default {
   name: "DocumentView",
   components: {
@@ -59,6 +59,7 @@ export default {
     DocEditor,
     CommentDrawer: CommentDrawer,
     ChangelogDrawer: ChangelogDrawer,
+    AuthPopupButton,
   },
   data() {
     return {
@@ -101,7 +102,7 @@ export default {
   margin-top: 10px;
 }
 
-#action-button {
+.action-button {
   margin-top: 10px;
   margin-bottom: 10px;
 }
