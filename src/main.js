@@ -12,6 +12,7 @@ import {Message, MessageBox, Loading} from 'element-ui';
 import 'mavon-editor/dist/css/index.css';
 import "element-ui/lib/theme-chalk/index.css";
 import './utils/axiosUtils'
+import './utils/encryptUtils'
 import CKEditor from '@ckeditor/ckeditor5-vue';
 // import {updateStatus} from "@/utils/axiosUtils";
 
