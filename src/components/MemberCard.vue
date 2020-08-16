@@ -1,12 +1,5 @@
 <template>
 	<div id = 'MemberCard' v-bind:style="{width: getWidth()}">
-		<!-- <h1>{{Team_id}}</h1> -->
-		
-		<!-- <el-popover
-			placement="left"
-			width="400"
-			trigger="click"
-			> -->
 		
 			<el-table
 				:data="Member_list"
@@ -61,8 +54,6 @@
 				
 			</el-table>
 	
-			<!-- <el-button slot="reference">团队成员</el-button>
-		</el-popover> -->
 	</div>
 </template>
 
@@ -100,9 +91,9 @@ export default {
 			var _this = this
 			
 			this.$axios
-				.post('退出团队接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: User_id
+				.post('teamwork/remove_member/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: User_id
 				}))
 				.then((response) => {
 					var res = response.data
@@ -133,13 +124,13 @@ export default {
 			console.log('正在获取团队成员')
 			
 			this.$axios
-				.post('获取团队成员接口', JSON.stringify({
+				.post('teamwork/members_in_team/', JSON.stringify({
 					Team_id: _this.Team_id
 				}))
 				.then((response) => {
 					var res = response.data
 					
-					_this.Member_list = res.Member_list
+					_this.Member_list = res.member_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -162,11 +153,11 @@ export default {
 		
 		//获取当前用户id
 		this.$axios
-			.get('获得当前用户id接口')
+			.get('account/my_status/')
 			.then((response) => {
 				var res = response.data
 		
-				_this.User_id = res.User_id
+				_this.User_id = res.user_id
 				if (res.success === false) {
 					this.$message.error(res.exc)
 				}
@@ -178,14 +169,14 @@ export default {
 			
 		//获取身份，设置isAdmin
 		this.$axios
-			.post('获取成员在团队中的身份接口', JSON.stringify({
-				Team_id: _this.Team_id,
-				User_id: _this.User_id
+			.post('account/get_identity_in_team/', JSON.stringify({
+				team_id: _this.Team_id,
+				user_id: _this.User_id
 			}))
 			.then((response) => {
 				var res = response.data
 				
-				if (res.User_status === 0) {
+				if (res.user_status === 0) {
 					_this.isAdmin = true
 				} else {
 					_this.isAdmin = false
