@@ -272,15 +272,16 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('创建团队接口', JSON.stringify({
-					User_id: _this.User_id
+				.post('account/create_team/', JSON.stringify({
+					user_id: _this.User_id,
+					team_name: _this.inputTName
 				}))
 				.then((response) => {
 					var res = response.data
 					
 					if (res.success === true) {
 						_this.$message.success('创建团队成功')
-						_this.$router.push('/TeamSpace/'+res.Team_id)
+						_this.$router.push('/TeamSpace/'+res.team_id)
 					} else {
 						_this.$message.error(res.exc)
 					}
@@ -300,10 +301,10 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('发送邀请接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: _this.inputUID,
-					Inviter_id: _this.User_id
+				.post('teamwork/invite_members/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: _this.inputUID,
+					inviter_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
@@ -329,9 +330,9 @@ export default{
 			var _this = this
 
 			this.$axios
-				.post('申请加入团队接口', JSON.stringify({
-					Team_id: _this.inputTID,
-					User_id: _this.User_id
+				.post('account/apply_to_join/', JSON.stringify({
+					team_id: _this.inputTID,
+					user_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
@@ -355,9 +356,9 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('退出团队接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: _this.User_id
+				.post('teamwork/remove_member/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
@@ -381,8 +382,8 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('解散团队接口', JSON.stringify({
-					Team_id: _this.Team_id,
+				.post('teamwork/disband/', JSON.stringify({
+					team_id: _this.Team_id,
 				}))
 				.then((response) => {
 					var res = response.data
@@ -409,9 +410,10 @@ export default{
 			console.log('同意用户id：' + User_id + '进入团队')
 			
 			this.$axios
-				.post('同意申请接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: User_id
+				.post('teamwork/deal_with_application/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: User_id,
+					accepted: true
 				}))
 				.then((response) => {
 					var res = response.data
@@ -435,9 +437,10 @@ export default{
 			console.log('拒绝用户id：' + User_id + '进入团队')
 			
 			this.$axios
-				.post('拒绝加入申请接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: User_id
+				.post('teamwork/deal_with_application/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: User_id,
+					accepted: false
 				}))
 				.then((response) => {
 					var res = response.data
@@ -459,13 +462,13 @@ export default{
 			console.log('正在获取申请人员列表')
 			
 			this.$axios
-				.post('获得申请加入的人员列表接口', JSON.stringify({
-					Team_id: _this.Team_id
+				.post('teamwork/list_applications/', JSON.stringify({
+					team_id: _this.Team_id
 				}))
 				.then((response) => {
 					var res = response.data
 					
-					_this.ApplyUserData = res.User_list
+					_this.ApplyUserData = res.user_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -482,13 +485,13 @@ export default{
 			console.log('正在获取邀请列表')
 			
 			this.$axios
-				.post('获得邀请列表接口', JSON.stringify({
-					User_id: _this.User_id
+				.post('teamwork/list_my_invitations/', JSON.stringify({
+					user_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
 					
-					_this.invitationData = res.Invitation_list
+					_this.invitationData = res.invitation_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -505,9 +508,10 @@ export default{
 			console.log('接受邀请,进入团队id：' + Team_id)
 			
 			this.$axios
-				.post('接受邀请接口', JSON.stringify({
-					Team_id: Team_id,
-					User_id: _this.User_id
+				.post('account/deal_with_invitation/', JSON.stringify({
+					team_id: Team_id,
+					user_id: _this.User_id,
+					accepted: true
 				}))
 				.then((response) => {
 					var res = response.data
@@ -529,9 +533,10 @@ export default{
 			console.log('拒绝进入团队id：' + Team_id)
 			
 			this.$axios
-				.post('拒绝邀请接口', JSON.stringify({
-					Team_id: Team_id,
-					User_id: _this.User_id
+				.post('account/deal_with_invitation/', JSON.stringify({
+					team_id: Team_id,
+					user_id: _this.User_id,
+					accepted: true
 				}))
 				.then((response) => {
 					var res = response.data
@@ -555,11 +560,11 @@ export default{
 		
 		//获得当前用户id
 		this.$axios
-			.get('获得当前用户id接口')
+			.get('account/my_status/')
 			.then((response) => {
 				var res = response.data
 		
-				_this.User_id = res.User_id
+				_this.User_id = res.user_id
 				if (res.success === false) {
 					_this.$message.error(res.exc)
 				}
@@ -571,14 +576,14 @@ export default{
 			
 		//获取身份，设置isAdmin
 		this.$axios
-			.post('获取成员在团队中的身份接口', JSON.stringify({
-				Team_id: _this.Team_id,
-				User_id: _this.User_id
+			.post('account/get_identity_in_team/', JSON.stringify({
+				team_id: _this.Team_id,
+				user_id: _this.User_id
 			}))
 			.then((response) => {
 				var res = response.data
 				
-				if (res.User_status === 0) {
+				if (res.user_status === 0) {
 					_this.isAdmin = true
 				} else {
 					_this.isAdmin = false

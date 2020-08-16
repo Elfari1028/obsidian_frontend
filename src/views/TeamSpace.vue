@@ -280,12 +280,12 @@
 				var _this = this
 				console.log('正在获取团队文件')
 				this.$axios
-					.post('获取团队文件接口' ,JSON.stringify({
-						Team_id: _this.Team_id
+					.post('doc/list_all_team_docs' ,JSON.stringify({
+						team_id: _this.Team_id
 					}))
 					.then(response => {
 					var res = response.data
-					_this.docList = res.File_list
+					_this.docList = res.doc_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -300,12 +300,12 @@
 				var _this = this
 				console.log('正在获取团队回收站文件')
 				this.$axios
-					.post('获取团队回收站文件接口' ,JSON.stringify({
-						Team_id: _this.Team_id
+					.post('bin/get-team-docs' ,JSON.stringify({
+						team_id: _this.Team_id
 					}))
 					.then(response => {
 					var res = response.data
-					_this.trashList = res.File_list
+					_this.trashList = res.doc_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -387,12 +387,12 @@
 			var _this = this
 			console.log('正在获取团队名称')
 			this.$axios
-				.post('获取团队名称接口', JSON.stringify({
-					Team_id: _this.Team_id
+				.post('teamwork/get_team_name/', JSON.stringify({
+					team_id: _this.Team_id
 				}))
 				.then((response) => {
 					var res = response.data
-					_this.Team_name = res.Team_name
+					_this.Team_name = res.team_name
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)

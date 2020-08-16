@@ -188,7 +188,7 @@
 		-ms-user-select: none;
 		user-select: none;
 		display: block;
-		/* float: left; */
+		float: left;
 		width: 400px;
 		height: 100px;
 		margin: 10px;
