@@ -75,10 +75,10 @@
                     this.$axios.post('account/username_used/', JSON.stringify({username: value}), axiosConfig)
                         .then(res => {
                             console.log(res.data)
-                            if (res.data.success === 0) {
+                            if (res.data.success === true) {
                                 callback()
-                            } else if (res.data.success === 1) {
-                                callback(new Error('用户名已存在'))
+                            } else if (res.data.success === false) {
+                                callback(new Error(res.data.exc))
                             } else {
                                 callback(new Error('未知错误,请联系管理员'))
                             }
@@ -99,16 +99,10 @@
                 this.$axios.post('account/email_used/', JSON.stringify({email: value}), axiosConfig)
                     .then(res => {
                         console.log(res.data)
-                        switch (res.data.success) {
-                            case 0:
-                                callback()
-                                break
-                            case 1:
-                                callback(new Error('邮箱已存在'))
-                                break
-                            default:
-                                callback(new Error(res.data.exec))
+                        if(res.data.success === true){
+                            callback();
                         }
+                        else callback(new Error("res.data.exc"));
                     })
                     .catch(err => {
                         console.log(err)
