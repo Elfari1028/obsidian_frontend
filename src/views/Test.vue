@@ -2,23 +2,17 @@
 	<div id = 'Test'>
 		<p>This is page is for testing.</p>
 		
-		<MenuBar/>
-		
-		
-		<br><br><br><br>
-		<SearchResult></SearchResult>
+		<GroupInit></GroupInit>
 	</div>
 </template>
 
 <script>
-import SearchResult from '../components/SearchResult.vue'
-import MenuBar from "../components/MenuBar.vue"
+import GroupInit from '../components/GroupInit.vue'	
 	
 export default {
 	name: 'Test',
 	components: {
-		SearchResult,
-		MenuBar
+		GroupInit
 	}
 }
 </script>

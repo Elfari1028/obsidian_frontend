@@ -58,19 +58,19 @@
 				
 					<el-table-column
 						label="团队名称"
-						prop="Team_name"
+						prop="team_name"
 						width="100px"
 						>
 					</el-table-column>
 					<el-table-column
 						label="团队ID"
-						prop="Team_id"
+						prop="team_id"
 						width="100px"
 						>
 					</el-table-column>
 					<el-table-column
 						label="邀请人"
-						prop="User_name"
+						prop="user_name"
 						width="100px"
 						>
 					</el-table-column>
@@ -82,12 +82,12 @@
 							<el-button
 								size="mini"
 								type="success"
-								@click='agreeInvitation(scope.row.Team_id)'
+								@click='agreeInvitation(scope.row.team_id)'
 								>接受邀请</el-button>
 							<el-button
 								size="mini"
 								type="danger"
-								@click='rejectInvitation(scope.row.Team_id)'
+								@click='rejectInvitation(scope.row.team_id)'
 								>拒绝邀请</el-button>
 						</template>
 					</el-table-column>
@@ -154,7 +154,7 @@
 				
 						<template slot-scope="scope">
 							<el-avatar >
-								<img :src="scope.row.User_avatar" style="width: 100%; height: 100%;">
+								<img :src="scope.row.user_avatar" style="width: 100%; height: 100%;">
 							</el-avatar>
 						</template>
 				
@@ -163,7 +163,7 @@
 					<el-table-column
 						label="昵称"
 						width="80px"
-						prop="User_name"
+						prop="user_name"
 						>
 					</el-table-column>
 					
@@ -176,12 +176,12 @@
 							<el-button
 								size="mini"
 								type="success"
-								@click='allowMember(scope.row.User_id)'
+								@click='allowMember(scope.row.user_id)'
 								>允许加入</el-button>
 							<el-button
 								size="mini"
 								type="danger"
-								@click='denyMember(scope.row.User_id)'
+								@click='denyMember(scope.row.user_id)'
 								>拒绝加入</el-button>
 						</template>
 					</el-table-column>
@@ -221,7 +221,7 @@ export default{
 	data () {
 		return {
 			isAdmin: true,
-			User_id: '',
+			User_id: -1,
 			inputUID: '',
 			inputTID: '',
 			inputTName: '',
@@ -230,30 +230,8 @@ export default{
 			visible3: false,
 			visible4: false,
 			visible5: false,
-			ApplyUserData: [
-				{
-					User_id: 1,
-					User_avatar: require('../assets/loading/avatar/1.jpg'),
-					User_name: 'Song'
-				},
-				{
-					User_id: 2,
-					User_avatar: require('../assets/loading/avatar/2.jpg'),
-					User_name: 'Never'
-				}
-			],
-			invitationData: [
-				{
-					Team_name: '前端团队',
-					Team_id: 321,
-					User_name: '张三'
-				},
-				{
-					Team_name: '火锅小分队',
-					Team_id: 897,
-					User_name: '李四'
-				}
-			]
+			ApplyUserData: [],
+			invitationData: []
 		}
 	},
 	methods: {
@@ -272,15 +250,16 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('创建团队接口', JSON.stringify({
-					User_id: _this.User_id
+				.post('account/create_team/', JSON.stringify({
+					user_id: _this.User_id,
+					team_name: _this.inputTName
 				}))
 				.then((response) => {
 					var res = response.data
 					
 					if (res.success === true) {
 						_this.$message.success('创建团队成功')
-						_this.$router.push('/TeamSpace/'+res.Team_id)
+						_this.$router.push('/TeamSpace/'+res.team_id)
 					} else {
 						_this.$message.error(res.exc)
 					}
@@ -300,10 +279,10 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('发送邀请接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: _this.inputUID,
-					Inviter_id: _this.User_id
+				.post('teamwork/invite_members/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: parseInt(_this.inputUID),
+					inviter_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
@@ -329,9 +308,9 @@ export default{
 			var _this = this
 
 			this.$axios
-				.post('申请加入团队接口', JSON.stringify({
-					Team_id: _this.inputTID,
-					User_id: _this.User_id
+				.post('account/apply_to_join/', JSON.stringify({
+					team_id: parseInt(_this.inputTID),
+					user_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
@@ -355,9 +334,9 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('退出团队接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: _this.User_id
+				.post('teamwork/remove_member/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
@@ -381,8 +360,8 @@ export default{
 			var _this = this
 			
 			this.$axios
-				.post('解散团队接口', JSON.stringify({
-					Team_id: _this.Team_id,
+				.post('teamwork/disband/', JSON.stringify({
+					team_id: _this.Team_id,
 				}))
 				.then((response) => {
 					var res = response.data
@@ -409,9 +388,10 @@ export default{
 			console.log('同意用户id：' + User_id + '进入团队')
 			
 			this.$axios
-				.post('同意申请接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: User_id
+				.post('teamwork/deal_with_application/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: User_id,
+					accepted: true
 				}))
 				.then((response) => {
 					var res = response.data
@@ -435,9 +415,10 @@ export default{
 			console.log('拒绝用户id：' + User_id + '进入团队')
 			
 			this.$axios
-				.post('拒绝加入申请接口', JSON.stringify({
-					Team_id: _this.Team_id,
-					User_id: User_id
+				.post('teamwork/deal_with_application/', JSON.stringify({
+					team_id: _this.Team_id,
+					user_id: User_id,
+					accepted: false
 				}))
 				.then((response) => {
 					var res = response.data
@@ -459,13 +440,13 @@ export default{
 			console.log('正在获取申请人员列表')
 			
 			this.$axios
-				.post('获得申请加入的人员列表接口', JSON.stringify({
-					Team_id: _this.Team_id
+				.post('teamwork/list_applications/', JSON.stringify({
+					team_id: _this.Team_id
 				}))
 				.then((response) => {
 					var res = response.data
 					
-					_this.ApplyUserData = res.User_list
+					_this.ApplyUserData = res.user_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -482,13 +463,13 @@ export default{
 			console.log('正在获取邀请列表')
 			
 			this.$axios
-				.post('获得邀请列表接口', JSON.stringify({
-					User_id: _this.User_id
+				.post('teamwork/list_my_invitations/', JSON.stringify({
+					user_id: _this.User_id
 				}))
 				.then((response) => {
 					var res = response.data
 					
-					_this.invitationData = res.Invitation_list
+					_this.invitationData = res.invitation_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -505,9 +486,10 @@ export default{
 			console.log('接受邀请,进入团队id：' + Team_id)
 			
 			this.$axios
-				.post('接受邀请接口', JSON.stringify({
-					Team_id: Team_id,
-					User_id: _this.User_id
+				.post('account/deal_with_invitation/', JSON.stringify({
+					team_id: Team_id,
+					user_id: _this.User_id,
+					accepted: true
 				}))
 				.then((response) => {
 					var res = response.data
@@ -529,9 +511,10 @@ export default{
 			console.log('拒绝进入团队id：' + Team_id)
 			
 			this.$axios
-				.post('拒绝邀请接口', JSON.stringify({
-					Team_id: Team_id,
-					User_id: _this.User_id
+				.post('account/deal_with_invitation/', JSON.stringify({
+					team_id: Team_id,
+					user_id: _this.User_id,
+					accepted: false
 				}))
 				.then((response) => {
 					var res = response.data
@@ -555,43 +538,44 @@ export default{
 		
 		//获得当前用户id
 		this.$axios
-			.get('获得当前用户id接口')
+			.get('account/my_status/')
 			.then((response) => {
 				var res = response.data
 		
-				_this.User_id = res.User_id
+				_this.User_id = res.user_id
 				if (res.success === false) {
 					_this.$message.error(res.exc)
 				}
+				
+				//获取身份，设置isAdmin
+				this.$axios
+					.post('account/get_identity_in_team/', JSON.stringify({
+						team_id: _this.Team_id,
+						user_id: _this.User_id
+					}))
+					.then((response) => {
+						var res = response.data
+						
+						if (res.user_status === 0) {
+							_this.isAdmin = true
+						} else {
+							_this.isAdmin = false
+						}
+						
+						if (res.success === false) {
+							_this.$message.error(res.exc)
+						}
+					})
+					.catch(err => {
+						_this.$message.error('获取成员在团队中的身份出了点问题')
+						console.log(err)
+					})
 			})
 			.catch(err => {
 				_this.$message.error('获得当前用户id接口出了点问题')
 				console.log(err)
 			})
 			
-		//获取身份，设置isAdmin
-		this.$axios
-			.post('获取成员在团队中的身份接口', JSON.stringify({
-				Team_id: _this.Team_id,
-				User_id: _this.User_id
-			}))
-			.then((response) => {
-				var res = response.data
-				
-				if (res.User_status === 0) {
-					_this.isAdmin = true
-				} else {
-					_this.isAdmin = false
-				}
-				
-				if (res.success === false) {
-					_this.$message.error(res.exc)
-				}
-			})
-			.catch(err => {
-				_this.$message.error('获取成员在团队中的身份出了点问题')
-				console.log(err)
-			})
 	}
 }
 </script>

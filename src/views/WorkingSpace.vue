@@ -22,38 +22,7 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
-						
-                        <el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
-							
-                            <div slot="header" style="height: 10px">
-                                <i class="el-icon-document" style="float: left"></i>
-                                <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
-                                <el-dropdown trigger="click" style="float: right">
-                                    <span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
-                                        <i class="el-icon-more"></i>
-                                    </span>
-                                    <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
-                                        </el-dropdown-item>
-                                        <el-dropdown-item @click.native="delDocument(doc.doc_id)"
-                                                          style="color: #ff0000">删除
-                                        </el-dropdown-item>
-                                        <el-dropdown-item @click.native="shareDocument(doc.doc_id)">分享
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </div>
-							
-                            <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
-                                <span class="card_body_font card_body">
-                                    {{doc.workspace}}
-                                </span>
-                                <span class="card_time_font card_body">
-                                    最后修改于：{{doc.time}}
-                                </span>
-                            </div>
-							
-                        </el-card>
+                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
@@ -97,15 +66,15 @@
     import AsideMenu from "@/components/AsideMenu";
     import CreateDocPopup from "@/components/CreateDocPopup"
     import $ from 'jquery'
+    import DocumentCard from "@/components/DocumentCard";
 
     export default {
         name: "WorkingSpace",
-        components: {AsideMenu, MenuBar,"CreateDocPopup":CreateDocPopup},
+        components: {DocumentCard, AsideMenu, MenuBar,"CreateDocPopup":CreateDocPopup},
         data() {
             return {
                 isScreenWide: false,
                 dialogVisible: false,
-                shareUrl: '',
                 isLoading: false,
                 spaceHeight: window.innerHeight - 80 + 'px',
                 docList: []
@@ -140,45 +109,6 @@
                     }
                     this.isLoading = false;
                 })
-            },
-            toDocument(doc_id) {
-                console.log(doc_id)
-                this.$router.push({
-                    path: '/document/'+doc_id
-                })
-            },
-            delDocument(doc_id) {
-                console.log(doc_id)
-                this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id})).then(res => {
-                    if (res.data.success === 0) {
-                        this.$alert("文件已移入回收站")
-                    } else {
-                        this.$alert(res.data.exec)
-                    }
-                })
-            },
-            shareDocument(doc_id) {
-                console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
-                    if (res.data.success === 0) {
-                        this.shareUrl = res.data.url;
-                        this.dialogVisible = true;
-                    }
-                }).catch(err => {
-                    console.log(err)
-                    this.shareUrl = 'TEST_URL'
-                    this.dialogVisible = true;
-                })
-            },
-            copyUrl() {
-                const e = document.getElementById('url_input');
-                e.select();
-                document.execCommand("Copy");
-
-                this.$message({
-                    message: "链接已复制成功",
-                    type: 'warning'
-                });
             },
 			sortDocList: function (list, method) {
 				if (method === 'titleDown') {
@@ -269,55 +199,9 @@
         padding: 10px;
     }
 
-    .doc_item {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        display: block;
-        float: left;
-        width: 45%;
-        height: 100px;
-        margin: 10px;
-    }
-
-    .card_header_font {
-        cursor: pointer;
-        font-size: 16px;
-        color: dimgray;
-    }
-
-    .card_body {
-        display: block;
-        margin: 5px;
-    }
-
-    .card_time_font {
-        font-size: 10px;
-        color: dimgray;
-    }
-
-    .card_body_font {
-        color: dimgray;
-    }
-
     .list_empty_notice{
         color: darkgrey;
         height: inherit;
         padding-top: 20%;
-    }
-</style>
-
-<style>
-    .el-card__body {
-        padding: 8px 5px !important;
-    }
-
-    .el-card__header {
-        padding: 15px !important;
-    }
-
-    body .el-scrollbar__wrap {
-        overflow-x: hidden;
     }
 </style>

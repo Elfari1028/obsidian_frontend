@@ -22,32 +22,7 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
-                        <el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
-                            <div slot="header" style="height: 10px">
-                                <i class="el-icon-document" style="float: left"></i>
-                                <span class="card_header_font">{{doc.title}}</span>
-                                <el-dropdown trigger="click" style="float: right">
-                                    <span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
-                                        <i class="el-icon-more"></i>
-                                    </span>
-                                    <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item @click.native="restoreDocument(doc.doc_id)">恢复
-                                        </el-dropdown-item>
-                                        <el-dropdown-item @click.native="delDocument(doc.doc_id)"
-                                                          style="color: #ff0000">删除
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </div>
-                            <div>
-                                <span class="card_body_font card_body">
-                                    {{doc.workspace}}
-                                </span>
-								<span class="card_time_font card_body">
-									最后修改于：{{doc.time}}
-								</span>
-                            </div>
-                        </el-card>
+                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isTrash'"/>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
@@ -89,16 +64,16 @@
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
     import $ from 'jquery'
+    import DocumentCard from "@/components/DocumentCard";
 
     export default {
         name: "TrashCan",
-        components: {AsideMenu, MenuBar},
+        components: {DocumentCard, AsideMenu, MenuBar},
         data() {
             return {
                 isScreenWide: false,
                 dialogVisible: false,
                 isLoading: false,
-                shareUrl: '',
                 spaceHeight: window.innerHeight - 80 + 'px',
                 docList: []
             }
@@ -129,64 +104,6 @@
                     }
                     this.isLoading = false;
                 })
-            },
-            restoreDocument(doc_id) {
-                console.log(doc_id)
-                this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id})).then(res => {
-                    if (res.data.success === 0) {
-                        this.$alert("文件已恢复")
-                    } else {
-                        this.$alert(res.data.exec)
-                    }
-                })
-            },
-            delDocument(doc_id) {
-                console.log(doc_id)
-                this.$confirm('此操作将永久删除文档，是否继续？', '警告', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: "warning"
-                }).then(() => {
-                    this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id})).then(res => {
-                        if (res.data.success === 0) {
-                            this.$alert("文件已删除")
-                        } else {
-                            this.$alert(res.data.exec)
-                        }
-                    }).catch(err => {
-                        console.log(err)
-                        this.$alert('网络出现了点问题')
-                    })
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                })
-
-            },
-            shareDocument(doc_id) {
-                console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
-                    if (res.data.success === 0) {
-                        this.shareUrl = res.data.url;
-                        this.dialogVisible = true;
-                    }
-                }).catch(err => {
-                    console.log(err)
-                    this.shareUrl = 'TEST_URL'
-                    this.dialogVisible = true;
-                })
-            },
-            copyUrl() {
-                const e = document.getElementById('url_input');
-                e.select();
-                document.execCommand("Copy");
-
-                this.$message({
-                    message: "链接已复制成功",
-                    type: 'warning'
-                });
             },
 			sortDocList: function (list, method) {
 				if (method === 'titleDown') {
@@ -277,54 +194,9 @@
         padding: 10px;
     }
 
-    .doc_item {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        display: block;
-        float: left;
-        width: 45%;
-        height: 100px;
-        margin: 10px;
-    }
-
-    .card_header_font {
-        font-size: 16px;
-        color: dimgray;
-    }
-
-    .card_body {
-        display: block;
-        margin: 5px;
-    }
-
-    .card_body_font {
-        color: dimgray;
-    }
-	
-	.card_time_font {
-		font-size: 10px;
-		color: dimgray;
-	}
-
     .list_empty_notice{
         color: darkgrey;
         height: inherit;
         padding-top: 20%;
-    }
-</style>
-
-<style>
-    .el-card__body {
-        padding: 8px 5px !important;
-    }
-
-    .el-card__header {
-        padding: 15px !important;
-    }
-
-    body .el-scrollbar__wrap {
-        overflow-x: hidden;
     }
 </style>

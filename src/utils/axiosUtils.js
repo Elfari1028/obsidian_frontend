@@ -1,17 +1,9 @@
 import axios from 'axios'
 import store from "@/vuex/store";
-
-export const baseUrl = 'http://127.0.0.1:8000/'
-const infoUrl = baseUrl + 'account/my_status/'
-
-export const axiosConfig = {
-    headers: {
-        'Content-Type': 'application/json;charset=UTF-8'
-    }
-}
+import config from "@/config.js"
 
 export function updateStatus() {
-    axios.post(infoUrl).then(res => {
+    axios.post(config.infoUrl).then(res => {
         console.log(res.data)
         if (!res.data.success) {
             console.log("未登录")
@@ -25,7 +17,7 @@ export function updateStatus() {
             axios.get('account/get_avatar/').then(result => {
                 store.dispatch("userInfo",{
                     username: res.data.username,
-                    avatarUrl: baseUrl.substring(0, baseUrl.length - 1) + result.data.url
+                    avatarUrl: config.baseUrl.substring(0, config.baseUrl.length - 1) + result.data.url
                 })
             })
             console.log("检测:"+store.getters.getUsername)

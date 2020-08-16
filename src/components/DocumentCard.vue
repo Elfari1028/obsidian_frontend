@@ -1,15 +1,27 @@
 <template>
-	<div>
+    <div>
+        <el-dialog
+                title="分享文件"
+                :append-to-body="true"
+                :visible.sync="dialogVisible"
+                width="500px">
+            <el-input v-model="shareUrl" readonly="true" id="url_input">
+                <template slot="prepend">URL:</template>
+                <el-button slot="append" icon="el-icon-document" @click="copyUrl()"></el-button>
+            </el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-card class="doc_item">
 
-		<el-card class="doc_item">
+            <div slot="header" style="height: 10px">
+                <i class="el-icon-document" style="float: left"></i>
 
-			<div slot="header" style="height: 10px">
-				<i class="el-icon-document" style="float: left"></i>
+                <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
 
-				<span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
+                <el-dropdown trigger="click" style="float: right">
 
-				<el-dropdown trigger="click" style="float: right">
-					
 					<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
 						<i class="el-icon-more"></i>
 					</span>
@@ -57,14 +69,14 @@
 				<span class="card_body_font card_body">
 					{{doc.workspace}}
 				</span>
-				<span class="card_time_font card_body">
+                <span class="card_time_font card_body">
 					最后修改于：{{doc.time}}
 				</span>
-			</div>
+            </div>
 
-		</el-card>
+        </el-card>
 
-	</div>
+    </div>
 </template>
 
 <script>
@@ -76,21 +88,22 @@
     import config from "@/config";
 
     export default {
-        name: 'ResultCard',
+        name: 'DocumentCard',
         props: {
             docType: String,
             doc: Object,
         },
-        data() {
+        data () {
             return {
                 isDefault: false,
                 isCollection: false,
                 isHistory: false,
-                isTrash: false
+                isTrash: false,
+                shareUrl: ''
             }
         },
         mounted() {
-            console.log("docType in card " + this.docType)
+            console.log("docType in card "+this.docType)
 
             if (this.docType === 'isCollection') {
                 this.isCollection = true
@@ -106,7 +119,7 @@
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: '/document/' + doc_id
+                    path: '/document/'+doc_id
                 })
             },
             delCollection(doc_id) {
@@ -177,39 +190,63 @@
                 })
 
             },
+            copyUrl() {
+                const e = document.getElementById('url_input');
+                e.select();
+                document.execCommand("Copy");
+
+                this.$message({
+                    message: "链接已复制成功",
+                    type: 'warning'
+                });
+            },
         }
     }
 </script>
 
 <style scoped>
-	.doc_item {
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		user-select: none;
-		display: block;
-		float: left;
-		width: 400px;
-		height: 100px;
-		margin: 10px;
-	}
-	.card_header_font {
-		cursor: pointer;
-		font-size: 16px;
-		color: dimgray;
-	}
+    .doc_item {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        display: block;
+        float: left;
+        width: 45%;
+        height: 100px;
+        margin: 10px;
+    }
+    .card_header_font {
+        cursor: pointer;
+        font-size: 16px;
+        color: dimgray;
+    }
 
-	.card_body {
-		display: block;
-		margin: 5px;
-	}
+    .card_body {
+        display: block;
+        margin: 5px;
+    }
 
-	.card_time_font {
-		font-size: 10px;
-		color: dimgray;
-	}
+    .card_time_font {
+        font-size: 10px;
+        color: dimgray;
+    }
 
-	.card_body_font {
-		color: dimgray;
-	}
+    .card_body_font {
+        color: dimgray;
+    }
+</style>
+
+<style>
+    .el-card__body {
+        padding: 8px 5px !important;
+    }
+
+    .el-card__header {
+        padding: 15px !important;
+    }
+
+    body .el-scrollbar__wrap {
+        overflow-x: hidden;
+    }
 </style>

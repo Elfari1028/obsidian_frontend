@@ -147,6 +147,7 @@
 	import MemberCard from "@/components/MemberCard.vue"
 	import GroupManage from "@/components/GroupManage.vue"
 	import $ from 'jquery'
+	import config from "@/config";
 	
 	export default {
 		name: "TeamSpace",
@@ -154,7 +155,7 @@
 		inject:['reload'],
 		data() {
 			return {
-				Team_id: '',
+				Team_id: -1,
 				Team_name: '火锅小分队',
 				isScreenWide: false,
 				dialogVisible: false,
@@ -234,7 +235,7 @@
 			},
 			delDocument(doc_id) {
 				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
 					if (res.data.success === 0) {
 						this.$alert("文件已移入回收站")
 					} else {
@@ -244,7 +245,7 @@
 			},
 			restoreDocument(doc_id) {
 				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
 					if (res.data.success === 0) {
 						this.$alert("文件已恢复")
 					} else {
@@ -254,7 +255,7 @@
 			},
 			shareDocument(doc_id) {
 				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id})).then(res => {
+				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
 					if (res.data.success === 0) {
 						this.shareUrl = res.data.url;
 						this.dialogVisible = true;
@@ -279,12 +280,12 @@
 				var _this = this
 				console.log('正在获取团队文件')
 				this.$axios
-					.post('获取团队文件接口' ,JSON.stringify({
-						Team_id: _this.Team_id
+					.post('doc/list_all_team_docs' ,JSON.stringify({
+						team_id: _this.Team_id
 					}))
 					.then(response => {
 					var res = response.data
-					_this.docList = res.File_list
+					_this.docList = res.doc_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -299,12 +300,12 @@
 				var _this = this
 				console.log('正在获取团队回收站文件')
 				this.$axios
-					.post('获取团队回收站文件接口' ,JSON.stringify({
-						Team_id: _this.Team_id
+					.post('bin/get-team-docs' ,JSON.stringify({
+						team_id: _this.Team_id
 					}))
 					.then(response => {
 					var res = response.data
-					_this.trashList = res.File_list
+					_this.trashList = res.doc_list
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -386,12 +387,12 @@
 			var _this = this
 			console.log('正在获取团队名称')
 			this.$axios
-				.post('获取团队名称接口', JSON.stringify({
-					Team_id: _this.Team_id
+				.post('teamwork/get_team_name/', JSON.stringify({
+					team_id: _this.Team_id
 				}))
 				.then((response) => {
 					var res = response.data
-					_this.Team_name = res.Team_name
+					_this.Team_name = res.team_name
 					
 					if (res.success === false) {
 						_this.$message.error(res.exc)
@@ -498,18 +499,4 @@
 		padding: 10px;
 	}
 
-</style>
-
-<style>
-    .el-card__body {
-        padding: 8px 5px !important;
-    }
-
-    .el-card__header {
-        padding: 15px !important;
-    }
-
-    body .el-scrollbar__wrap {
-        overflow-x: hidden;
-    }
 </style>

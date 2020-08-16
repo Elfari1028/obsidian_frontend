@@ -74,7 +74,7 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
-    import {baseUrl} from "@/utils/axiosUtils";
+    import config from "@/config";
 
     export default {
         name: "UserCenter",
@@ -129,7 +129,7 @@
             this.isLoading = true
             await this.$axios.get('account/get_avatar/').then(res => {
                 if (res.data.success) {
-                    this.userInfo.avatarUrl = baseUrl.substring(0, baseUrl.length - 1) + res.data.url
+                    this.userInfo.avatarUrl = config.baseUrl.substring(0, config.baseUrl.length - 1) + res.data.url
                 } else {
                     this.userInfo.avatarUrl = ''
                 }
