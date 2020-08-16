@@ -8,9 +8,9 @@
 			z-index="2"
 			size="450px"
 			>
-		
+
 			<SearchResult :docList='resultList' :docType='docType'></SearchResult>
-		
+
 		</el-drawer>
         <div class="navigate_bar_title">
             <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
@@ -27,7 +27,7 @@
             <span style="width: 16px"></span>
             <NoticeBox class="navigate_bar_function_item"/>
             <span style="width: 10px"></span>
-            <div class="menubar_username navigate_bar_function_item">
+            <div class="menubar_username navigate_bar_function_item" @click="toUserCenter">
                 <el-avatar :size="'small'"
                            :src="avatarUrl"
                            style="font-size: 30px;vertical-align: middle;margin-right: 10px"></el-avatar>
@@ -57,44 +57,49 @@
         data() {
             return {
                 searchKeywords: "",
-				visible: false,
-				resultList: [],
-				spaceType: ''
+                visible: false,
+                resultList: [],
+                spaceType: ''
             };
         },
         created() {
             updateStatus()
-			
-			if (this.docType === 'isDefault'){
-				this.spaceType = '工作台中'
-			} else if (this.docType === 'isCollection'){
-				this.spaceType = '收藏夹中'
-			} else if (this.docType === 'isTrash'){
-				this.spaceType = '回收站中'
-			} else if (this.docType === 'isHistory'){
-				this.spaceType = '浏览历史中'
-			}
+
+            if (this.docType === 'isDefault') {
+                this.spaceType = '工作台中'
+            } else if (this.docType === 'isCollection') {
+                this.spaceType = '收藏夹中'
+            } else if (this.docType === 'isTrash') {
+                this.spaceType = '回收站中'
+            } else if (this.docType === 'isHistory') {
+                this.spaceType = '浏览历史中'
+            }
         },
         computed: {
-            username(){
+            username() {
                 return this.$store.getters.getUsername
             },
-            avatarUrl(){
+            avatarUrl() {
                 return this.$store.getters.getUserAvatar
             }
         },
         methods: {
+            toUserCenter() {
+                this.$router.push({
+                    name: 'UserCenter'
+                })
+            },
             submitSearch: function () {
                 console.log('正在搜索' + this.searchKeywords);
-				this.resultList = []
-				
-				for (let i = 0; i < this.docList.length; i++) {
-					if ( this.docList[i].title.indexOf(this.searchKeywords) != -1 ) {
-						this.resultList.push(this.docList[i])
-					}
-				}
-				
-				this.visible = true
+                this.resultList = []
+
+                for (let i = 0; i < this.docList.length; i++) {
+                    if (this.docList[i].title.indexOf(this.searchKeywords) != -1) {
+                        this.resultList.push(this.docList[i])
+                    }
+                }
+
+                this.visible = true
             },
         },
         watch: {
@@ -102,23 +107,23 @@
                 this.username = this.$store.getters.getUsername;
                 this.avatarUrl = this.$store.getters.getUserAvatar;
             },
-			docType() {
-				if (this.docType === 'isDefault'){
-					this.spaceType = '工作台中'
-				} else if (this.docType === 'isCollection'){
-					this.spaceType = '收藏夹中'
-				} else if (this.docType === 'isTrash'){
-					this.spaceType = '回收站中'
-				} else if (this.docType === 'isHistory'){
-					this.spaceType = '浏览历史中'
-				}
-			}
+            docType() {
+                if (this.docType === 'isDefault') {
+                    this.spaceType = '工作台中'
+                } else if (this.docType === 'isCollection') {
+                    this.spaceType = '收藏夹中'
+                } else if (this.docType === 'isTrash') {
+                    this.spaceType = '回收站中'
+                } else if (this.docType === 'isHistory') {
+                    this.spaceType = '浏览历史中'
+                }
+            }
         }
     };
 </script>
 
 <style>
-    .navigate_bar_function_item{
+    .navigate_bar_function_item {
     }
 
     .navigate_bar {
