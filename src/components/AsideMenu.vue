@@ -34,18 +34,13 @@
                         <el-menu-item v-bind:index="'/TeamSpace/'+Team.Team_id">{{ Team.Team_name }}</el-menu-item>
 					</span>
 					
-                    <span v-if="Team_list.length===0">
-						
-						<el-popover
-							placement="right"
-							trigger="click"
-							>
-							
-							<GroupInit></GroupInit>
-							
-							<el-button slot="reference" size="small">加入新团队</el-button>
-							
-						</el-popover>
+                    <span v-if="Team_list.length===0" style="margin-bottom: 10px">
+                            <el-popover placement="right" trigger="manual" v-model="visible">
+                                <GroupInit></GroupInit>
+                                <el-menu-item slot="reference" size="small" @click="visible = !visible">
+                                    <i class="el-icon-plus" style="font-size: 10px"></i>加入新团队
+                                </el-menu-item>
+                            </el-popover>
 					</span>
 					
                 </el-menu-item-group>
@@ -88,6 +83,7 @@
 				],
 				User_id: '',
 				isLoading: false,
+                visible: false
 			}
 		},
         methods: {
