@@ -13,7 +13,7 @@
 
 					<template slot-scope="scope">
 						<el-avatar >
-							<img :src="scope.row.User_avatar" style="width: 100%; height: 100%;">
+							<img :src="scope.row.user_avatar" style="width: 100%; height: 100%;">
 						</el-avatar>
 					</template>
 
@@ -22,14 +22,14 @@
 				<el-table-column
 					label="昵称"
 					width="80px"
-					prop="User_name"
+					prop="user_name"
 					>
 				</el-table-column>
 				
 				<el-table-column
 					label="身份"
 					width="80px"
-					prop="User_status"
+					prop="user_status"
 					>
 				</el-table-column>
 				
@@ -42,7 +42,7 @@
 
 					<el-popconfirm
 						title="确定踢出该队员吗？"
-						@onConfirm="deleteMember(scope.row.User_id)"
+						@onConfirm="deleteMember(scope.row.user_id)"
 						>
 						
 						<el-button slot="reference" type="danger" size="mini">踢出</el-button>
@@ -70,18 +70,8 @@ export default {
 	data () {
 		return {
 			isAdmin: true,
-			User_id: '',
-			Member_list: [{
-				User_id: 1,
-				User_avatar: require('../assets/loading/avatar/1.jpg'),
-				User_name: 'Song',
-				User_status: '管理员'
-			}, {
-				User_id: 2,
-				User_avatar: require('../assets/loading/avatar/2.jpg'),
-				User_name: 'Never',
-				User_status: '成员'
-			}]
+			User_id: -1,
+			Member_list: []
 		}
 	},
 	methods: {
@@ -125,11 +115,11 @@ export default {
 			
 			this.$axios
 				.post('teamwork/members_in_team/', JSON.stringify({
-					Team_id: _this.Team_id
+					team_id: _this.Team_id
 				}))
 				.then((response) => {
 					var res = response.data
-					
+					console.log(res)
 					_this.Member_list = res.member_list
 					
 					if (res.success === false) {
@@ -156,40 +146,42 @@ export default {
 			.get('account/my_status/')
 			.then((response) => {
 				var res = response.data
-		
 				_this.User_id = res.user_id
 				if (res.success === false) {
 					this.$message.error(res.exc)
 				}
+				
+				//获取身份，设置isAdmin
+				this.$axios
+					.post('account/get_identity_in_team/', JSON.stringify({
+						team_id: _this.Team_id,
+						user_id: _this.User_id
+					}))
+					.then((response) => {
+						var res = response.data
+						
+						if (res.user_status === 0) {
+							_this.isAdmin = true
+						} else {
+							_this.isAdmin = false
+						}
+						
+						if (res.success === false) {
+							this.$message.error(res.exc)
+						}
+					})
+					.catch(err => {
+						_this.$message.error('获取成员在团队中的身份出了点问题')
+						console.log(err)
+					})
+					
 			})
 			.catch(err => {
 				_this.$message.error('获得当前用户id接口出了点问题')
 				console.log(err)
 			})
 			
-		//获取身份，设置isAdmin
-		this.$axios
-			.post('account/get_identity_in_team/', JSON.stringify({
-				team_id: _this.Team_id,
-				user_id: _this.User_id
-			}))
-			.then((response) => {
-				var res = response.data
-				
-				if (res.user_status === 0) {
-					_this.isAdmin = true
-				} else {
-					_this.isAdmin = false
-				}
-				
-				if (res.success === false) {
-					this.$message.error(res.exc)
-				}
-			})
-			.catch(err => {
-				_this.$message.error('获取成员在团队中的身份出了点问题')
-				console.log(err)
-			})
+		
 	}
 }
 </script>

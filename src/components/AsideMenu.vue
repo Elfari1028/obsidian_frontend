@@ -31,7 +31,7 @@
                 <el-menu-item-group v-loading="isLoading">
                     <div v-if="isLoading" style="height: 50px;width: 100%"></div>
                     <span v-for="Team in Team_list" :key=Team.Team_id>
-                        <el-menu-item v-bind:index="'/TeamSpace/'+Team.Team_id">{{ Team.Team_name }}</el-menu-item>
+                        <el-menu-item v-bind:index="'/TeamSpace/'+Team.team_id">{{ Team.team_name }}</el-menu-item>
 					</span>
 					
                     <span v-if="Team_list.length===0">
@@ -77,14 +77,14 @@
 		data () {
 			return {
 				Team_list: [
-					// {
-					// 	Team_id: 123,
-					// 	Team_name: '火锅小分队'
-					// },
-					// {
-					// 	Team_id: 234,
-					// 	Team_name: '烧烤小分队'
-					// }
+					{
+						Team_id: 123,
+						Team_name: '火锅小分队'
+					},
+					{
+						Team_id: 234,
+						Team_name: '烧烤小分队'
+					}
 				],
 				User_id: '',
 				isLoading: false,
@@ -123,7 +123,7 @@
 				
 			},*/
 			getTeamList() {
-                console.log('bing')
+                console.log('获取团队列表')
                 this.isLoading = true
                 this.$axios.get('account/get_my_teams/').then(res => {
                     console.log(res.data)
