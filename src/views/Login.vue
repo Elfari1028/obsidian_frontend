@@ -60,6 +60,7 @@
     import MenuBar from "../components/MenuBar";
     import {updateStatus} from "@/utils/axiosUtils"
     import config from "@/config"
+    import {encryption} from "@/utils/encryptUtils"
     //import {getToken} from "../utils/auth";
 
     export default {
@@ -123,6 +124,15 @@
                     email: '',
                     password: ''
                 },
+                encryptLogin: {
+                    email: '',
+                    password: ''
+                },
+                encryptRegister: {
+                    username: '',
+                    email: '',
+                    password: '',
+                },
                 registerForm: {
                     username: '',
                     email: '',
@@ -153,9 +163,11 @@
             }
         },
         methods: {
+
             submitLogin: function () {
-                console.log(this.loginForm)
-                this.$axios.post('account/login1/', JSON.stringify(this.loginForm), config.axiosHeaders)
+                encryption(this.loginForm,this.encryptLogin)
+                console.log(this.encryptLogin)
+                this.$axios.post('account/login1/', JSON.stringify(this.encryptLogin), config.axiosHeaders)
                     .then(res => {
                         console.log(res.data)
                         if (!res.data.success) {
@@ -172,14 +184,15 @@
                 console.log(this.registerForm)
                 this.$refs['registerForm'].validate(valid => {
                     if (valid) {
-                        this.$axios.post('account/register1/', JSON.stringify(this.registerForm), config.axiosHeaders)
+                        encryption(this.registerForm,this.encryptRegister)
+                        this.$axios.post('account/register1/', JSON.stringify(this.encryptRegister), config.axiosHeaders)
                             .then(res => {
                                 console.log("============yes==========")
                                 console.log(res)
                                 this.$alert('注册成功', '啊哈', {
                                     center: true,
                                     callback: () => {
-                                        this.$axios.post('account/login1/', JSON.stringify(this.loginForm), config.axiosHeaders)
+                                        this.$axios.post('account/login1/', JSON.stringify(this.encryptRegister), config.axiosHeaders)
                                             .then(res => {
                                                 console.log(res.data)
                                                 if (res.data.success) {
