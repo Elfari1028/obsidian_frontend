@@ -22,31 +22,7 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
-                        <el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
-                            <div slot="header" style="height: 10px">
-                                <i class="el-icon-document" style="float: left"></i>
-                                <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
-                                <el-dropdown trigger="click" style="float: right">
-                                    <span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
-                                        <i class="el-icon-more"></i>
-                                    </span>
-                                    <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
-                                        </el-dropdown-item>
-                                        <el-dropdown-item @click.native="shareDocument(doc.doc_id)">分享
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </div>
-                            <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
-                                <span class="card_body_font card_body">
-                                    {{doc.workspace}}
-                                </span>
-                                <span class="card_time_font card_body">
-                                    最后修改于：{{doc.time}}
-                                </span>
-                            </div>
-                        </el-card>
+                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isHistory'"/>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">快去找几个文档看看</div>
                     </el-scrollbar>
                 </el-main><!--主体-->
@@ -86,10 +62,12 @@
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
     import $ from 'jquery'
+    import DocumentCard from "@/components/DocumentCard";
+    import config from "@/config";
 
     export default {
         name: "History",
-        components: {AsideMenu, MenuBar},
+        components: {DocumentCard, AsideMenu, MenuBar},
         data() {
             return {
                 isScreenWide: false,

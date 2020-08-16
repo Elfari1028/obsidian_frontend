@@ -1,6 +1,18 @@
 <template>
     <div>
-
+        <el-dialog
+                title="分享文件"
+                :append-to-body="true"
+                :visible.sync="dialogVisible"
+                width="500px">
+            <el-input v-model="shareUrl" readonly="true" id="url_input">
+                <template slot="prepend">URL:</template>
+                <el-button slot="append" icon="el-icon-document" @click="copyUrl()"></el-button>
+            </el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
         <el-card class="doc_item">
 
             <div slot="header" style="height: 10px">
@@ -86,7 +98,8 @@
                 isDefault: false,
                 isCollection: false,
                 isHistory: false,
-                isTrash: false
+                isTrash: false,
+                shareUrl: ''
             }
         },
         mounted() {
@@ -177,6 +190,16 @@
                 })
 
             },
+            copyUrl() {
+                const e = document.getElementById('url_input');
+                e.select();
+                document.execCommand("Copy");
+
+                this.$message({
+                    message: "链接已复制成功",
+                    type: 'warning'
+                });
+            },
         }
     }
 </script>
@@ -211,5 +234,19 @@
 
     .card_body_font {
         color: dimgray;
+    }
+</style>
+
+<style>
+    .el-card__body {
+        padding: 8px 5px !important;
+    }
+
+    .el-card__header {
+        padding: 15px !important;
+    }
+
+    body .el-scrollbar__wrap {
+        overflow-x: hidden;
     }
 </style>
