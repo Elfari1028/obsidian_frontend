@@ -3,7 +3,7 @@
 
 		<el-card class="doc_item">
 			
-			<div slot="header" style="height: 10px">
+			<div slot="header" style="height: 20px">
 				<i class="el-icon-document" style="float: left"></i>
 				
 				<span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
@@ -129,11 +129,11 @@ export default {
 
 <style>
     .el-card__body {
-        padding: 8px 5px !important;
+        padding: 8px 10px !important;
     }
 
     .el-card__header {
-        padding: 15px !important;
+        padding: 5px 15px !important;
     }
 
     body .el-scrollbar__wrap {
