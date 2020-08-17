@@ -69,17 +69,17 @@
                                    :close-on-click-modal="false"
                                    :visible.sync="showPassChangeDialog">
                             <el-form :model="passForm" :rules="passRules" ref="passForm">
-                                <el-form-item prop="oldPassword">
+                                <el-form-item prop="old_password">
                                     <el-input placeholder="旧密码" type="password"
-                                              v-model="passForm.oldPassword"></el-input>
+                                              v-model="passForm.old_password"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="newPassword">
+                                <el-form-item prop="new_password">
                                     <el-input placeholder="新密码" type="password"
-                                              v-model="passForm.newPassword"></el-input>
+                                              v-model="passForm.new_password"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="checkPassword">
+                                <el-form-item prop="check_password">
                                     <el-input placeholder="确认密码" type="password"
-                                              v-model="passForm.checkPassword"></el-input>
+                                              v-model="passForm.check_password"></el-input>
                                 </el-form-item>
                             </el-form>
 
@@ -126,7 +126,7 @@
                     })
             };
             const validatePassword = (rule, value, callback) => {
-                if (value !== this.passForm.newPassword) {
+                if (value !== this.passForm.new_password) {
                     callback(new Error('两次输入密码不一致'));
                 } else {
                     callback();
@@ -148,9 +148,9 @@
                     age: 21
                 },
                 passForm: {
-                    oldPassword: '',
-                    newPassword: '',
-                    checkPassword: ''
+                    old_password: '',
+                    new_password: '',
+                    check_password: ''
                 },
                 encodePassForm: {},
                 infoRules: {
@@ -160,14 +160,14 @@
                     ],
                 },
                 passRules: {
-                    oldPassword: [
+                    old_password: [
                         {required: true, message: '请输入原密码', trigger: 'change'},
                     ],
-                    newPassword: [
+                    new_password: [
                         {required: true, message: '请输入新密码', trigger: 'change'},
                         {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'change'}
                     ],
-                    checkPassword: [
+                    check_password: [
                         {required: true, message: '请再次输入验证密码', trigger: 'change'},
                         {validator: validatePassword, trigger: 'change'}
                     ]
@@ -210,9 +210,9 @@
             },
             changePass() {
                 this.passForm = {
-                    oldPassword: '',
-                    newPassword: '',
-                    checkPassword: ''
+                    old_password: '',
+                    new_password: '',
+                    check_password: ''
                 }
                 this.showPassChangeDialog = true
             },
@@ -223,6 +223,7 @@
                 this.$refs['passForm'].validate(valid => {
                     if (valid) {
                         encryption(this.passForm, this.encodePassForm)
+                        console.log(this.encodePassForm)
                         this.$axios.post('account/modify_password/', JSON.stringify(this.encodePassForm), config.axiosHeaders)
                             .then(res => {
                                 console.log(res)
