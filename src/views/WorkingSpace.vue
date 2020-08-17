@@ -21,9 +21,7 @@
                         <el-button size="small" type="info" circle
                                    icon="el-icon-refresh"
                                    @click="updateList"></el-button>
-                        <el-button size="small" type="info" @click="openCreateDocPopup"
-                                   round icon="el-icon-plus">新建文档
-                        </el-button>
+                        <NewDocPopupButton/>
                         <br><br>
                         <DocumentSorter :doc-list="docList" :sortResult="handleSort"/>
                     </div>
@@ -38,14 +36,14 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
-    import CreateDocPopup from "@/components/CreateDocPopup"
+    import NewDocPopupButton from "@/components/NewDocPopupButton"
     import $ from 'jquery'
     import DocumentCard from "@/components/DocumentCard";
     import DocumentSorter from "@/components/DocumentSorter";
 
     export default {
         name: "WorkingSpace",
-        components: {DocumentSorter, DocumentCard, AsideMenu, MenuBar, "CreateDocPopup": CreateDocPopup},
+        components: {DocumentSorter, DocumentCard, AsideMenu, MenuBar,NewDocPopupButton},
         data() {
             return {
                 isScreenWide: false,

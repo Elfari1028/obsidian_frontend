@@ -90,6 +90,7 @@ export default {
               this.doc_title_input = this.doc_title;
               this.$notify({
                 title: "操作失败！",
+                type:"error",
                 message: "错误信息:" + response.data.exc,
               });
             }
@@ -97,6 +98,7 @@ export default {
             this.doc_title_input = this.doc_title;
             this.$notify({
               title: "网络异常，连接失败！",
+              type:"error",
               message: "错误代码：" + response.status,
             });
           }
@@ -105,6 +107,7 @@ export default {
           this.doc_title_input = this.doc_title;
           this.$notify({
             title: "网络异常，连接失败！",
+            type:"error",
             message: "错误代码：" + error.response.status,
           });
         });
@@ -119,7 +122,8 @@ export default {
       // console.log(text);
     }
   },
-  created() {
+  created() { 
+    this.doc_id=this.$route.params.doc_id;
     this.doc_title_input = this.doc_title;
   },
 };

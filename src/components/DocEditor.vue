@@ -151,11 +151,13 @@ export default {
               this.$notify({
                 title: "该文档已被他人占用！",
                 message: "错误信息:" + response.data.exc,
+                type:"error",
               });
           } else {
             this.$notify({
               title: "网络异常，连接失败！",
               message: "错误代码：" + response.status,
+              type:"error",
             });
           }
         })
@@ -163,13 +165,14 @@ export default {
           this.$notify({
             title: "网络异常，连接失败！",
             message: "错误代码：" + error.response.status,
+            type:"error",
           });
         });
     },
     onCommunicationError(error) {
       this.$notify({
         title: "访问出错!",
-        type: "danger",
+        type: "error",
         message: error,
         duration: 5000,
       });
