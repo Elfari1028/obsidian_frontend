@@ -39,7 +39,7 @@
                             <el-form-item label="用户名">
                                 <el-input :disabled="true" v-model="userInfo.username"></el-input>
                             </el-form-item>
-                            <el-form-item label="邮箱">
+                            <el-form-item label="邮箱" prop="email">
                                 <el-input :disabled="!onEdit" v-model="userInfo.email"></el-input>
                             </el-form-item>
                             <el-form-item label="性别">
@@ -56,7 +56,7 @@
                             </el-form-item>
                             <el-form-item label="个人简介">
                                 <el-input :disabled="!onEdit" type="textarea" :rows="5"
-                                          v-model="userInfo.mood"></el-input>
+                                          v-model="userInfo.mood" maxlength="50" show-word-limit></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="changePass">修改密码</el-button>
@@ -70,15 +70,15 @@
                                    :visible.sync="showPassChangeDialog">
                             <el-form :model="passForm" :rules="passRules" ref="passForm">
                                 <el-form-item prop="old_password">
-                                    <el-input placeholder="旧密码" type="password"
+                                    <el-input placeholder="旧密码" type="password" show-password
                                               v-model="passForm.old_password"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="new_password">
-                                    <el-input placeholder="新密码" type="password"
+                                    <el-input placeholder="新密码" type="password" show-password
                                               v-model="passForm.new_password"></el-input>
                                 </el-form-item>
                                 <el-form-item prop="check_password">
-                                    <el-input placeholder="确认密码" type="password"
+                                    <el-input placeholder="确认密码" type="password" show-password
                                               v-model="passForm.check_password"></el-input>
                                 </el-form-item>
                             </el-form>
