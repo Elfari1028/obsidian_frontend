@@ -52,7 +52,7 @@ import DocEditor from "@/components/DocEditor";
 import CommentDrawer from "@/components/CommentDrawer";
 import ChangelogDrawer from "@/components/ChangelogDrawer";
 import AuthPopupButton from "@/components/AuthPopupButton";
-import config from "@/config"
+import Config from "@/config"
 export default {
   name: "DocumentView",
   components: {
@@ -79,7 +79,7 @@ export default {
       this.$refs.changelogDrawer.openDrawer();
     },
     update_title(){
-      this.$axios.post("/doc/modify_title/",{doc_id:this.doc_id,new_title:this.doc_title_input},config.axiosHeaders).then((response) => {
+      this.$axios.post("/doc/modify_title/",{doc_id:this.doc_id,new_title:this.doc_title_input},Config.axiosHeaders).then((response) => {
           if (response.status === 200) {
             if (response.data.success === true) {
               this.doc_title = this.doc_title_input;   

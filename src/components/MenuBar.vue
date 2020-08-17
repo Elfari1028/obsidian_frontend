@@ -1,23 +1,23 @@
 <template>
     <div class="navigate_bar">
-		<!-- 搜索结果 -->
-		<el-drawer
-			:title="spaceType+'“'+searchKeywords+'”的搜索结果'"
-			:visible.sync="visible"
-			direction="rtl"
-			z-index="2"
-			size="450px"
-			>
+        <!-- 搜索结果 -->
+        <el-drawer
+                :title="spaceType+'“'+searchKeywords+'”的搜索结果'"
+                :visible.sync="visible"
+                direction="rtl"
+                z-index="2"
+                size="450px"
+        >
 
-			<SearchResult :docList='resultList' :docType='docType'></SearchResult>
+            <SearchResult :docList='resultList' :docType='docType'></SearchResult>
 
-		</el-drawer>
+        </el-drawer>
         <div class="navigate_bar_title">
             <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
             黑曜石文档
         </div>
-        <div style="display: flex;position: absolute;right: 0" v-if="!this.hide">
-            <div class="navigate_bar_function_item" style="max-width: 400px">
+        <div style="display: flex;position: absolute;right: 0" v-if="this.hide!==1">
+            <div class="navigate_bar_function_item" style="max-width: 400px" v-if="this.hide!==2">
                 <el-input v-model="searchKeywords"
                           placeholder="搜索当前页面"
                           @keyup.enter.native="submitSearch">
@@ -42,17 +42,17 @@
      * 使用时请绑定 :hide="1" 以隐藏右侧通知等功能
      */
     import {updateStatus} from "@/utils/axiosUtils";
-	import SearchResult from "./SearchResult.vue"
+    import SearchResult from "./SearchResult.vue"
     import NoticeBox from "@/components/NoticeBox";
 
     export default {
         name: "MenuBar",
         components: {NoticeBox, SearchResult},
         props: {
-            hide: Boolean,
-			test: String,
-			docList: Array,
-			docType: String,
+            hide: Number,
+            test: String,
+            docList: Array,
+            docType: String,
         },
         data() {
             return {

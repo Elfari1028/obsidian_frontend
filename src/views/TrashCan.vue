@@ -21,11 +21,11 @@
                         <el-button size="small" type="info" circle
                                    icon="el-icon-refresh"
                                    @click="updateList"></el-button>
-                        <el-button size="small" type="danger"
+                        <el-button size="small" type="danger" @click="emptyTrash"
                                    round icon="el-icon-delete">清空
                         </el-button>
 
-						<br><br>
+                        <br><br>
 
                         <DocumentSorter :doc-list="docList" :sortResult="handleSort"/>
                     </div>
@@ -84,6 +84,32 @@
             handleSort(data) {
                 this.docList = data
             },
+            emptyTrash() {
+                this.$confirm('此操作将清空回收站中所有文件，是否继续？', '警告', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: "warning"
+                }).then(() => {
+                    this.$axios.get('recyclebin/clear_all_doc/')
+                        .then(res => {
+                            if (res.data.success) {
+                                this.docList = []
+                                this.$message('回收站已清空')
+                            } else {
+                                this.$alert(res.data.exc)
+                            }
+                        }).catch(err => {
+                        console.log(err)
+                        this.$alert('网络出现了点问题')
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                })
+
+            }
         },
         created() {
             console.log(this.$route.path)
@@ -133,7 +159,7 @@
         padding: 10px;
     }
 
-    .list_empty_notice{
+    .list_empty_notice {
         color: darkgrey;
         height: inherit;
         padding-top: 20%;
