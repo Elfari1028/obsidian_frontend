@@ -75,7 +75,7 @@
     * docType: 'isDefault'/'isCollection'/'isTrash'/'isHistory'
     * doc: 所展示的文档
     */
-    import config from "@/config";
+    import Config from "@/config";
 
     export default {
         name: 'DocumentCard',
@@ -96,12 +96,15 @@
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: '/document/' + doc_id
+                    name:'DocumentView',
+                    params: {
+                        doc_id: doc_id
+                    }
                 })
             },
             delCollection(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
+                this.$axios.post('', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文档已移出收藏")
                     } else {
@@ -111,7 +114,7 @@
             },
             shareDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
+                this.$axios.post('', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.shareUrl = res.data.url;
                         this.dialogVisible = true;
@@ -124,7 +127,7 @@
             },
             toTrash(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
+                this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文件已移入回收站")
                     } else {
@@ -134,7 +137,7 @@
             },
             restoreDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
+                this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文件已恢复")
                     } else {
@@ -149,7 +152,7 @@
                     cancelButtonText: '取消',
                     type: "warning"
                 }).then(() => {
-                    this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
+                    this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                         if (res.data.success === 0) {
                             this.$alert("文件已删除")
                         } else {

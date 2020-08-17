@@ -99,7 +99,7 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
-    import config from "@/config";
+    import Config from "@/config";
     import {encryption} from "@/utils/encryptUtils";
 
     export default {
@@ -113,7 +113,7 @@
                 } else {
                     callback(new Error('邮箱地址格式错误'))
                 }
-                this.$axios.post('account/email_used/', JSON.stringify({email: value}), config.axiosHeaders)
+                this.$axios.post('account/email_used/', JSON.stringify({email: value}), Config.axiosHeaders)
                     .then(res => {
                         console.log(res.data)
                         if (res.data.success === true) {
@@ -224,7 +224,7 @@
                     if (valid) {
                         encryption(this.passForm, this.encodePassForm)
                         console.log(this.encodePassForm)
-                        this.$axios.post('account/modify_password/', JSON.stringify(this.encodePassForm), config.axiosHeaders)
+                        this.$axios.post('account/modify_password/', JSON.stringify(this.encodePassForm), Config.axiosHeaders)
                             .then(res => {
                                 console.log(res)
                                 if (res.data.success) {
@@ -262,7 +262,7 @@
             this.isLoading = true
             await this.$axios.get('account/get_avatar/').then(res => {
                 if (res.data.success) {
-                    this.avatarUrl = config.baseUrl.substring(0, config.baseUrl.length - 1) + res.data.url
+                    this.avatarUrl = Config.baseUrl.substring(0, Config.baseUrl.length - 1) + res.data.url
                 } else {
                     this.avatarUrl = ''
                 }
