@@ -21,9 +21,7 @@
                         <el-button size="small" type="info" circle
                                    icon="el-icon-refresh"
                                    @click="updateList"></el-button>
-                        <el-button size="small" type="info" @click="openCreateDocPopup"
-                                   round icon="el-icon-plus">新建文档</el-button>
-							
+                        <NewDocPopupButton/>
 						<br><br>	
 							
 						<el-dropdown trigger="click" @command="handleCommand">
@@ -43,7 +41,6 @@
                     </div>
                 </el-aside>
             </el-container>
-            <CreateDocPopup ref="create_doc" />
         </el-container>
     </div>
 
@@ -52,13 +49,13 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
-    import CreateDocPopup from "@/components/CreateDocPopup"
+    import NewDocPopupButton from "@/components/NewDocPopupButton"
     import $ from 'jquery'
     import DocumentCard from "@/components/DocumentCard";
 
     export default {
         name: "WorkingSpace",
-        components: {DocumentCard, AsideMenu, MenuBar,"CreateDocPopup":CreateDocPopup},
+        components: {DocumentCard, AsideMenu, MenuBar,NewDocPopupButton},
         data() {
             return {
                 isScreenWide: false,

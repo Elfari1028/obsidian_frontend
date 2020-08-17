@@ -110,7 +110,7 @@
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: '/document/'+doc_id
+                   name: 'document',params:{doc_id:doc_id},
                 })
             },
             delCollection(doc_id) {
