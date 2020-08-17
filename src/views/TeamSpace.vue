@@ -62,8 +62,8 @@
 						<el-button size="small" type="info" circle
 									icon="el-icon-refresh"
 									@click="updateFileList"></el-button>
-						<el-button size="small" type="info" @click="openCreateDocPopup"
-									round icon="el-icon-plus">新建文档</el-button>
+									
+						<NewDocPopupButton/>
 
 						<br><br>
 
@@ -92,12 +92,13 @@
 	import GroupManage from "@/components/GroupManage.vue"
 	import DocumentCard from "@/components/DocumentCard.vue"
 	import DocumentCardforGroupTrash from "@/components/DocumentCardforGroupTrash.vue"
-	import CreateDocPopup from "@/components/CreateDocPopup"
+	import DocumentSorter from "@/components/DocumentSorter.vue"
+	import NewDocPopupButton from "@/components/NewDocPopupButton"
 	import $ from 'jquery'
 
 	export default {
 		name: "TeamSpace",
-		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, DocumentCardforGroupTrash, "CreateDocPopup":CreateDocPopup},
+		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, DocumentCardforGroupTrash, NewDocPopupButton, DocumentSorter},
 		inject:['reload'],
 		data() {
 			return {
@@ -174,9 +175,6 @@
 			}
 		},
 		methods: {
-			openCreateDocPopup(){
-				this.$refs.create_doc.openDialog();
-			},
 			loadDocList: function () {
 				this.isLoading = true
 				var _this = this
