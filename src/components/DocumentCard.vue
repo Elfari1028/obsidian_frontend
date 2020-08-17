@@ -196,7 +196,7 @@
 
     .card_header_font {
         cursor: pointer;
-        font-size: 16px;
+        font-size: 15px;
         color: dimgray;
     }
 
@@ -211,6 +211,7 @@
     }
 
     .card_body_font {
+        font-size: 15px;
         color: dimgray;
     }
 </style>
