@@ -101,10 +101,9 @@
                 this.$axios.post('account/email_used/', JSON.stringify({email: value}), config.axiosHeaders)
                     .then(res => {
                         console.log(res.data)
-                        if(res.data.success === true){
+                        if (res.data.success === true) {
                             callback();
-                        }
-                        else callback(new Error("res.data.exc"));
+                        } else callback(new Error(res.data.exc));
                     })
                     .catch(err => {
                         console.log(err)
@@ -159,13 +158,12 @@
                         {validator: validatePassword, trigger: 'change'}
                     ]
                 },
-
             }
         },
         methods: {
 
             submitLogin: function () {
-                encryption(this.loginForm,this.encryptLogin)
+                encryption(this.loginForm, this.encryptLogin)
                 console.log(this.encryptLogin)
                 this.$axios.post('account/login1/', JSON.stringify(this.encryptLogin), config.axiosHeaders)
                     .then(res => {
@@ -181,10 +179,10 @@
                     })
             },
             submitRegister: function () {
-                console.log(this.registerForm)
                 this.$refs['registerForm'].validate(valid => {
                     if (valid) {
-                        encryption(this.registerForm,this.encryptRegister)
+                        encryption(this.registerForm, this.encryptRegister)
+                        console.log(this.encryptRegister)
                         this.$axios.post('account/register1/', JSON.stringify(this.encryptRegister), config.axiosHeaders)
                             .then(res => {
                                 console.log("============yes==========")
