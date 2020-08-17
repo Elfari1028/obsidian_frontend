@@ -78,7 +78,7 @@
     import config from "@/config";
 
     export default {
-        name: 'DocumentCard',
+        name: 'ResultCard',
         props: {
             docType: String,
             doc: Object,
