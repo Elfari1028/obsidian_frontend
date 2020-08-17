@@ -5,7 +5,6 @@
       v-loading="loading"
       :visible.sync="drawer"
       :direction="direction"
-      :before-close="handleClose"
     >
       <div class="DrawerContainer" v-if="loading===true"></div>
       <div class="container-active" v-else>
@@ -131,16 +130,7 @@ export default {
         } ];
     },
     setDemoData() {},
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
-          console.log(_);
-          done();
-        })
-        .catch((_) => {
-          console.log(_);});
-    },
-  },
+   },
 };
 </script>
 

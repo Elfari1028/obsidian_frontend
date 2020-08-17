@@ -5,212 +5,243 @@
                 <MenuBar :docList='searchList' :docType='docType'/>
             </el-header>
 
-            <el-container>
+			<el-container>
+				
+				<!-- 左边栏 -->
+				<el-aside width="225px" id="aside_left">
+					<AsideMenu/>
+				</el-aside>
+				
+				<!-- 主界面 -->
+				<el-main v-if='!isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
 
-                <!-- 左边栏 -->
-                <el-aside width="225px" id="aside_left">
-                    <AsideMenu/>
-                </el-aside>
+					<el-scrollbar style="height: 100%">
+						<DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
+						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
+					</el-scrollbar>
 
-                <!-- 主界面 -->
-                <el-main v-if='!isTrashCan' :style="{height: spaceHeight}">
+				</el-main>
 
-                    <el-scrollbar style="height: 100%">
-                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
-                    </el-scrollbar>
+				<!-- 回收站 -->
+				<el-main v-if='isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
+					<el-scrollbar style="height: 100%">
+						<DocumentCardforGroupTrash v-for="(doc,index) in trashList" :key="index" :doc="doc"/>
+						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
+					</el-scrollbar>
+				</el-main>
 
-                </el-main><!--主体-->
+				<!-- 右边栏 -->
+				<el-aside width="250px" id="aside_right">
+					<div id="bench_toolbar">
+						<div id="toolbar_title">{{Team_name}}</div>
 
-                <!-- 回收站 -->
-                <el-main v-if='isTrashCan' :style="{height: spaceHeight}">
-                    <el-scrollbar style="height: 100%">
-                        <DocumentCard v-for="(doc,index) in trashList" :key="index" :doc="doc" :doc-type="'isTrash'"/>
-                    </el-scrollbar>
-                </el-main>
+						<el-divider></el-divider>
 
-                <!-- 右边栏 -->
-                <el-aside width="250px" id="aside_right">
-                    <div id="bench_toolbar">
-                        <div id="toolbar_title">{{Team_name}}</div>
+						<el-popover
+							placement="left"
+							trigger="click"
+							>
 
-                        <el-divider></el-divider>
+							<MemberCard :Team_id='Team_id' ref="member_card"></MemberCard>
 
-                        <el-popover
-                                placement="left"
-                                trigger="click"
-                        >
+							<el-button slot="reference">团队成员</el-button>
+						</el-popover>
+						<br><br>
+						<el-popover
+							placement="left"
+							trigger="click"
+							>
 
-                            <MemberCard :Team_id='Team_id'></MemberCard>
+							<GroupManage :Team_id='Team_id' v-on:updateMemberList="updateMemberList"></GroupManage>
 
-                            <el-button slot="reference">团队成员</el-button>
-                        </el-popover>
-                        <br><br>
-                        <el-popover
-                                placement="left"
-                                trigger="click"
-                        >
+							<el-button slot="reference">团队管理</el-button>
+						</el-popover>
 
-                            <GroupManage :Team_id='Team_id'></GroupManage>
+						<el-divider></el-divider>
 
-                            <el-button slot="reference">团队管理</el-button>
-                        </el-popover>
+						<el-button size="small" type="info" circle
+									icon="el-icon-refresh"
+									@click="updateFileList"></el-button>
+						<el-button size="small" type="info" @click="openCreateDocPopup"
+									round icon="el-icon-plus">新建文档</el-button>
 
-                        <el-divider></el-divider>
+						<br><br>
 
-                        <DocumentSorter :doc-list="isTrashCan?trashList:docList" :sortResult="handleSort"/>
+						<DocumentSorter :doc-list="isTrashCan?trashList:docList" :sortResult="handleSort"/>
+						
+						<br><br>
+						
+						<el-button id="trashCanButton" type="info" @click='switchTrashCan'>
+							<i class='el-icon-delete-solid'></i>
+							切换到团队回收站
+						</el-button>
+						
+					</div>
+				</el-aside>
 
-                        <br><br>
-
-                        <el-button id="trashCanButton" type="info" @click='switchTrashCan'>
-                            <i class='el-icon-delete-solid'></i>
-                            切换到团队回收站
-                        </el-button>
-
-                    </div>
-                </el-aside>
-
-            </el-container>
-
-        </el-container>
-    </div>
+			</el-container>
+			<CreateDocPopup ref="create_doc" />
+		</el-container>
+	</div>
 </template>
 
 <script>
-    import MenuBar from "@/components/MenuBar";
-    import AsideMenu from "@/components/AsideMenu";
-    import MemberCard from "@/components/MemberCard.vue"
-    import GroupManage from "@/components/GroupManage.vue"
-    import $ from 'jquery'
-    import DocumentSorter from "@/components/DocumentSorter";
-    import DocumentCard from "@/components/DocumentCard";
+	import MenuBar from "@/components/MenuBar";
+	import AsideMenu from "@/components/AsideMenu";
+	import MemberCard from "@/components/MemberCard.vue"
+	import GroupManage from "@/components/GroupManage.vue"
+	import DocumentCard from "@/components/DocumentCard.vue"
+	import DocumentCardforGroupTrash from "@/components/DocumentCardforGroupTrash.vue"
+	import CreateDocPopup from "@/components/CreateDocPopup"
+	import $ from 'jquery'
 
-    export default {
-        name: "TeamSpace",
-        components: {DocumentCard, DocumentSorter, AsideMenu, MenuBar, MemberCard, GroupManage},
-        inject: ['reload'],
-        data() {
-            return {
-                Team_id: -1,
-                Team_name: '火锅小分队',
-                isScreenWide: false,
-                dialogVisible: false,
-                isTrashCan: false,
-                shareUrl: '',
-                spaceHeight: window.innerHeight - 80 + 'px',
-                searchList: [],
-                docType: 'isDefault',
-                docList: [
-                    {
-                        doc_id: 3321,
-                        title: '团队空间b',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: '团队空间a',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/01 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: '团队空间j',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/9/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: '团队空间f',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:04:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: '团队空间w',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/11 20:03:02'
-                    },
-                ],
-                trashList: [
-                    {
-                        doc_id: 3321,
-                        title: '团队回收站adsv',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 21:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: '团队回收站kds',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:02'
-                    },
-                    {
-                        doc_id: 3321,
-                        title: '团队回收站sds',
-                        team_id: 55443,
-                        workspace: 'TEAM_DEBUG',
-                        time: '2020/8/10 20:03:03'
-                    },
-                ]
-            }
-        },
-        methods: {
-            loadDocList: function () {
-                var _this = this
-                console.log('正在获取团队文件')
-                this.$axios
-                    .post('doc/list_all_team_docs', JSON.stringify({
-                        team_id: _this.Team_id
-                    }))
-                    .then(response => {
-                        var res = response.data
-                        _this.docList = res.doc_list
+	export default {
+		name: "TeamSpace",
+		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, DocumentCardforGroupTrash, "CreateDocPopup":CreateDocPopup},
+		inject:['reload'],
+		data() {
+			return {
+				Team_id: -1,
+				Team_name: '火锅小分队',
+				isScreenWide: false,
+				isLoading: false,
+				dialogVisible: false,
+				isTrashCan: false,
+				shareUrl: '',
+				spaceHeight: window.innerHeight - 80 + 'px',
+				searchList: [],
+				docType: 'isDefault',
+				docList: [
+					{
+						doc_id: 3321,
+						title: '团队空间b',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 20:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: '团队空间a',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/01 20:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: '团队空间j',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/9/10 20:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: '团队空间f',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 20:04:02'
+					},
+					{
+						doc_id: 3321,
+						title: '团队空间w',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/11 20:03:02'
+					},
+				],
+				trashList: [
+					{
+						doc_id: 3321,
+						title: '团队回收站adsv',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 21:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: '团队回收站kds',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 20:03:02'
+					},
+					{
+						doc_id: 3321,
+						title: '团队回收站sds',
+						team_id: 55443,
+						workspace: 'TEAM_DEBUG',
+						time: '2020/8/10 20:03:03'
+					},
+				]
+			}
+		},
+		methods: {
+			openCreateDocPopup(){
+				this.$refs.create_doc.openDialog();
+			},
+			loadDocList: function () {
+				this.isLoading = true
+				var _this = this
+				console.log('正在获取团队文件')
+				this.$axios
+					.post('doc/list_all_team_docs' ,JSON.stringify({
+						team_id: _this.Team_id
+					}))
+					.then(response => {
+						var res = response.data
+						_this.docList = res.doc_list
 
-                        if (res.success === false) {
-                            _this.$message.error(res.exc)
-                        }
-                    })
-                    .catch(err => {
-                        _this.$message.error('获取团队文件出了点问题')
-                        console.log(err)
-                    })
-            },
-            loadTrashList: function () {
-                var _this = this
-                console.log('正在获取团队回收站文件')
-                this.$axios
-                    .post('bin/get-team-docs', JSON.stringify({
-                        team_id: _this.Team_id
-                    }))
-                    .then(response => {
-                        var res = response.data
-                        _this.trashList = res.doc_list
+						if (res.success === false) {
+							_this.$message.error(res.exc)
+						}
+						_this.isLoading = false
+					})
+					.catch(err => {
+						_this.$message.error('获取团队文件出了点问题')
+						console.log(err)
+						_this.isLoading = false
+					})
+			},
+			loadTrashList: function () {
+				this.isLoading = true
+				var _this = this
+				console.log('正在获取团队回收站文件')
+				this.$axios
+					.post('bin/get-team-docs' ,JSON.stringify({
+						team_id: _this.Team_id
+					}))
+					.then(response => {
+						var res = response.data
+						_this.trashList = res.doc_list
 
-                        if (res.success === false) {
-                            _this.$message.error(res.exc)
-                        }
-                    })
-                    .catch(err => {
-                        _this.$message.error('获取团队回收站文件出了点问题')
-                        console.log(err)
-                    })
-            },
-            switchTrashCan: function () {
-                if (!this.isTrashCan) {
-                    //获取回收站文件
+						if (res.success === false) {
+							_this.$message.error(res.exc)
+						}
+						_this.isLoading = false
+					})
+					.catch(err => {
+						_this.$message.error('获取团队回收站文件出了点问题')
+						console.log(err)
+						_this.isLoading = false
+					})
+			},
+			updateFileList: function () {
+				if (this.isTrashCan) {
+					this.loadTrashList()
+				} else {
+					this.loadDocList()
+				}
+			},
+			updateMemberList: function () {
+				this.$refs.member_card.loadGroupMember()
+			},
+			switchTrashCan: function () {
+				if (!this.isTrashCan) {
+					//获取回收站文件
 
-                    this.loadTrashList()
-                    this.searchList = this.trashList
-                    this.docType = "isTrash"
-                } else {
-                    //获取团队文件
+					this.loadTrashList()
+					this.searchList = this.trashList
+					this.docType = "isTrash"
+				} else {
+					//获取团队文件
 
                     this.loadDocList()
                     this.searchList = this.docList
@@ -277,66 +308,66 @@
 </script>
 
 <style scoped>
+	
+	#toolbar_title{
+		display: inline;
+		margin: 10px;
+		color: dimgray;
+		font-size: 16px;
+		width: 50%;
+	}
 
-    #toolbar_title {
-        display: inline;
-        margin: 10px;
-        color: dimgray;
-        font-size: 16px;
-        width: 50%;
-    }
+	#bench_toolbar {
+		margin-top: 10px;
+	}
 
-    #bench_toolbar {
-        margin-top: 10px;
-    }
+	.main_page {
+		min-width: 1200px;
+	}
 
-    .main_page {
-        min-width: 1200px;
-    }
+	#aside_left {
+		border-right: 1px solid #DEDFE6;
+		height: auto;
+		padding: 10px;
+	}
 
-    #aside_left {
-        border-right: 1px solid #DEDFE6;
-        height: auto;
-        padding: 10px;
-    }
+	#aside_right {
+		border-left: 1px solid #DEDFE6;
+		height: auto;
+		padding: 10px;
+	}
 
-    #aside_right {
-        border-left: 1px solid #DEDFE6;
-        height: auto;
-        padding: 10px;
-    }
+	.doc_item {
+		-webkit-user-select:none;
+		-moz-user-select:none;
+		-ms-user-select:none;
+		user-select:none;
+		display: block;
+		float: left;
+		width: 45%;
+		height: 100px;
+		margin: 10px;
+	}
 
-    .doc_item {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        display: block;
-        float: left;
-        width: 45%;
-        height: 100px;
-        margin: 10px;
-    }
+	.card_header_font {
+		cursor: pointer;
+		font-size: 16px;
+		color: dimgray;
+	}
 
-    .card_header_font {
-        cursor: pointer;
-        font-size: 16px;
-        color: dimgray;
-    }
+	.card_body {
+		display: block;
+		margin: 5px;
+	}
 
-    .card_body {
-        display: block;
-        margin: 5px;
-    }
+	.card_time_font {
+		font-size: 10px;
+		color: dimgray;
+	}
 
-    .card_time_font {
-        font-size: 10px;
-        color: dimgray;
-    }
-
-    .card_body_font {
-        color: dimgray;
-    }
+	.card_body_font {
+		color: dimgray;
+	}
 
     #aside_left {
         border-right: 1px solid #DEDFE6;

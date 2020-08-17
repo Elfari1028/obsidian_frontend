@@ -1,5 +1,5 @@
 <template>
-  <div class="changelog-container-outer">
+  <!-- <div class="changelog-container-outer"> -->
     <div class="changelog-container-inner">
       <div class="changelog-info-row" ref="changelogrow">
         <div class="changelog-avatar" :span="5">
@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>

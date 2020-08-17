@@ -1,5 +1,6 @@
 <template>
-  <div class="comment-container-outer">
+  <!-- <div class="comment-container-outer"> -->
+    <el-card class="comment-container-outer">
     <div class="comment-container-inner">
       <div class="comment-info-row" ref="commentrow">
         <div class="comment-avatar" :span="5">
@@ -21,7 +22,8 @@
       </div>
     </div>
     <CreateCommentPopup v-if="asReply===false" ref="comment_popup" />
-  </div>
+    </el-card>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -84,11 +86,11 @@ export default {
 }
 .comment-container-outer {
   margin: 10px;
-  border: 1px;
+  /* border: 1px;
   border-color: rgb(255, 255, 255);
   border-style: solid;
   border-radius: 10px;
-  box-shadow: 0px 0px 5px 0px rgb(172, 171, 171);
+  box-shadow: 0px 0px 5px 0px rgb(172, 171, 171); */
 }
 .comment-info-row {
   width: 100%;

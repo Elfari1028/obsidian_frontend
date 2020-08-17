@@ -5,13 +5,22 @@
       v-loading="loading"
       :visible.sync="drawer"
       :direction="direction"
-      :before-close="handleClose"
     >
       <div class="DrawerContainer" v-if="loading===true"></div>
       <div class="container-active" v-else>
-        <div class="changelog-list" v-for="item in changelogs" :key="item.primary">
+        <!-- <div class="changelog-list" v-for="item in changelogs" :key="item.primary">
             <ChangelogCard :changelog="item"/>
-        </div>
+        </div>-->
+
+        <el-timeline :reverse="reverse">
+          <el-timeline-item hide-timestamp	
+            v-for="(activity, index) in changelogs"
+            :key="index"
+            :timestamp="activity.change_time"
+          >
+          <ChangelogCard :changelog="activity"/>
+          </el-timeline-item>
+        </el-timeline>
       </div>
     </el-drawer>
   </div>
@@ -21,7 +30,7 @@
 import ChangelogCard from './ChangelogCard';
 export default {
   name: "ChangelogDrawer",
-  components:{ChangelogCard},
+  components: {ChangelogCard},
   props: {
     docID: {
       type: Number,
@@ -41,7 +50,7 @@ export default {
       this.drawer = true;
       this.loading = true;
       this.setDemoData();
-      this.loading=false;
+      this.loading = false;
       // axios
       //   .post("", { doc_id: this.docID })
       //   .then(function (response) {
@@ -68,54 +77,51 @@ export default {
       //       duration: 5000,
       //     });
       //   });
-      this.changelogs = [{
-            id: "-1",
-            change_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },{
-            id: "-1",
-            change_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },{
-            id: "-1",
-            change_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },{
-            id: "-1",
-            change_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },{
-            id: "-1",
-            change_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },];
+      this.changelogs = [
+        {
+          id: "-1",
+          change_time: "2020/09/07 12:00",
+          username: "username",
+          avatar:
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
+        },
+        {
+          id: "-1",
+          change_time: "2020/09/07 12:00",
+          username: "username",
+          avatar:
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
+        },
+        {
+          id: "-1",
+          change_time: "2020/09/07 12:00",
+          username: "username",
+          avatar:
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
+        },
+        {
+          id: "-1",
+          change_time: "2020/09/07 12:00",
+          username: "username",
+          avatar:
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
+        },
+        {
+          id: "-1",
+          change_time: "2020/09/07 12:00",
+          username: "username",
+          avatar:
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
+        },
+      ];
     },
     setDemoData() {},
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
-          console.log(_);
-          done();
-        })
-        .catch((_) => {
-          console.log(_);});
-    },
   },
 };
 </script>
 
 <style>
-.container-active{
+.container-active {
   height: 90vh;
   overflow-y: scroll;
 }
