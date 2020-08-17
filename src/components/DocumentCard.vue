@@ -108,10 +108,13 @@
         },
         methods: {
             toDocument(doc_id) {
-                console.log(doc_id)
+                console.log(doc_id);
                 this.$router.push({
-                   name: 'document',params:{doc_id:doc_id},
-                })
+                    name:'DocumentView',
+                    params: {
+                    doc_id: doc_id
+                }
+            })
             },
             delCollection(doc_id) {
                 console.log(doc_id)
