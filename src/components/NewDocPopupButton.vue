@@ -68,8 +68,8 @@ export default {
       default: false,
     },
     team_id: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: -1,
     },
   },
   methods: {

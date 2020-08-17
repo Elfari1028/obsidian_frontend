@@ -63,7 +63,7 @@
 									icon="el-icon-refresh"
 									@click="updateFileList"></el-button>
 									
-						<NewDocPopupButton/>
+						<NewDocPopupButton :belong_to_team='true' :team_id='Team_id' />
 
 						<br><br>
 
