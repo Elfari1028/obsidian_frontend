@@ -93,13 +93,14 @@ export default {
 					} else {
 						_this.$message.success('已删除成员')
 					}
+					
+					this.loadGroupMember()
 				})
 				.catch(err => {
 					_this.$message.error('删除成员出了点问题')
 					console.log(err)
 				})
 				
-			this.loadGroupMember()
 		},
 		getWidth: function () {
 			if (this.isAdmin) {
@@ -131,7 +132,7 @@ export default {
 					console.log(err)
 				})
 			
-		}
+		},
 	},
 	created () {
 		console.log('this team id:' + this.Team_id)
