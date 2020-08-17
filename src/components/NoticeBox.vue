@@ -1,14 +1,5 @@
 <template>
     <div>
-        <el-popover placement="bottom"
-                    width="100px"
-                    trigger="hover"
-                    @click.native="isVisible = !isVisible"
-                    :popper-options="{ boundariesElement: 'viewport', removeOnDestroy: true }"
-                    v-model="isOpen">
-            <span>test</span>
-            <i slot="reference" class="el-icon-message-solid notice" @click="isOpen = !isOpen"></i>
-        </el-popover>
         <el-drawer
                 :title="'通知'"
                 :close-on-click-modal="true"
