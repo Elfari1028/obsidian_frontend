@@ -1,6 +1,6 @@
 <template>
     <div id="login_page">
-        <MenuBar :hide="true"/>
+        <MenuBar :hide="1"/>
         <el-container>
             <el-main id="login_page_main">
                 <div id="login_block">
@@ -11,7 +11,7 @@
                                     <el-input v-model="loginForm.email" placeholder="邮箱/用户名"></el-input>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-input type="password" v-model="loginForm.password" placeholder="密码"></el-input>
+                                    <el-input type="password" v-model="loginForm.password" placeholder="密码" show-password></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="info" style="float: right" @click="submitLogin">登录
@@ -32,11 +32,11 @@
                                 </el-form-item>
                                 <el-form-item prop="password">
                                     <el-input type="password" v-model="registerForm.password"
-                                              placeholder="密码"></el-input>
+                                              placeholder="密码" show-password></el-input>
                                 </el-form-item>
                                 <el-form-item prop="checkPassword">
                                     <el-input type="password" v-model="registerForm.checkPassword"
-                                              placeholder="确认密码"></el-input>
+                                              placeholder="确认密码" show-password></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="info" style="float: right" @click="submitRegister">注册<i
