@@ -23,20 +23,8 @@
                                    @click="updateHistory">刷新</el-button>
 
 						<br><br>
-							
-						<el-dropdown trigger="click" @command="handleCommand">
-							<el-button type="info">
-								<i class='el-icon-s-fold'></i>
-								对当前文件排序
-							</el-button>
-							
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-								<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-								<el-dropdown-item command='timeUp'>按时间升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-								<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
+
+                        <DocumentSorter :doc-list="docList" :sortResult="handleSort"/>
 						
                     </div>
                 </el-aside>
@@ -51,11 +39,11 @@
     import AsideMenu from "@/components/AsideMenu";
     import $ from 'jquery'
     import DocumentCard from "@/components/DocumentCard";
-    import config from "@/config";
+    import DocumentSorter from "@/components/DocumentSorter";
 
     export default {
         name: "History",
-        components: {DocumentCard, AsideMenu, MenuBar},
+        components: {DocumentSorter, DocumentCard, AsideMenu, MenuBar},
         data() {
             return {
                 isScreenWide: false,
@@ -91,75 +79,9 @@
                     this.isLoading = false;
                 })
             },
-            toDocument(doc_id) {
-                console.log(doc_id)
-                this.$router.push({
-                    path: '/document/'+doc_id
-                })
-            },
-            shareDocument(doc_id) {
-                console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
-                    if (res.data.success === 0) {
-                        this.shareUrl = res.data.url;
-                        this.dialogVisible = true;
-                    }
-                }).catch(err => {
-                    console.log(err)
-                    this.shareUrl = 'TEST_URL'
-                    this.dialogVisible = true;
-                })
-            },
-            copyUrl() {
-                const e = document.getElementById('url_input');
-                e.select();
-                document.execCommand("Copy");
-
-                this.$message({
-                    message: "链接已复制成功",
-                    type: 'warning'
-                });
-            },
-			sortDocList: function (list, method) {
-				if (method === 'titleDown') {
-					list.sort(function(a,b){
-						var x = a.title.toLowerCase()
-						var y = b.title.toLowerCase()
-						if (x > y) {return -1}
-						if (x < y) {return 1}
-						return 0
-					})
-				} else if (method === 'titleUp') {
-					list.sort(function(a,b){
-						var x = a.title.toLowerCase()
-						var y = b.title.toLowerCase()
-						if (x < y) {return -1}
-						if (x > y) {return 1}
-						return 0
-					})
-				}
-				
-				if (method === 'timeDown') {
-					list.sort(function(a,b){
-						var x = new Date(a.time)
-						var y = new Date(b.time)
-						if (x < y) {return -1}
-						if (x > y) {return 1}
-						return 0
-					})
-				} else if (method === 'timeUp') {
-					list.sort(function(a,b){
-						var x = new Date(a.time)
-						var y = new Date(b.time)
-						if (x > y) {return -1}
-						if (x < y) {return 1}
-						return 0
-					})
-				}
-			},
-			handleCommand: function (command) {
-				this.sortDocList(this.docList, command)
-			}
+            handleSort(data) {
+                this.docList = data
+            }
         },
         created() {
             console.log(this.$route.path)

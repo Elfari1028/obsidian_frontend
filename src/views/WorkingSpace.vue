@@ -22,28 +22,14 @@
                                    icon="el-icon-refresh"
                                    @click="updateList"></el-button>
                         <el-button size="small" type="info" @click="openCreateDocPopup"
-                                   round icon="el-icon-plus">新建文档</el-button>
-							
-						<br><br>	
-							
-						<el-dropdown trigger="click" @command="handleCommand">
-							<el-button type="info">
-								<i class='el-icon-s-fold'></i>
-								对当前文件排序
-							</el-button>
-							
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-								<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-								<el-dropdown-item command='timeUp'>按时间升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-								<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
-						
+                                   round icon="el-icon-plus">新建文档
+                        </el-button>
+                        <br><br>
+                        <DocumentSorter :doc-list="docList" :sortResult="handleSort"/>
                     </div>
                 </el-aside>
             </el-container>
-            <CreateDocPopup ref="create_doc" />
+            <CreateDocPopup ref="create_doc"/>
         </el-container>
     </div>
 
@@ -55,10 +41,11 @@
     import CreateDocPopup from "@/components/CreateDocPopup"
     import $ from 'jquery'
     import DocumentCard from "@/components/DocumentCard";
+    import DocumentSorter from "@/components/DocumentSorter";
 
     export default {
         name: "WorkingSpace",
-        components: {DocumentCard, AsideMenu, MenuBar,"CreateDocPopup":CreateDocPopup},
+        components: {DocumentSorter, DocumentCard, AsideMenu, MenuBar, "CreateDocPopup": CreateDocPopup},
         data() {
             return {
                 isScreenWide: false,
@@ -68,7 +55,7 @@
             }
         },
         methods: {
-            openCreateDocPopup(){
+            openCreateDocPopup() {
                 this.$refs.create_doc.openDialog();
             },
             updateList() {
@@ -97,46 +84,9 @@
                     this.isLoading = false;
                 })
             },
-			sortDocList: function (list, method) {
-				if (method === 'titleDown') {
-					list.sort(function(a,b){
-						var x = a.title.toLowerCase()
-						var y = b.title.toLowerCase()
-						if (x > y) {return -1}
-						if (x < y) {return 1}
-						return 0
-					})
-				} else if (method === 'titleUp') {
-					list.sort(function(a,b){
-						var x = a.title.toLowerCase()
-						var y = b.title.toLowerCase()
-						if (x < y) {return -1}
-						if (x > y) {return 1}
-						return 0
-					})
-				}
-				
-				if (method === 'timeDown') {
-					list.sort(function(a,b){
-						var x = new Date(a.time)
-						var y = new Date(b.time)
-						if (x < y) {return -1}
-						if (x > y) {return 1}
-						return 0
-					})
-				} else if (method === 'timeUp') {
-					list.sort(function(a,b){
-						var x = new Date(a.time)
-						var y = new Date(b.time)
-						if (x > y) {return -1}
-						if (x < y) {return 1}
-						return 0
-					})
-				}
-			},
-			handleCommand: function (command) {
-				this.sortDocList(this.docList, command)
-			}
+            handleSort(data) {
+                this.docList = data
+            }
         },
         created() {
             console.log(this.$route.path)
@@ -186,7 +136,7 @@
         padding: 10px;
     }
 
-    .list_empty_notice{
+    .list_empty_notice {
         color: darkgrey;
         height: inherit;
         padding-top: 20%;
