@@ -10,6 +10,7 @@ import UserCenter from "@/views/UserCenter";
 import TeamSpace from "../views/TeamSpace.vue"
 import AvatarTest from "@/views/AvatarTest";
 import DocumentView from '@/views/DocumentView';
+import UserInfo from "@/views/UserInfo";
 
 Vue.use(VueRouter);
 
@@ -96,6 +97,15 @@ const routes = [
             isLogin: true,
         }
 
+    },
+    {
+        path: "/User/:username",
+        name: "UserInfo",
+        component: UserInfo,
+        meta: {
+            title: "他人空间",
+            isLogin: true,
+        }
     },
     {
         path: "/AvatarTest",
