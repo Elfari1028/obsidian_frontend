@@ -146,7 +146,7 @@ export default {
       console.log(this.document);
       this.$axios.post("/doc/auto_save_doc/",
         {doc_id: this.doc_id,
-          document: this.document},config.axiosHeaders).then((response)=>{
+          document: this.document},Config.axiosHeaders).then((response)=>{
             if(response.status === 200){
               if(response.data.success === true){
                 this.$message("自动保存成功");
@@ -162,7 +162,7 @@ export default {
     },
     refresh_document(){
       this.$axios.post("/doc/refresh_doc/",
-        {doc_id: this.doc_id},config.axiosHeaders).then((response)=>{
+        {doc_id: this.doc_id},Config.axiosHeaders).then((response)=>{
             if(response.status === 200){
               if(response.data.success === true){
                 this.$message("自动刷新成功");
@@ -177,7 +177,7 @@ export default {
       clearInterval(this.timer);
       this.$axios.post("/doc/close_doc/",
         {doc_id: this.doc_id,
-          document: this.document},config.axiosHeaders).then((response)=>{
+          document: this.document},Config.axiosHeaders).then((response)=>{
             if(response.status === 200){
               if(response.data.success === true){
                 this.$message("关闭成功");
@@ -193,7 +193,7 @@ export default {
   created() {  
     this.doc_id=this.$route.params.doc_id;
     this.doc_title_input = this.doc_title;
-    this.$axios.post("/doc/open_one_doc/",{doc_id:this.doc_id},config.axiosHeaders).then((response)=> {
+    this.$axios.post("/doc/open_one_doc/",{doc_id:this.doc_id},Config.axiosHeaders).then((response)=> {
         if (response.status === 200) {  
           if (response.data.success === true) {
             let res = response.data;
