@@ -21,7 +21,7 @@
 					<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
 						<i class="el-icon-more"></i>
 					</span>
-                    <el-dropdown-menu v-if='isDefault' slot="dropdown">
+                    <el-dropdown-menu v-if="this.docType==='isDefault'" slot="dropdown">
                         <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
                         </el-dropdown-item>
                         <el-dropdown-item @click.native="toTrash(doc.doc_id)"
@@ -31,7 +31,7 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
 
-                    <el-dropdown-menu v-if='isCollection' slot="dropdown">
+                    <el-dropdown-menu v-if="this.docType==='isCollection'" slot="dropdown">
                         <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
                         </el-dropdown-item>
                         <el-dropdown-item @click.native="delCollection(doc.doc_id)"
@@ -41,14 +41,14 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
 
-                    <el-dropdown-menu v-if='isHistory' slot="dropdown">
+                    <el-dropdown-menu v-if="this.docType==='isHistory'" slot="dropdown">
                         <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
                         </el-dropdown-item>
                         <el-dropdown-item @click.native="shareDocument(doc.doc_id)">分享
                         </el-dropdown-item>
                     </el-dropdown-menu>
 
-                    <el-dropdown-menu v-if='isTrash' slot="dropdown">
+                    <el-dropdown-menu v-if="this.docType==='isTrash'" slot="dropdown">
                         <el-dropdown-item @click.native="restoreDocument(doc.doc_id)">恢复
                         </el-dropdown-item>
                         <el-dropdown-item @click.native="delDocument(doc.doc_id)"
@@ -83,39 +83,25 @@
             docType: String,
             doc: Object,
         },
-        data () {
+        data() {
             return {
-                isDefault: false,
-                isCollection: false,
-                isHistory: false,
-                isTrash: false,
                 shareUrl: '',
                 dialogVisible: false
             }
         },
         mounted() {
-            console.log("docType in card "+this.docType)
 
-            if (this.docType === 'isCollection') {
-                this.isCollection = true
-            } else if (this.docType === 'isTrash') {
-                this.isTrash = true
-            } else if (this.docType === 'isHistory') {
-                this.isHistory = true
-            } else if (this.docType === 'isDefault') {
-                this.isDefault = true
-            }
         },
         methods: {
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: '/document/'+doc_id
+                    path: '/document/' + doc_id
                 })
             },
             delCollection(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
+                this.$axios.post('', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文档已移出收藏")
                     } else {
@@ -125,7 +111,7 @@
             },
             shareDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
+                this.$axios.post('', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.shareUrl = res.data.url;
                         this.dialogVisible = true;
@@ -138,7 +124,7 @@
             },
             toTrash(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
+                this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文件已移入回收站")
                     } else {
@@ -148,7 +134,7 @@
             },
             restoreDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
+                this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文件已恢复")
                     } else {
@@ -163,7 +149,7 @@
                     cancelButtonText: '取消',
                     type: "warning"
                 }).then(() => {
-                    this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
+                    this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id}), config.axiosHeaders).then(res => {
                         if (res.data.success === 0) {
                             this.$alert("文件已删除")
                         } else {
@@ -207,6 +193,7 @@
         height: 100px;
         margin: 10px;
     }
+
     .card_header_font {
         cursor: pointer;
         font-size: 16px;
