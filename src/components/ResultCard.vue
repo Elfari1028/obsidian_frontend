@@ -1,19 +1,26 @@
 <template>
-	<div>
-
-		<el-card class="doc_item">
-
-			<div slot="header" style="height: 10px">
-				<i class="el-icon-document" style="float: left"></i>
-
-				<span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
-
-				<el-dropdown trigger="click" style="float: right">
-					
+    <div>
+        <el-dialog
+                title="分享文件"
+                :append-to-body="true"
+                :visible.sync="dialogVisible"
+                width="500px">
+            <el-input v-model="shareUrl" readonly="true" id="url_input">
+                <template slot="prepend">URL:</template>
+                <el-button slot="append" icon="el-icon-document" @click="copyUrl()"></el-button>
+            </el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-card class="doc_item">
+            <div slot="header" style="height: 10px">
+                <i class="el-icon-document" style="float: left"></i>
+                <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
+                <el-dropdown trigger="click" style="float: right">
 					<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
 						<i class="el-icon-more"></i>
 					</span>
-
                     <el-dropdown-menu v-if='isDefault' slot="dropdown">
                         <el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
                         </el-dropdown-item>
@@ -48,23 +55,18 @@
                                           style="color: #ff0000">删除
                         </el-dropdown-item>
                     </el-dropdown-menu>
-
                 </el-dropdown>
-
             </div>
-
             <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
 				<span class="card_body_font card_body">
 					{{doc.workspace}}
 				</span>
-				<span class="card_time_font card_body">
+                <span class="card_time_font card_body">
 					最后修改于：{{doc.time}}
 				</span>
-			</div>
-
-		</el-card>
-
-	</div>
+            </div>
+        </el-card>
+    </div>
 </template>
 
 <script>
@@ -76,21 +78,23 @@
     import config from "@/config";
 
     export default {
-        name: 'ResultCard',
+        name: 'DocumentCard',
         props: {
             docType: String,
             doc: Object,
         },
-        data() {
+        data () {
             return {
                 isDefault: false,
                 isCollection: false,
                 isHistory: false,
-                isTrash: false
+                isTrash: false,
+                shareUrl: '',
+                dialogVisible: false
             }
         },
         mounted() {
-            console.log("docType in card " + this.docType)
+            console.log("docType in card "+this.docType)
 
             if (this.docType === 'isCollection') {
                 this.isCollection = true
@@ -101,12 +105,17 @@
             } else if (this.docType === 'isDefault') {
                 this.isDefault = true
             }
+			
+			if (this.isResult) {
+				var elem = document.getElementsByClassName('DocumentCard')
+				elem.style.width = '400px'
+			}
         },
         methods: {
             toDocument(doc_id) {
                 console.log(doc_id)
                 this.$router.push({
-                    path: '/document/' + doc_id
+                    path: '/document/'+doc_id
                 })
             },
             delCollection(doc_id) {
@@ -177,6 +186,16 @@
                 })
 
             },
+            copyUrl() {
+                const e = document.getElementById('url_input');
+                e.select();
+                document.execCommand("Copy");
+
+                this.$message({
+                    message: "链接已复制成功",
+                    type: 'warning'
+                });
+            },
         }
     }
 </script>
@@ -212,4 +231,18 @@
 	.card_body_font {
 		color: dimgray;
 	}
+</style>
+
+<style>
+    .el-card__body {
+        padding: 8px 5px !important;
+    }
+
+    .el-card__header {
+        padding: 15px !important;
+    }
+
+    body .el-scrollbar__wrap {
+        overflow-x: hidden;
+    }
 </style>
