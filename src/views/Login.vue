@@ -1,6 +1,6 @@
 <template>
     <div id="login_page">
-        <MenuBar :hide="1"/>
+        <MenuBar :hide="true"/>
         <el-container>
             <el-main id="login_page_main">
                 <div id="login_block">

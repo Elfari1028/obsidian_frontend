@@ -16,7 +16,7 @@
             <img src="../assets/icon/obsidian2.png" style="vertical-align: middle" alt="" width="40" height="40"/>
             黑曜石文档
         </div>
-        <div style="display: flex;position: absolute;right: 0">
+        <div style="display: flex;position: absolute;right: 0" v-if="!this.hide">
             <div class="navigate_bar_function_item" style="max-width: 400px">
                 <el-input v-model="searchKeywords"
                           placeholder="搜索当前页面"
@@ -49,7 +49,7 @@
         name: "MenuBar",
         components: {NoticeBox, SearchResult},
         props: {
-            hide: Number,
+            hide: Boolean,
 			test: String,
 			docList: Array,
 			docType: String,
