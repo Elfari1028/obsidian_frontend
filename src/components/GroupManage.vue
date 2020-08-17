@@ -401,6 +401,8 @@ export default{
 					} else {
 						_this.$message.success('已同意成员进入')
 					}
+					
+					_this.$emit("updateMemberList")
 				})
 				.catch(err => {
 					_this.$message.error('同意成员进入出了点问题')

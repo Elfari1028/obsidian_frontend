@@ -13,72 +13,20 @@
 				</el-aside>
 				
 				<!-- 主界面 -->
-				<el-main v-if='!isTrashCan' :style="{height: spaceHeight}">
+				<el-main v-if='!isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
 					
 					<el-scrollbar style="height: 100%">
-						<el-card class="doc_item" v-for="(doc,index) in docList" :key="index">
-							
-							<div slot="header" style="height: 10px">
-								<i class="el-icon-document" style="float: left"></i>
-								<span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
-								<el-dropdown trigger="click" style="float: right">
-									<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
-										<i class="el-icon-more"></i>
-									</span>
-									<el-dropdown-menu slot="dropdown">
-										<el-dropdown-item @click.native="toDocument(doc.doc_id)">打开
-										</el-dropdown-item>
-										<el-dropdown-item @click.native="delDocument(doc.doc_id)"
-															style="color: #ff0000">删除
-										</el-dropdown-item>
-										<el-dropdown-item @click.native="shareDocument(doc.doc_id)">分享
-										</el-dropdown-item>
-									</el-dropdown-menu>
-								</el-dropdown>
-							</div>
-							
-							<div style="cursor: pointer" @click="toDocument(doc.doc_id)">
-								<span class="card_body_font card_body">
-									{{doc.workspace}}
-								</span>
-								<span class="card_time_font card_body">
-									最后修改于：{{doc.time}}
-								</span>
-							</div>
-						</el-card>
+						<DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
+						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
 					</el-scrollbar>
 					
-				</el-main><!--主体-->
-				
+				</el-main>
+
 				<!-- 回收站 -->
-				<el-main v-if='isTrashCan' :style="{height: spaceHeight}">
+				<el-main v-if='isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
 					<el-scrollbar style="height: 100%">
-						<el-card class="doc_item" v-for="(doc,index) in trashList" :key="index">
-							<div slot="header" style="height: 10px">
-								<i class="el-icon-document" style="float: left"></i>
-								<span class="card_header_font">{{doc.title}}</span>
-								<el-dropdown trigger="click" style="float: right">
-									<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
-										<i class="el-icon-more"></i>
-									</span>
-									<el-dropdown-menu slot="dropdown">
-										<el-dropdown-item @click.native="restoreDocument(doc.doc_id)">恢复
-										</el-dropdown-item>
-										<el-dropdown-item @click.native="delDocument(doc.doc_id)"
-														style="color: #ff0000">删除
-										</el-dropdown-item>
-									</el-dropdown-menu>
-								</el-dropdown>
-							</div>
-							<div>
-								<span class="card_body_font card_body">
-									{{doc.workspace}}
-								</span>
-								<span class="card_time_font card_body">
-									最后修改于：{{doc.time}}
-								</span>
-							</div>
-						</el-card>
+						<DocumentCardforGroupTrash v-for="(doc,index) in trashList" :key="index" :doc="doc"/>
+						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
 					</el-scrollbar>
 				</el-main>
 				
@@ -94,7 +42,7 @@
 							trigger="click"
 							>
 							
-							<MemberCard :Team_id='Team_id'></MemberCard>
+							<MemberCard :Team_id='Team_id' ref="member_card"></MemberCard>
 							
 							<el-button slot="reference">团队成员</el-button>
 						</el-popover>
@@ -104,12 +52,20 @@
 							trigger="click"
 							>
 							
-							<GroupManage :Team_id='Team_id'></GroupManage>
+							<GroupManage :Team_id='Team_id' v-on:updateMemberList="updateMemberList"></GroupManage>
 							
 							<el-button slot="reference">团队管理</el-button>
 						</el-popover>
 					
 						<el-divider></el-divider>
+						
+						<el-button size="small" type="info" circle
+									icon="el-icon-refresh"
+									@click="updateFileList"></el-button>
+						<el-button size="small" type="info" @click="openCreateDocPopup"
+									round icon="el-icon-plus">新建文档</el-button>
+
+						<br><br>
 						
 						<el-dropdown trigger="click" @command="handleCommand">
 							<el-button type="info">
@@ -136,7 +92,7 @@
 				</el-aside>
 
 			</el-container>
-
+			<CreateDocPopup ref="create_doc" />
 		</el-container>
 	</div>
 </template>
@@ -146,18 +102,21 @@
 	import AsideMenu from "@/components/AsideMenu";
 	import MemberCard from "@/components/MemberCard.vue"
 	import GroupManage from "@/components/GroupManage.vue"
+	import DocumentCard from "@/components/DocumentCard.vue"
+	import DocumentCardforGroupTrash from "@/components/DocumentCardforGroupTrash.vue"
+	import CreateDocPopup from "@/components/CreateDocPopup"
 	import $ from 'jquery'
-	import config from "@/config";
 	
 	export default {
 		name: "TeamSpace",
-		components: {AsideMenu, MenuBar, MemberCard, GroupManage},
+		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, DocumentCardforGroupTrash, "CreateDocPopup":CreateDocPopup},
 		inject:['reload'],
 		data() {
 			return {
 				Team_id: -1,
 				Team_name: '火锅小分队',
 				isScreenWide: false,
+				isLoading: false,
 				dialogVisible: false,
 				isTrashCan: false,
 				shareUrl: '',
@@ -227,56 +186,11 @@
 			}
 		},
 		methods: {
-			toDocument(doc_id) {
-				console.log(doc_id)
-				this.$router.push({
-					path: ''
-				})
-			},
-			delDocument(doc_id) {
-				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
-					if (res.data.success === 0) {
-						this.$alert("文件已移入回收站")
-					} else {
-						this.$alert(res.data.exc)
-					}
-				})
-			},
-			restoreDocument(doc_id) {
-				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
-					if (res.data.success === 0) {
-						this.$alert("文件已恢复")
-					} else {
-						this.$alert(res.data.exc)
-					}
-				})
-			},
-			shareDocument(doc_id) {
-				console.log(doc_id)
-				this.$axios.post('', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
-					if (res.data.success === 0) {
-						this.shareUrl = res.data.url;
-						this.dialogVisible = true;
-					}
-				}).catch(err => {
-					console.log(err)
-					this.shareUrl = 'TEST_URL'
-					this.dialogVisible = true;
-				})
-			},
-			copyUrl() {
-				const e = document.getElementById('url_input');
-				e.select();
-				document.execCommand("Copy");
-		
-				this.$message({
-					message: "链接已复制成功",
-					type: 'warning'
-				});
+			openCreateDocPopup(){
+				this.$refs.create_doc.openDialog();
 			},
 			loadDocList: function () {
+				this.isLoading = true
 				var _this = this
 				console.log('正在获取团队文件')
 				this.$axios
@@ -284,19 +198,22 @@
 						team_id: _this.Team_id
 					}))
 					.then(response => {
-					var res = response.data
-					_this.docList = res.doc_list
-					
-					if (res.success === false) {
-						_this.$message.error(res.exc)
-					}
+						var res = response.data
+						_this.docList = res.doc_list
+						
+						if (res.success === false) {
+							_this.$message.error(res.exc)
+						}
+						_this.isLoading = false
 					})
 					.catch(err => {
 						_this.$message.error('获取团队文件出了点问题')
 						console.log(err)
+						_this.isLoading = false
 					})
 			},
 			loadTrashList: function () {
+				this.isLoading = true
 				var _this = this
 				console.log('正在获取团队回收站文件')
 				this.$axios
@@ -304,17 +221,29 @@
 						team_id: _this.Team_id
 					}))
 					.then(response => {
-					var res = response.data
-					_this.trashList = res.doc_list
-					
-					if (res.success === false) {
-						_this.$message.error(res.exc)
-					}
+						var res = response.data
+						_this.trashList = res.doc_list
+						
+						if (res.success === false) {
+							_this.$message.error(res.exc)
+						}
+						_this.isLoading = false
 					})
 					.catch(err => {
 						_this.$message.error('获取团队回收站文件出了点问题')
 						console.log(err)
+						_this.isLoading = false
 					})
+			},
+			updateFileList: function () {
+				if (this.isTrashCan) {
+					this.loadTrashList()
+				} else {
+					this.loadDocList()
+				}
+			},
+			updateMemberList: function () {
+				this.$refs.member_card.loadGroupMember()
 			},
 			switchTrashCan: function () {
 				if (!this.isTrashCan) {
@@ -433,65 +362,65 @@
 
 <style scoped>
 	
-    #toolbar_title{
-        display: inline;
-        margin: 10px;
-        color: dimgray;
-        font-size: 16px;
-        width: 50%;
-    }
+	#toolbar_title{
+		display: inline;
+		margin: 10px;
+		color: dimgray;
+		font-size: 16px;
+		width: 50%;
+	}
 
-    #bench_toolbar {
-        margin-top: 10px;
-    }
+	#bench_toolbar {
+		margin-top: 10px;
+	}
 
-    .main_page {
-        min-width: 1200px;
-    }
+	.main_page {
+		min-width: 1200px;
+	}
 
-    #aside_left {
-        border-right: 1px solid #DEDFE6;
-        height: auto;
-        padding: 10px;
-    }
+	#aside_left {
+		border-right: 1px solid #DEDFE6;
+		height: auto;
+		padding: 10px;
+	}
 
-    #aside_right {
-        border-left: 1px solid #DEDFE6;
-        height: auto;
-        padding: 10px;
-    }
+	#aside_right {
+		border-left: 1px solid #DEDFE6;
+		height: auto;
+		padding: 10px;
+	}
 
-    .doc_item {
-        -webkit-user-select:none;
-        -moz-user-select:none;
-        -ms-user-select:none;
-        user-select:none;
-        display: block;
-        float: left;
-        width: 45%;
-        height: 100px;
-        margin: 10px;
-    }
+	.doc_item {
+		-webkit-user-select:none;
+		-moz-user-select:none;
+		-ms-user-select:none;
+		user-select:none;
+		display: block;
+		float: left;
+		width: 45%;
+		height: 100px;
+		margin: 10px;
+	}
 
-    .card_header_font {
-        cursor: pointer;
-        font-size: 16px;
-        color: dimgray;
-    }
+	.card_header_font {
+		cursor: pointer;
+		font-size: 16px;
+		color: dimgray;
+	}
 
-    .card_body {
-        display: block;
-        margin: 5px;
-    }
+	.card_body {
+		display: block;
+		margin: 5px;
+	}
 
-    .card_time_font {
-        font-size: 10px;
-        color: dimgray;
-    }
+	.card_time_font {
+		font-size: 10px;
+		color: dimgray;
+	}
 
-    .card_body_font {
-        color: dimgray;
-    }
+	.card_body_font {
+		color: dimgray;
+	}
 
 	#aside_left {
 		border-right: 1px solid #DEDFE6;
