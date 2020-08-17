@@ -3,7 +3,7 @@
 
 		<el-card class="doc_item">
 			
-			<div slot="header" style="height: 10px">
+			<div slot="header" style="height: 20px">
 				<i class="el-icon-document" style="float: left"></i>
 				
 				<span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import config from "@/config";
+import Config from "@/config";
 	
 export default {
 	name: 'DocumentCardforGroupTrash',
@@ -52,12 +52,15 @@ export default {
 		toDocument(doc_id) {
 			console.log(doc_id)
 			this.$router.push({
-				path: '/document/'+doc_id
+				path: '/document',
+				params: {
+					doc_id: doc_id
+				}
 			})
 		},
 		restoreDocument(doc_id) {
 			console.log(doc_id)
-			this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
+			this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
 				if (res.data.success === 0) {
 					this.$alert("文件已恢复")
 				} else {
@@ -72,7 +75,7 @@ export default {
 				cancelButtonText: '取消',
 				type: "warning"
 			}).then(() => {
-				this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id}),config.axiosHeaders).then(res => {
+				this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
 					if (res.data.success === 0) {
 						this.$alert("文件已删除")
 					} else {
@@ -129,11 +132,11 @@ export default {
 
 <style>
     .el-card__body {
-        padding: 8px 5px !important;
+        padding: 8px 10px !important;
     }
 
     .el-card__header {
-        padding: 15px !important;
+        padding: 5px 15px !important;
     }
 
     body .el-scrollbar__wrap {

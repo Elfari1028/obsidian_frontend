@@ -39,7 +39,7 @@
                             <el-form-item label="用户名">
                                 <el-input :disabled="true" v-model="userInfo.username"></el-input>
                             </el-form-item>
-                            <el-form-item label="邮箱">
+                            <el-form-item label="邮箱" prop="email">
                                 <el-input :disabled="!onEdit" v-model="userInfo.email"></el-input>
                             </el-form-item>
                             <el-form-item label="性别">
@@ -56,7 +56,7 @@
                             </el-form-item>
                             <el-form-item label="个人简介">
                                 <el-input :disabled="!onEdit" type="textarea" :rows="5"
-                                          v-model="userInfo.mood"></el-input>
+                                          v-model="userInfo.mood" maxlength="50" show-word-limit></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="changePass">修改密码</el-button>
@@ -69,17 +69,17 @@
                                    :close-on-click-modal="false"
                                    :visible.sync="showPassChangeDialog">
                             <el-form :model="passForm" :rules="passRules" ref="passForm">
-                                <el-form-item prop="oldPassword">
-                                    <el-input placeholder="旧密码" type="password"
-                                              v-model="passForm.oldPassword"></el-input>
+                                <el-form-item prop="old_password">
+                                    <el-input placeholder="旧密码" type="password" show-password
+                                              v-model="passForm.old_password"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="newPassword">
-                                    <el-input placeholder="新密码" type="password"
-                                              v-model="passForm.newPassword"></el-input>
+                                <el-form-item prop="new_password">
+                                    <el-input placeholder="新密码" type="password" show-password
+                                              v-model="passForm.new_password"></el-input>
                                 </el-form-item>
-                                <el-form-item prop="checkPassword">
-                                    <el-input placeholder="确认密码" type="password"
-                                              v-model="passForm.checkPassword"></el-input>
+                                <el-form-item prop="check_password">
+                                    <el-input placeholder="确认密码" type="password" show-password
+                                              v-model="passForm.check_password"></el-input>
                                 </el-form-item>
                             </el-form>
 
@@ -99,7 +99,7 @@
 <script>
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
-    import config from "@/config";
+    import Config from "@/config";
     import {encryption} from "@/utils/encryptUtils";
 
     export default {
@@ -113,7 +113,7 @@
                 } else {
                     callback(new Error('邮箱地址格式错误'))
                 }
-                this.$axios.post('account/email_used/', JSON.stringify({email: value}), config.axiosHeaders)
+                this.$axios.post('account/email_used/', JSON.stringify({email: value}), Config.axiosHeaders)
                     .then(res => {
                         console.log(res.data)
                         if (res.data.success === true) {
@@ -126,7 +126,7 @@
                     })
             };
             const validatePassword = (rule, value, callback) => {
-                if (value !== this.passForm.newPassword) {
+                if (value !== this.passForm.new_password) {
                     callback(new Error('两次输入密码不一致'));
                 } else {
                     callback();
@@ -148,9 +148,9 @@
                     age: 21
                 },
                 passForm: {
-                    oldPassword: '',
-                    newPassword: '',
-                    checkPassword: ''
+                    old_password: '',
+                    new_password: '',
+                    check_password: ''
                 },
                 encodePassForm: {},
                 infoRules: {
@@ -160,14 +160,14 @@
                     ],
                 },
                 passRules: {
-                    oldPassword: [
+                    old_password: [
                         {required: true, message: '请输入原密码', trigger: 'change'},
                     ],
-                    newPassword: [
+                    new_password: [
                         {required: true, message: '请输入新密码', trigger: 'change'},
                         {min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'change'}
                     ],
-                    checkPassword: [
+                    check_password: [
                         {required: true, message: '请再次输入验证密码', trigger: 'change'},
                         {validator: validatePassword, trigger: 'change'}
                     ]
@@ -210,9 +210,9 @@
             },
             changePass() {
                 this.passForm = {
-                    oldPassword: '',
-                    newPassword: '',
-                    checkPassword: ''
+                    old_password: '',
+                    new_password: '',
+                    check_password: ''
                 }
                 this.showPassChangeDialog = true
             },
@@ -223,7 +223,8 @@
                 this.$refs['passForm'].validate(valid => {
                     if (valid) {
                         encryption(this.passForm, this.encodePassForm)
-                        this.$axios.post('account/modify_password/', JSON.stringify(this.encodePassForm), config.axiosHeaders)
+                        console.log(this.encodePassForm)
+                        this.$axios.post('account/modify_password/', JSON.stringify(this.encodePassForm), Config.axiosHeaders)
                             .then(res => {
                                 console.log(res)
                                 if (res.data.success) {
@@ -261,7 +262,7 @@
             this.isLoading = true
             await this.$axios.get('account/get_avatar/').then(res => {
                 if (res.data.success) {
-                    this.avatarUrl = config.baseUrl.substring(0, config.baseUrl.length - 1) + res.data.url
+                    this.avatarUrl = Config.baseUrl.substring(0, Config.baseUrl.length - 1) + res.data.url
                 } else {
                     this.avatarUrl = ''
                 }

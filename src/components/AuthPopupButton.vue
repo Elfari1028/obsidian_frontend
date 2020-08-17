@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import config from "@/config"
+import Config from "@/config"
 export default {
   name: "AuthPopupButton",
   props: {
@@ -73,7 +73,7 @@ export default {
         doc_id: this.doc_id,
         auth:this.self_auth,
         team_auth: this.belong_to_team?this.team_auth:null,
-      },config.axiosHeaders).then((response) => {
+      },Config.axiosHeaders).then((response) => {
           if (response.status === 200) {
             if (response.data.success === true) return;
             else

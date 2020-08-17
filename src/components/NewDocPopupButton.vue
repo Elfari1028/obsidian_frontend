@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import config from "@/config";
+import Config from "@/config";
 export default {
   name: "NewDocPopupButton",
   components: {},
@@ -91,7 +91,7 @@ export default {
           team_auth: referer.belong_to_team ? referer.team_auth : null,
           team: referer.belong_to_team ? referer.team_id : null,
         },
-        config.axiosHeaders
+        Config.axiosHeaders
       ).then((response) => {
           if (response.status === 200) {
             if (response.data.success === true){
@@ -139,7 +139,7 @@ export default {
   created() {
     let referer = this;
     this.$axios
-      .get("/doc/list_all_templates/", config.axiosHeaders)
+      .get("/doc/list_all_templates/", Config.axiosHeaders)
       .then((response) => {
         if (response.status === 200) {
           if (response.data.success === true) {

@@ -1,9 +1,9 @@
 <template>
-	<div >
-		<el-container>
-			<el-header style="padding: 0">
-				<MenuBar :docList='searchList' :docType='docType'/>
-			</el-header>
+    <div>
+        <el-container>
+            <el-header style="padding: 0">
+                <MenuBar :docList='searchList' :docType='docType'/>
+            </el-header>
 
 			<el-container>
 				
@@ -14,12 +14,12 @@
 				
 				<!-- 主界面 -->
 				<el-main v-if='!isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
-					
+
 					<el-scrollbar style="height: 100%">
 						<DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
 						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
 					</el-scrollbar>
-					
+
 				</el-main>
 
 				<!-- 回收站 -->
@@ -29,21 +29,21 @@
 						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
 					</el-scrollbar>
 				</el-main>
-				
+
 				<!-- 右边栏 -->
 				<el-aside width="250px" id="aside_right">
 					<div id="bench_toolbar">
 						<div id="toolbar_title">{{Team_name}}</div>
-						
+
 						<el-divider></el-divider>
-						
+
 						<el-popover
 							placement="left"
 							trigger="click"
 							>
-							
+
 							<MemberCard :Team_id='Team_id' ref="member_card"></MemberCard>
-							
+
 							<el-button slot="reference">团队成员</el-button>
 						</el-popover>
 						<br><br>
@@ -51,35 +51,23 @@
 							placement="left"
 							trigger="click"
 							>
-							
+
 							<GroupManage :Team_id='Team_id' v-on:updateMemberList="updateMemberList"></GroupManage>
-							
+
 							<el-button slot="reference">团队管理</el-button>
 						</el-popover>
-					
+
 						<el-divider></el-divider>
-						
+
 						<el-button size="small" type="info" circle
 									icon="el-icon-refresh"
 									@click="updateFileList"></el-button>
-						<el-button size="small" type="info" @click="openCreateDocPopup"
-									round icon="el-icon-plus">新建文档</el-button>
+									
+						<NewDocPopupButton/>
 
 						<br><br>
-						
-						<el-dropdown trigger="click" @command="handleCommand">
-							<el-button type="info">
-								<i class='el-icon-s-fold'></i>
-								对当前文件排序
-							</el-button>
-							
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item command='titleUp'>按名称升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-								<el-dropdown-item command='titleDown'>按名称降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-								<el-dropdown-item command='timeUp'>按时间升序<i class='el-icon-caret-top'></i></el-dropdown-item>
-								<el-dropdown-item command='timeDown'>按时间降序<i class='el-icon-caret-bottom'></i></el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
+
+						<DocumentSorter :doc-list="isTrashCan?trashList:docList" :sortResult="handleSort"/>
 						
 						<br><br>
 						
@@ -104,12 +92,13 @@
 	import GroupManage from "@/components/GroupManage.vue"
 	import DocumentCard from "@/components/DocumentCard.vue"
 	import DocumentCardforGroupTrash from "@/components/DocumentCardforGroupTrash.vue"
-	import CreateDocPopup from "@/components/CreateDocPopup"
+	import DocumentSorter from "@/components/DocumentSorter.vue"
+	import NewDocPopupButton from "@/components/NewDocPopupButton"
 	import $ from 'jquery'
-	
+
 	export default {
 		name: "TeamSpace",
-		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, DocumentCardforGroupTrash, "CreateDocPopup":CreateDocPopup},
+		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, DocumentCardforGroupTrash, NewDocPopupButton, DocumentSorter},
 		inject:['reload'],
 		data() {
 			return {
@@ -186,9 +175,6 @@
 			}
 		},
 		methods: {
-			openCreateDocPopup(){
-				this.$refs.create_doc.openDialog();
-			},
 			loadDocList: function () {
 				this.isLoading = true
 				var _this = this
@@ -200,7 +186,7 @@
 					.then(response => {
 						var res = response.data
 						_this.docList = res.doc_list
-						
+
 						if (res.success === false) {
 							_this.$message.error(res.exc)
 						}
@@ -223,7 +209,7 @@
 					.then(response => {
 						var res = response.data
 						_this.trashList = res.doc_list
-						
+
 						if (res.success === false) {
 							_this.$message.error(res.exc)
 						}
@@ -255,109 +241,68 @@
 				} else {
 					//获取团队文件
 
-					this.loadDocList()
-					this.searchList = this.docList
-					this.docType = "isDefault"
-				}
-				
-				this.isTrashCan = !this.isTrashCan
-				
-				document.getElementById('trashCanButton').innerHTML = this.isTrashCan==true ? "<i class='el-icon-menu'></i>切换到团队主页面" : "<i class='el-icon-delete-solid'></i>切换到团队回收站"
-			},
-			sortDocList: function (list, method) {
-				if (method === 'titleDown') {
-					list.sort(function(a,b){
-						var x = a.title.toLowerCase()
-						var y = b.title.toLowerCase()
-						if (x > y) {return -1}
-						if (x < y) {return 1}
-						return 0
-					})
-				} else if (method === 'titleUp') {
-					list.sort(function(a,b){
-						var x = a.title.toLowerCase()
-						var y = b.title.toLowerCase()
-						if (x < y) {return -1}
-						if (x > y) {return 1}
-						return 0
-					})
-				}
-				
-				if (method === 'timeDown') {
-					list.sort(function(a,b){
-						var x = new Date(a.time)
-						var y = new Date(b.time)
-						if (x < y) {return -1}
-						if (x > y) {return 1}
-						return 0
-					})
-				} else if (method === 'timeUp') {
-					list.sort(function(a,b){
-						var x = new Date(a.time)
-						var y = new Date(b.time)
-						if (x > y) {return -1}
-						if (x < y) {return 1}
-						return 0
-					})
-				}
-			},
-			handleCommand: function (command) {
-				if (this.isTrashCan) {
-					this.sortDocList(this.trashList, command)
-				} else {
-					this.sortDocList(this.docList, command)
-				}
-			}
-		},
-		created() {
-			this.Team_id = this.$route.params.Team_id
-			
-			//获取团队名称
-			var _this = this
-			console.log('正在获取团队名称')
-			this.$axios
-				.post('teamwork/get_team_name/', JSON.stringify({
-					team_id: _this.Team_id
-				}))
-				.then((response) => {
-					var res = response.data
-					_this.Team_name = res.team_name
-					
-					if (res.success === false) {
-						_this.$message.error(res.exc)
-					}
-				})
-				.catch(err => {
-					_this.$message.error('获取团队名称出了点问题')
-					console.log(err)
-				})
-				
-			//获取团队文件
-			this.loadDocList()
-			
-			this.searchList = this.docList
-		},
-		mounted() {
-			window.onresize = () => {
-				return (() => {
-					this.spaceHeight = window.innerHeight - 80 + 'px'
-					if (!this.isScreenWide && window.innerWidth > 1500) {
-						this.isScreenWide = !this.isScreenWide
-						$(".doc_item").css("width", "30%")
-					}
-					if (this.isScreenWide && window.innerWidth <= 1500) {
-						this.isScreenWide = !this.isScreenWide
-						$(".doc_item").css("width", "45%")
-					}
-				})()
-			}
-		},
-		beforeRouteUpdate (to, from, next) {
-			console.log(to, from, next)
-			next()
-			this.reload()
-		},
-	}
+                    this.loadDocList()
+                    this.searchList = this.docList
+                    this.docType = "isDefault"
+                }
+
+                this.isTrashCan = !this.isTrashCan
+
+                document.getElementById('trashCanButton').innerHTML = this.isTrashCan == true ? "<i class='el-icon-menu'></i>切换到团队主页面" : "<i class='el-icon-delete-solid'></i>切换到团队回收站"
+            },
+            handleSort(data) {
+                this.docList = data
+            },
+        },
+        created() {
+            this.Team_id = this.$route.params.Team_id
+
+            //获取团队名称
+            var _this = this
+            console.log('正在获取团队名称')
+            this.$axios
+                .post('teamwork/get_team_name/', JSON.stringify({
+                    team_id: _this.Team_id
+                }))
+                .then((response) => {
+                    var res = response.data
+                    _this.Team_name = res.team_name
+
+                    if (res.success === false) {
+                        _this.$message.error(res.exc)
+                    }
+                })
+                .catch(err => {
+                    _this.$message.error('获取团队名称出了点问题')
+                    console.log(err)
+                })
+
+            //获取团队文件
+            this.loadDocList()
+
+            this.searchList = this.docList
+        },
+        mounted() {
+            window.onresize = () => {
+                return (() => {
+                    this.spaceHeight = window.innerHeight - 80 + 'px'
+                    if (!this.isScreenWide && window.innerWidth > 1500) {
+                        this.isScreenWide = !this.isScreenWide
+                        $(".doc_item").css("width", "30%")
+                    }
+                    if (this.isScreenWide && window.innerWidth <= 1500) {
+                        this.isScreenWide = !this.isScreenWide
+                        $(".doc_item").css("width", "45%")
+                    }
+                })()
+            }
+        },
+        beforeRouteUpdate(to, from, next) {
+            console.log(to, from, next)
+            next()
+            this.reload()
+        },
+    }
 </script>
 
 <style scoped>
@@ -422,10 +367,10 @@
 		color: dimgray;
 	}
 
-	#aside_left {
-		border-right: 1px solid #DEDFE6;
-		height: auto;
-		padding: 10px;
-	}
+    #aside_left {
+        border-right: 1px solid #DEDFE6;
+        height: auto;
+        padding: 10px;
+    }
 
 </style>
