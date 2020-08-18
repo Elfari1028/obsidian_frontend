@@ -11,7 +11,8 @@
                                     <el-input v-model="loginForm.email" placeholder="邮箱/用户名"></el-input>
                                 </el-form-item>
                                 <el-form-item>
-                                    <el-input type="password" v-model="loginForm.password" placeholder="密码" show-password></el-input>
+                                    <el-input type="password" v-model="loginForm.password" placeholder="密码"
+                                              show-password></el-input>
                                 </el-form-item>
                                 <el-form-item>
                                     <el-button type="info" style="float: right" @click="submitLogin">登录
@@ -196,7 +197,8 @@
                                                 if (res.data.success) {
                                                     this.$store.dispatch("userLogin", true)
                                                     sessionStorage.setItem("USER_STATUS", "isLogin")
-                                                    this.$router.push("/WorkingSpace")
+                                                    this.$router.push({name: "WorkingSpace"})
+
                                                 }
                                             })
                                     }
@@ -214,13 +216,12 @@
                 })
             }
         },
-        created() {
-            updateStatus()
-            /*if (updateStatus()) {
+        async created() {
+            console.log(updateStatus())
+            if (await updateStatus() === true) {
                 this.$router.push('/WorkingSpace')
-            }*/
+            }
         }
-
     }
 </script>
 

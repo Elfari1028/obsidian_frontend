@@ -3,6 +3,7 @@ import store from "@/vuex/store";
 import config from "@/config.js"
 
 export async function updateStatus() {
+    let flag = false
     await axios.post(config.infoUrl).then(async res => {
         console.log(res.data)
         if (!res.data.success) {
@@ -10,7 +11,7 @@ export async function updateStatus() {
             store.dispatch("userLogin", false)
             store.dispatch("userInfo", "")
             sessionStorage.removeItem("USER_STATUS")
-            return false
+            flag = false
         } else {
             console.log("已登录" + res.data.username)
             store.dispatch("userLogin", true)
@@ -22,8 +23,8 @@ export async function updateStatus() {
             })
             console.log("检测:" + store.getters.getUsername)
             sessionStorage.setItem("USER_STATUS", "isLogin")
-            return true
+            flag = true
         }
     })
-    return false
+    return flag
 }
