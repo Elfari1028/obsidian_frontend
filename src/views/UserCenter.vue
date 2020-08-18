@@ -101,6 +101,7 @@
     import AsideMenu from "@/components/AsideMenu";
     import Config from "@/config";
     import {encryption} from "@/utils/encryptUtils";
+    import {updateStatus} from "@/utils/axiosUtils";
 
     export default {
         name: "UserCenter",
@@ -178,10 +179,11 @@
             logout() {
                 this.$axios.post('account/logout1/').then((res) => {
                     if (res.data.success) {
+                        updateStatus()
                         this.$message('已退出登录')
-                        // this.$router.push({
-                        //     name: 'Login'
-                        // })
+                        this.$router.push({
+                            name: 'Login'
+                        })
                     }
                 })
             },
