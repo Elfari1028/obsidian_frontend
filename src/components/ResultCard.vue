@@ -123,7 +123,7 @@
             },
             delCollection(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
+                this.$axios.post('favorite/cancel/', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
                     if (res.data.success === 0) {
                         this.$alert("文档已移出收藏")
                     } else {
