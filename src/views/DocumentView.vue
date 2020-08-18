@@ -49,7 +49,7 @@
               <br/>
               <el-button class="action-button"  type="plain" plain icon="el-icon-time" @click="openChangelogDrawer">编辑记录</el-button>
               <br/>
-              <AuthPopupButton v-if="superuser" :doc_id="this.doc_id" :belong_to_team="this.belong_team" :init_self_auth="this.self_auth" :init_team_auth="this.team_auth" />
+              <AuthPopupButton v-if="superuser" :doc_id="this.doc_id" :belong_to_team="this.belong_team" :init_self_auth="self_auth" :init_team_auth="team_auth" />
               <el-button  v-if="superuser" class="action-button"  type="danger" plain icon="el-icon-delete" @click="deleteFile">删除文件</el-button>
               <br/>
             </div>
@@ -88,7 +88,7 @@ export default {
       creator: null,
       favorite:false,
       current_auth: {read:false,edit:false,comment:false},
-      auth:{read:false,edit:false,comment:false},
+      self_auth:{read:false,edit:false,comment:false},
       team_auth:{read:false,edit:false,comment:false},
       superuser:null,
       belong_team:null,
@@ -179,21 +179,21 @@ export default {
       this.$message.error("保存错误！错误信息："+text);
     },
     refresh_document(){
-      this.$refs.doc_editor.setLoading(true);
+      this.$refs.doc_editor.setLoading(false);
       this.$axios.post("/doc/refresh_doc/",
         {doc_id: this.doc_id, edit:this.current_auth.edit},Config.axiosHeaders).then((response)=>{
             if(response.status === 200){
               if(response.data.success === true){
-                this.$message("刷新成功");
+                // this.$message("刷新成功");
                 this.doc_title = response.data.title;
                 this.document= response.data.doc;
-                
                 this.$refs.doc_editor.setLoading(false);
                 if(this.current_auth.edit===true && this.conflict_protection === true && response.data.conflict_protection === false){
                   this.$notify({
                     type:"warning",
                     title: "文档已解除占用！",
-                    message:"刷新以进入编辑模式。"
+                    message:"刷新以进入编辑模式。",
+                    duration:750,
                     }
                   );
                 }
@@ -258,7 +258,7 @@ export default {
             this.creator = res.creator;
             this.favorite = res.favorite;
             this.current_auth = res.superuser?{read:true,edit:true,comment:true}:res.current_auth;
-            this.auth = res.auth;
+            this.self_auth = res.auth;
             this.team_auth = res.team_auth;
             this.superuser = res.superuser;
             this.belong_team = res.belong_team;
@@ -267,9 +267,9 @@ export default {
             this.boot_loading=false;
             this.$refs.doc_editor.setLoading(false);
             if(this.read_only===false)
-              this.timer=window.setInterval(()=>{this.save_document()},15000);
+              this.timer=window.setInterval(()=>{this.save_document()},30000);
             else
-              this.timer=window.setInterval(()=>{this.refresh_document();},7500);
+              this.timer=window.setInterval(()=>{this.refresh_document();},1000);
           } else 
             this.onOpenFailure(response.data.exc);
         } else 
