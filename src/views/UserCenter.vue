@@ -10,7 +10,7 @@
                 </el-aside>
                 <el-main>
                     <div id="info_form" v-loading="isLoading" :disabled="isLoading">
-                        <el-form :rules="infoRules" :model="userInfo" label-width="80px" ref="infoForm">
+                        <el-form :rules="infoRules" :model="userInfo" label-width="80px" ref="userInfo">
                             <el-form-item label="头像">
                                 <el-avatar :size="100"
                                            :src="avatarUrl"
@@ -21,14 +21,17 @@
                                 <el-button @click.prevent="isUploadingAvatar = true" size="small">修改头像</el-button>
                                 <el-dialog title="上传头像" width="500px"
                                            :visible.sync="isUploadingAvatar">
-                                    <el-upload action="http://127.0.0.1:8000/account/upload_avatar/"
+                                    <el-upload :action="this.$config.avatarUploadUrl"
                                                :show-file-list="false"
                                                :on-success="handleAvatarSuccess"
                                                :before-upload="beforeAvatarUpload"
                                                :with-credentials="true"
-                                               :name="'avatar'">
-                                        <el-avatar v-if="uploadUrl!==''" :size="100" :src="uploadUrl"></el-avatar>
-                                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                               :name="'avatar'" class="avatar_uploader">
+                                        <div>
+                                            <el-avatar v-if="uploadUrl!==''" :size="100" :src="uploadUrl"
+                                                       class="avatar"></el-avatar>
+                                            <el-button v-else icon="el-icon-upload">上传头像</el-button>
+                                        </div>
                                     </el-upload>
                                     <span slot="footer" class="dialog-footer">
                                         <el-button type="primary"
@@ -141,12 +144,12 @@
                 isLoading: false,
                 showPassChangeDialog: false,
                 userInfo: {
-                    username: 'test',
-                    email: 'test@test.com',
-                    sex: 0,
-                    mood: 'test mood hahahahaha',
-                    tel: '136xxxxxxxx',
-                    age: 21
+                    username: '',
+                    email: '',
+                    sex: '',
+                    age: '',
+                    mood: '',
+                    tel: '',
                 },
                 passForm: {
                     old_password: '',
@@ -195,8 +198,9 @@
                 this.onEdit = !this.onEdit
             },
             saveInfo() {
-                this.$refs['infoForm'].validate(valid => {
+                this.$refs['userInfo'].validate(valid => {
                     if (valid) {
+                        console.log(this.userInfo)
                         this.$axios.post('account/modify_information/', JSON.stringify(this.userInfo)).then(res => {
                             if (res.data.success) {
                                 this.onEdit = !this.onEdit
@@ -232,6 +236,7 @@
                                 if (res.data.success) {
                                     this.showPassChangeDialog = false
                                     this.$message('密码修改成功')
+                                    this.logout()
                                 } else {
                                     this.$message(res.data.exc)
                                 }
@@ -274,10 +279,11 @@
             })
             await this.$axios.get('account/get_information/').then(res => {
                 if (res.data.success) {
+                    console.log(res.data)
                     this.userInfo.username = res.data.username
                     this.userInfo.email = res.data.email
                     this.userInfo.age = res.data.age
-                    this.userInfo.sex = res.data.sex
+                    this.userInfo.sex = res.data.sex ? 1 : 0
                     this.userInfo.mood = res.data.mood
                     this.userInfo.tel = res.data.tel
                 } else {
@@ -293,13 +299,6 @@
 </script>
 
 <style scoped>
-    .avatar-uploader .el-upload {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
 
     #aside_left {
         border-right: 1px solid #DEDFE6;

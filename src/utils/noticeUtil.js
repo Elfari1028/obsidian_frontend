@@ -18,7 +18,6 @@ export default class NoticeRequest {
         await axios.get('message/get/').then(res => {
             if (res.data.success) {
                 this.messageQueue = []
-                console.log(res.data)
                 const list = res.data.list
                 this.messageUnreadLength = res.data.unread_num
                 for (let i = 0; i < list.length; i++) {
@@ -37,7 +36,6 @@ export default class NoticeRequest {
                     this.axiosPolling()
                 }, 5000)
             } else {
-                console.log(res.data)
                 if (NoticeRequest.timer != null) {
                     clearTimeout(NoticeRequest.timer)
                 }
