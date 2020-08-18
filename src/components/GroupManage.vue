@@ -14,7 +14,7 @@
 				v-model="visible1"
 				>
 				
-				<el-input v-model="inputUName" placeholder="请输入邀请的成员ID"></el-input>
+				<el-input v-model="inputUName" placeholder="请输入邀请的成员名称"></el-input>
 				<center>
 				<br>
 				<el-button type="primary" size="mini" @click="inviteNewMember">确定</el-button>

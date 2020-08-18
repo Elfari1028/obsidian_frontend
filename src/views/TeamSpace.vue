@@ -111,66 +111,8 @@
 				spaceHeight: window.innerHeight - 80 + 'px',
 				searchList: [],
 				docType: 'isDefault',
-				docList: [
-					{
-						doc_id: 3321,
-						title: '团队空间b',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间a',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/01 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间j',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/9/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间f',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:04:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间w',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/11 20:03:02'
-					},
-				],
-				trashList: [
-					{
-						doc_id: 3321,
-						title: '团队回收站adsv',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 21:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队回收站kds',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队回收站sds',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:03'
-					},
-				]
+				docList: [],
+				trashList: []
 			}
 		},
 		methods: {
