@@ -185,7 +185,7 @@ export default {
               }
               else this.$message.error(response.data.exc);
             }else this.$message.error(response.status);
-          }).error((error)=>{
+          }).catch((error)=>{
             this.$message.error(error);
           });
     },
@@ -206,11 +206,12 @@ export default {
   },
   beforeRouteLeave(to,from,next){
     if (!window.confirm("确认离开页面？请确认您已保存内容。")) {
+        next(false);
         return;
       }
     this.save_document();
     this.close_document();
-    next();
+    next(true);
   },
   created() {  
     this.doc_id=parseInt(this.$route.params.doc_id);
@@ -233,17 +234,6 @@ export default {
               this.timer=setInterval(this.save_document(),30000);
             else
               this.timer=setInterval(this.refresh_document(),30000);
-            // window.addEventListener('beforeunload', (event) => {
-            //   // Cancel the event as stated by the standard.
-            //   event.preventDefault();
-            //   // Chrome requires returnValue to be set.
-            //   event.returnValue = '';
-            // });
-            // window.addEventListener('unload', (event) => {
-            //   this.save_document();
-            //   this.close_document();
-            //   event.target;
-            // });
           } else 
             this.onOpenFailure(response.data.exc);
         } else 
