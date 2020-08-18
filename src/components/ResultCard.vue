@@ -124,7 +124,7 @@
             delCollection(doc_id) {
                 console.log(doc_id)
                 this.$axios.post('favorite/cancel/', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
-                    if (res.data.success === 0) {
+                    if (res.data.success) {
                         this.$alert("文档已移出收藏")
                     } else {
                         this.$alert(res.data.exc)
@@ -134,7 +134,7 @@
             shareDocument(doc_id) {
                 console.log(doc_id)
                 this.$axios.post('', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
-                    if (res.data.success === 0) {
+                    if (res.data.success) {
                         this.shareUrl = res.data.url;
                         this.dialogVisible = true;
                     }
@@ -147,7 +147,7 @@
             toTrash(doc_id) {
                 console.log(doc_id)
                 this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
-                    if (res.data.success === 0) {
+                    if (res.data.success) {
                         this.$alert("文件已移入回收站")
                     } else {
                         this.$alert(res.data.exc)
@@ -156,8 +156,8 @@
             },
             restoreDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('bin/recover-doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
-                    if (res.data.success === 0) {
+                this.$axios.post('bin/recover_doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
+                    if (res.data.success) {
                         this.$alert("文件已恢复")
                     } else {
                         this.$alert(res.data.exc)
@@ -171,8 +171,8 @@
                     cancelButtonText: '取消',
                     type: "warning"
                 }).then(() => {
-                    this.$axios.post('bin/delete-doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
-                        if (res.data.success === 0) {
+                    this.$axios.post('bin/delete_doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
+                        if (res.data.success) {
                             this.$alert("文件已删除")
                         } else {
                             this.$alert(res.data.exc)

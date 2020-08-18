@@ -57,7 +57,7 @@
         methods: {
             updateList() {
                 this.isLoading = true
-                this.$axios.get('bin/get-private-docs').then(res => {
+                this.$axios.get('bin/get_private_docs').then(res => {
                     console.log(res)
                     this.docList = []
                     const list = res.data.list
