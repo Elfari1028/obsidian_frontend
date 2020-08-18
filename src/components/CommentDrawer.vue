@@ -1,26 +1,26 @@
 <template>
   <div class="CommentDrawer">
-    <el-drawer
-      title="评论"
-      v-loading="loading"
-      :visible.sync="drawer"
-      :direction="direction"
-    >
+    <el-drawer title="评论" v-loading="loading" :visible.sync="drawer" :direction="direction">
       <div class="DrawerContainer" v-if="loading===true"></div>
+
       <div class="container-active" v-else>
         <div class="comment-list" v-for="item in comments" :key="item.primary">
-            <CommentCard :comment="item"/>
+          <CommentCard :comment="item" />
         </div>
+        <el-button  @click="onClickReply" type="primary">回复</el-button>
+        <CreateCommentPopup ref="comment_popup" />
       </div>
     </el-drawer>
   </div>
 </template>
 
 <script>
-import CommentCard from './CommentCard';
+import CommentCard from "./CommentCard";
+import CreateCommentPopup from "./CreateCommentPopup";
+import config from "@/config";
 export default {
   name: "CommentDrawer",
-  components:{CommentCard},
+  components: { CommentCard,"CreateCommentPopup":CreateCommentPopup },
   props: {
     docID: {
       type: Number,
@@ -36,106 +36,61 @@ export default {
     };
   },
   methods: {
+    onClickReply() {
+       this.$refs.comment_popup.openDialog();
+      // console.log(this.$refs.comment_popup);
+      // CreateCommentPopup.openDialog();
+    },
     openDrawer() {
       this.drawer = true;
       this.loading = true;
       this.setDemoData();
-      this.loading=false;
-      // axios
-      //   .post("", { doc_id: this.docID })
-      //   .then(function (response) {
-      //     const res = response.data;
-      //     if (res.success === true) {
-      //       this.comments = response.data.list;
-      //       this.loading = false;
-      //     } else {
-      //       this.$notify({
-      //         title: "通信失败!",
-      //         type: "warning",
-      //         message: res.exc,
-      //         duration: 5000,
-      //       });
-      //       this.drawer = false;
-      //     }
-      //   })
-      //   .catch(function (error) {
-      //     this.drawer = false;
-      //     this.$notify({
-      //       title: "访问出错!",
-      //       type: "danger",
-      //       message: error,
-      //       duration: 5000,
-      //     });
-      //   });
-      this.comments = [{
-          primary: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-          reply: null,
-        },{
-          primary: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-          reply: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-        },{
-          primary: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-          reply: null
-        },{
-          primary: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-          reply: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-        } ];
+      this.loading = false;
+      let ref = this;
+      this.$axios
+        .post("/comment/get/", { doc_id: this.docID }, config.axiosHeaders)
+        .then( (response)=> {
+          if (response.status === 200) {
+            if (response.data.success === true) {
+              ref.comments = response.data.comments;
+              ref.loading = false;
+            } else {
+              ref.$notify({
+                title: "通信失败!",
+                type: "warning",
+                message: response.data.exc,
+                duration: 5000,
+              });
+              ref.drawer = false;
+            }
+          }
+          else {
+             ref.$notify({
+                title: "通信失败!",
+                type: "warning",
+                message: response.status,
+                duration: 5000,
+              });
+              ref.drawer = false;
+          }
+        })
+        .catch((error)=> {
+          ref.drawer = false;
+          ref.$notify({
+            title: "访问出错!",
+            type: "danger",
+            message: error,
+            duration: 5000,
+          });
+        });
     },
     setDemoData() {},
-   },
+  },
 };
 </script>
 
 <style>
-.container-active{
+.container-active {
   height: 90vh;
   overflow-y: scroll;
 }

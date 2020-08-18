@@ -94,7 +94,7 @@
         },
         methods: {
             toDocument(doc_id) {
-                console.log(doc_id)
+                console.log(doc_id);
                 this.$router.push({
                     name:'DocumentView',
                     params: {

@@ -95,7 +95,10 @@ export default {
       ).then((response) => {
           if (response.status === 200) {
             if (response.data.success === true){
-              referer.$router.push({ path: '/document/'+response.data.doc });
+              let doc_id = response.data.doc;
+              referer.$router.push({
+                   path: 'document/'+doc_id,params:{doc_id:doc_id},
+                });
             }
             else
               referer.$notify({

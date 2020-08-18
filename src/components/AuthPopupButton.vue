@@ -33,7 +33,7 @@ export default {
     },
     belong_to_team: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     belong_to_creator:{
       type:Boolean,

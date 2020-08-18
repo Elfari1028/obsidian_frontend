@@ -3,12 +3,10 @@
     <div class="ck-container">
       <ckeditor
         :editor="editor"
-        :disabled="editorDisabled"
+        :disabled="read_only===true"
         v-model="editorData"                 
         @ready="onReady"
-        @input="$emit('input',$event)"
-        :eventInfo="eventInfo"
-        :data="data"
+        @input="$emit('editor-input',editorData)"
         @focus="onFocus"
         @blur="onBlur"
         :config="editorConfig"
@@ -19,86 +17,29 @@
 
 <script>
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
-import axios from "axios";
 export default {
   name: "DocEditor",
   model: {
-    prop: "content",
-    event: "input",
+    prop: "editorData",
+    event: "editor-input",
   },
   props: {
-    docID: {
+    doc_id: {
       type: Number,
       default: -1,
     },
-  },
-  created: function () {
-    let self = this;
-    this.documentData.id = this.docID;
-    if (this.docID === -1) this.editorData = "<p>在这里开始输入。</p>";
-    else
-      axios
-        .post("http://39.97.104.62/api/document/obtain_content", {
-          doc_id: this.docID,
-        })
-        .then(function (response) {
-          const res = response.data;
-          if (res.success === true) {
-            this.documentData.title = res.title;
-            this.documentData.creator = res.creator;
-            this.editorData = res.documentData;
-            if (res.auth.length > 0) {
-              this.documentData.read = true;
-            }
-            if (res.auth.search("W") >= 0) {
-              this.documentData.write = true;
-            }
-            if (res.auth.search("C") >= 0) {
-              this.documentData.comment = true;
-            }
-            if (this.documentData.read === false) {
-              this.editorDisabled = true;
-            }
-          } else {
-            this.$notify({
-              title: "操作失败!",
-              type: "warning",
-              message: res.exc,
-              duration: 5000,
-            });
-          }
-        })
-        .catch(function (error) {
-          self.onCommunicationError(error);
-        });
-        window.setInterval(() => {
-      this.keepSessionAlive();
-    }, 30000);
+    read_only: {
+      type: Boolean,
+      default: true,
+    },
+    editorData: {type:String},
   },
   data() {
     return {
       editor: DecoupledEditor,
-      editorData: "<h2>Lorem and Ipsum are getting married</h2><p>Let's congratulate them with our most sincere wishes!</p><h3>Wedding plans</h3><h4>Time</h4><p>July 30th. 2020. Please arrive before 14:00.</p><h4>Place</h4><p>Lockhart Church, North Town.</p><img src='https://atlas.thc.texas.gov/atlasimg/Markers/5055009770_Caldwell.jpg'/><h4>Dress Code</h4><p>Men:Please wear your best suits, please. Preferably blue.</p>",
-      editorDisabled: false,
-      documentData: {
-        id: "",
-        title: "",
-        read: "",
-        write: "",
-        comment: "",
-        creator: {
-          id: "",
-          name: "",
-          avatar: "",
-        },
-      },
+      editor_content: "",
       editorConfig: {
         language: "en",
-        autosave: {
-          save(editor) {
-            return this.saveData(editor.getData());
-          },
-        },
         fontSize: {
           options: [8, 10, "default", 14, 16, 18, 20, 22, 24, 26, 28, 32, 48],
         },
@@ -118,66 +59,8 @@ export default {
     };
   },
   methods: {
-    saveData(editorContent) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log("Saved", editorContent);
-          resolve();
-        });
-      });
-    },
-    displayStatus(editor) {
-      const pendingActions = editor.plugins.get("PendingActions");
-      const statusIndicator = document.querySelector("#editor-status");
-
-      pendingActions.on("change:hasAny", (evt, propertyName, newValue) => {
-        if (newValue) {
-          statusIndicator.classList.add("busy");
-        } else {
-          statusIndicator.classList.remove("busy");
-        }
-      });
-    },
-    keepSessionAlive() {
-      axios
-        .post("http://39.97.104.62/api/document/keepalive", {
-          doc_id: this.docID,
-          document:this.documentData,
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            if (response.data.success === true) return;
-            else
-              this.$notify({
-                title: "该文档已被他人占用！",
-                message: "错误信息:" + response.data.exc,
-                type:"error",
-              });
-          } else {
-            this.$notify({
-              title: "网络异常，连接失败！",
-              message: "错误代码：" + response.status,
-              type:"error",
-            });
-          }
-        })
-        .catch((error) => {
-          this.$notify({
-            title: "网络异常，连接失败！",
-            message: "错误代码：" + error.response.status,
-            type:"error",
-          });
-        });
-    },
-    onCommunicationError(error) {
-      this.$notify({
-        title: "访问出错!",
-        type: "error",
-        message: error,
-        duration: 5000,
-      });
-    },
     onFocus() {
+      console.log(this.editorData);
       this.editor.ui.getEditableElement().classList.add("ck-container-area");
     },
     onBlur() {
@@ -194,8 +77,7 @@ export default {
         );
       editor.ui.getEditableElement().classList.add("ck-container-area");
       editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-        //let val = editor.getData();
-        var CancelToken = axios.CancelToken;
+        var CancelToken = this.$axios.CancelToken;
         var source = CancelToken.source();
         return {
           abort: () => {
@@ -205,7 +87,7 @@ export default {
             return await loader.file.then(
               (file) =>
                 new Promise((resolve, reject) => {
-                  const config = {
+                  const customConfig= {
                     cancelToken: source.token,
                     headers: { "Content-Type": "multipart/form-data" },
                     onUploadProgress(progressEvent) {
@@ -214,13 +96,13 @@ export default {
                     },
                   };
                   var formData = new FormData();
-                  formData.append("doc_id", self.docID);
+                  formData.append("doc_id", self.doc_id);
                   formData.append("image", file);
-                  axios
+                  this.$axios
                     .post(
-                      "http://39.97.104.62/api/document/upload_image",
+                      "/doc/upload_image/",
                       formData,
-                      config
+                      customConfig
                     )
                     .then((response) => {
                       if (response.status === 200) {
