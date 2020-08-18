@@ -91,7 +91,10 @@
                 console.log(this.$route.path)
             },
             handleClose() {
-
+                // console.log("test");
+                // if(this.$route.name=="DocumentView"){
+                //     this.$route.methods.preventNav();
+                // }
             },
             /*
 			loadTeamList: function () {

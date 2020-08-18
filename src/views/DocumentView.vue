@@ -42,7 +42,7 @@
         </el-container>
       </el-container>
       <ChangelogDrawer :docID="doc_id" ref="changelogDrawer" />
-      <CommentDrawer :docID="doc_id" ref="commentDrawer" />
+      <CommentDrawer :doc_id="this.doc_id" ref="commentDrawer" />
     </el-container>
   </div>
 </template>
@@ -189,9 +189,31 @@ export default {
             this.$message.error(error);
           });
     },
+   preventNav(event){
+      this.save_document();
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  },
+  beforeMount(){
+    window.addEventListener("beforeunload", this.preventNav);
+    this.$once("hook:beforeDestroy", () => {
+      this.save_document();
+      this.close_document();
+      console.log("closing document");
+      window.removeEventListener("beforeunload", this.preventNav);
+    })
+  },
+  beforeRouteLeave(to,from,next){
+    if (!window.confirm("确认离开页面？请确认您已保存内容。")) {
+        return;
+      }
+    this.save_document();
+    this.close_document();
+    next();
   },
   created() {  
-    this.doc_id=this.$route.params.doc_id;
+    this.doc_id=parseInt(this.$route.params.doc_id);
     this.doc_title_input = this.doc_title;
     this.$axios.post("/doc/open_one_doc/",{doc_id:this.doc_id},Config.axiosHeaders).then((response)=> {
         if (response.status === 200) {  
@@ -211,17 +233,17 @@ export default {
               this.timer=setInterval(this.save_document(),30000);
             else
               this.timer=setInterval(this.refresh_document(),30000);
-            window.addEventListener('beforeunload', (event) => {
-              // Cancel the event as stated by the standard.
-              event.preventDefault();
-              // Chrome requires returnValue to be set.
-              event.returnValue = '';
-            });
-            window.addEventListener('unload', (event) => {
-              this.save_document();
-              this.close_document();
-              event.target;
-            });
+            // window.addEventListener('beforeunload', (event) => {
+            //   // Cancel the event as stated by the standard.
+            //   event.preventDefault();
+            //   // Chrome requires returnValue to be set.
+            //   event.returnValue = '';
+            // });
+            // window.addEventListener('unload', (event) => {
+            //   this.save_document();
+            //   this.close_document();
+            //   event.target;
+            // });
           } else 
             this.onOpenFailure(response.data.exc);
         } else 

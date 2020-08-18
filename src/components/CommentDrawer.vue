@@ -2,13 +2,13 @@
   <div class="CommentDrawer">
     <el-drawer title="评论" v-loading="loading" :visible.sync="drawer" :direction="direction">
       <div class="DrawerContainer" v-if="loading===true"></div>
-
-      <div class="container-active" v-else>
-        <div class="comment-list" v-for="item in comments" :key="item.primary">
-          <CommentCard :comment="item" />
+      <div id="comment-container" v-else>
+        <div class="comment-list-container">
+        <div class="comment-list-item" v-for="item in comments" :key="item.primary">
+          <CommentCard :doc_id="doc_id" :comment="item" />
         </div>
-        <el-button  @click="onClickReply" type="primary">回复</el-button>
-        <CreateCommentPopup ref="comment_popup" />
+        </div>
+        <CommentCreateWindow class="container-input" :doc_id="this.doc_id" :reply_to="null" />
       </div>
     </el-drawer>
   </div>
@@ -16,13 +16,13 @@
 
 <script>
 import CommentCard from "./CommentCard";
-import CreateCommentPopup from "./CreateCommentPopup";
+import CommentCreateWindow from "./CommentCreateWindow";
 import config from "@/config";
 export default {
   name: "CommentDrawer",
-  components: { CommentCard,"CreateCommentPopup":CreateCommentPopup },
+  components: { CommentCard, CommentCreateWindow },
   props: {
-    docID: {
+    doc_id: {
       type: Number,
       default: -1,
     },
@@ -37,19 +37,21 @@ export default {
   },
   methods: {
     onClickReply() {
-       this.$refs.comment_popup.openDialog();
+      this.$refs.comment_popup.openDialog();
       // console.log(this.$refs.comment_popup);
       // CreateCommentPopup.openDialog();
     },
     openDrawer() {
       this.drawer = true;
       this.loading = true;
-      this.setDemoData();
+      this.obtainData();
       this.loading = false;
+    },
+    obtainData() {
       let ref = this;
       this.$axios
-        .post("/comment/get/", { doc_id: this.docID }, config.axiosHeaders)
-        .then( (response)=> {
+        .post("/comment/get/", { doc_id: this.doc_id }, config.axiosHeaders)
+        .then((response) => {
           if (response.status === 200) {
             if (response.data.success === true) {
               ref.comments = response.data.comments;
@@ -63,18 +65,17 @@ export default {
               });
               ref.drawer = false;
             }
-          }
-          else {
-             ref.$notify({
-                title: "通信失败!",
-                type: "warning",
-                message: response.status,
-                duration: 5000,
-              });
-              ref.drawer = false;
+          } else {
+            ref.$notify({
+              title: "通信失败!",
+              type: "warning",
+              message: response.status,
+              duration: 5000,
+            });
+            ref.drawer = false;
           }
         })
-        .catch((error)=> {
+        .catch((error) => {
           ref.drawer = false;
           ref.$notify({
             title: "访问出错!",
@@ -84,14 +85,22 @@ export default {
           });
         });
     },
-    setDemoData() {},
   },
 };
 </script>
 
 <style>
-.container-active {
-  height: 90vh;
+#comment-container{
+  height: 95%;
+  overflow-y:hidden;
+}
+.container-input {
+  height: 15%;
+  max-height: 18%;
+}
+.comment-list-container{
+  height: 70%;
+  max-height: 70%;
   overflow-y: scroll;
 }
 </style>>
