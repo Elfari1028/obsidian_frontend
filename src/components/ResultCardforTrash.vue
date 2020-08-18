@@ -60,7 +60,7 @@ export default {
 		},
 		restoreDocument(doc_id) {
 			console.log(doc_id)
-			this.$axios.post('bin/recover_doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
+			this.$axios.post('bin/recover_doc/', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
 				if (res.data.success) {
 					this.$alert("文件已恢复")
 				} else {
@@ -75,7 +75,7 @@ export default {
 				cancelButtonText: '取消',
 				type: "warning"
 			}).then(() => {
-				this.$axios.post('bin/delete_doc', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
+				this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: doc_id}),Config.axiosHeaders).then(res => {
 					if (res.data.success) {
 						this.$alert("文件已删除")
 					} else {
