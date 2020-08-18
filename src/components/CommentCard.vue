@@ -18,7 +18,7 @@
         <div class="comment-body">{{commentData.comment.content}}</div>
       </div>
       <el-popover placement="left" title="回复评论" width="330" v-model="visible">
-        <CommentCreateWindow :doc_id="doc_id" :reply_to="this.comment.comment"/>
+        <CommentCreateWindow v-on:reply-made="pass_signal" :doc_id="doc_id" :reply_to="this.comment.comment"/>
         <div slot="reference"  class="reply-button"><el-button v-if="asReply===false"  type="primary">回复</el-button></div>
       </el-popover>
     </div>
@@ -43,6 +43,7 @@ export default {
   
   },
   methods: {
+    pass_signal(){this.$emit("reply-made-pass");},
     onClickReply() {
       this.visible=true;
     },
