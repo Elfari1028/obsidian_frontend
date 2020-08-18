@@ -97,7 +97,7 @@ export default {
             if (response.data.success === true){
               let doc_id = response.data.doc;
               referer.$router.push({
-                   path: 'document/'+doc_id,params:{doc_id:doc_id},
+                   name: 'DocumentView',params:{doc_id:doc_id},
                 });
             }
             else
@@ -200,7 +200,7 @@ export default {
         },
       ],
       value: [],
-      team_auth: { read: true, edit: false, comment: true },
+      team_auth: { read: true, edit: false, comment: true, share:true },
     };
   },
 };
