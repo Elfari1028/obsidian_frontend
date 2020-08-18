@@ -1,6 +1,6 @@
 <template>
     <div class="notice">
-        <el-badge :is-dot="messageBot.getLength()!==0">
+        <el-badge :is-dot="showDot>0">
             <el-button circle type="info"
                        size="mini" icon="el-icon-message-solid"
                        @click="isVisible = !isVisible">
@@ -15,12 +15,12 @@
                    :modal="true"
                    :modal-append-to-body="true"
                    direction="rtl"
-                   z-index="1"
+                   z-index="2"
                    size="25%">
             <div :style="{height: spaceHeight}"
                  style="margin-top: 60px; margin-right: 20px; margin-left:20px;transition: 1s ">
                 <el-scrollbar style="height: 100%">
-                    <NoticeCard v-for="(message,index) in messageBot.getList()" :key="index"
+                    <NoticeCard v-for="(message,index) in messageList" :key="index"
                                 :message="message"></NoticeCard>
                 </el-scrollbar>
             </div>
@@ -38,9 +38,11 @@
         data() {
             return {
                 isOpen: false,
+                showDot: false,
                 isVisible: false,
                 isLoading: false,
                 messageBot: null,
+                messageList: [],
                 spaceHeight: window.innerHeight - 80 + 'px',
             }
         },
@@ -52,6 +54,7 @@
         created() {
             this.messageBot = NoticeRequest.getInstance()
             this.messageBot?.axiosPolling()
+            this.messageList = this.messageBot?.getList()
         },
         destroy() {
             this.messageBot?.axiosStop()
@@ -61,6 +64,21 @@
                 return (() => {
                     this.spaceHeight = window.innerHeight - 80 + 'px'
                 })
+            }
+        },
+        watch: {
+            'messageBot.messageQueue': {
+                handler(val, oldVal) {
+                    console.log(oldVal)
+                    this.messageList = val
+                },
+                deep: true
+            },
+            'messageBot.messageUnreadLength': {
+                handler(val, oldVal) {
+                    console.log(oldVal)
+                    this.showDot = val > 0
+                }
             }
         }
     }
