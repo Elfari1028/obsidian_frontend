@@ -20,40 +20,56 @@
         props:{
             docList: Array
         },
-        methods:{
+        methods: {
             sortDocList: function (list, method) {
                 if (method === 'titleDown') {
-                    list.sort(function(a,b){
+                    list.sort(function (a, b) {
                         var x = a.title.toLowerCase()
                         var y = b.title.toLowerCase()
-                        if (x > y) {return -1}
-                        if (x < y) {return 1}
+                        if (x > y) {
+                            return -1
+                        }
+                        if (x < y) {
+                            return 1
+                        }
                         return 0
                     })
                 } else if (method === 'titleUp') {
-                    list.sort(function(a,b){
+                    list.sort(function (a, b) {
                         var x = a.title.toLowerCase()
                         var y = b.title.toLowerCase()
-                        if (x < y) {return -1}
-                        if (x > y) {return 1}
+                        if (x < y) {
+                            return -1
+                        }
+                        if (x > y) {
+                            return 1
+                        }
                         return 0
                     })
                 }
 
                 if (method === 'timeDown') {
-                    list.sort(function(a,b){
+                    list.sort(function (a, b) {
                         var x = new Date(a.time)
                         var y = new Date(b.time)
-                        if (x < y) {return -1}
-                        if (x > y) {return 1}
+                        if (x < y) {
+                            return -1
+                        }
+                        if (x > y) {
+                            return 1
+                        }
                         return 0
                     })
                 } else if (method === 'timeUp') {
-                    list.sort(function(a,b){
+                    list.sort(function (a, b) {
                         var x = new Date(a.time)
                         var y = new Date(b.time)
-                        if (x > y) {return -1}
-                        if (x < y) {return 1}
+                        if (x > y) {
+                            return -1
+                        }
+                        if (x < y) {
+                            return 1
+                        }
                         return 0
                     })
                 }

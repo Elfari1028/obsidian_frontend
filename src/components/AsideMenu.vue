@@ -34,7 +34,7 @@
                         <el-menu-item v-bind:index="'/TeamSpace/'+Team.team_id">{{ Team.team_name }}</el-menu-item>
 					</span>
 					
-                    <span v-if="Team_list.length===0" style="margin-bottom: 10px">
+                    <span style="margin-bottom: 10px">
                             <el-popover placement="right" trigger="manual" v-model="visible">
                                 <GroupInit></GroupInit>
                                 <el-menu-item slot="reference" size="small" @click="visible = !visible">

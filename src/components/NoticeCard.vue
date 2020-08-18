@@ -1,11 +1,11 @@
 <template>
     <el-card class="notice_item">
         <div slot="header" style="height: 20px">
-            <span :class="(message.is_read?'card_is_read':'card_not_read')+' card_header_font'">{{message.content.type}}</span>
+            <span :class="(message.is_read?'card_is_read':'card_not_read')+' card_header_font'">{{message.type}}</span>
         </div>
         <div>
 				<span class="card_body_font card_body">
-					{{message.content.text}}
+					{{message.content}}
 				</span>
             <span class="card_time_font card_body">
 					{{message.time}}

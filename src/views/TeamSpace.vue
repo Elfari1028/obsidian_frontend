@@ -127,7 +127,8 @@
 					.then(response => {
 						var res = response.data
 						_this.docList = res.list
-
+						_this.searchList = _this.docList
+						
 						if (res.success === false) {
 							_this.$message.error(res.exc)
 						}
@@ -150,6 +151,7 @@
 					.then(response => {
 						var res = response.data
 						_this.trashList = res.doc_list
+						_this.searchList = _this.trashList
 
 						if (res.success === false) {
 							_this.$message.error(res.exc)
@@ -192,7 +194,11 @@
                 document.getElementById('trashCanButton').innerHTML = this.isTrashCan == true ? "<i class='el-icon-menu'></i>切换到团队主页面" : "<i class='el-icon-delete-solid'></i>切换到团队回收站"
             },
             handleSort(data) {
-                this.docList = data
+				if (this.isTrashCan){
+					this.trashList = data
+				} else{
+					this.docList = data
+				}
             },
         },
         created() {

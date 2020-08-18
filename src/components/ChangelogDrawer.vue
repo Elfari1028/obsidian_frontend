@@ -5,6 +5,7 @@
       v-loading="loading"
       :visible.sync="drawer"
       :direction="direction"
+      size='400px'
     >
       <div class="DrawerContainer" v-if="loading===true"></div>
       <div class="container-active" v-else>
