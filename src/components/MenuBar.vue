@@ -26,7 +26,6 @@
             </div>
             <span style="width: 16px"></span>
             <NoticeBox class="navigate_bar_function_item"/>
-            <span style="width: 10px"></span>
             <div class="menubar_username navigate_bar_function_item" @click="toUserCenter">
                 <el-avatar :size="'small'"
                            :src="avatarUrl"
