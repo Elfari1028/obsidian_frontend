@@ -17,7 +17,7 @@
 <script>
     export default {
         name: "DocumentSorter",
-        props: {
+        props:{
             docList: Array
         },
         methods: {

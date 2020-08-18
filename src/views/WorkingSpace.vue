@@ -27,7 +27,6 @@
                     </div>
                 </el-aside>
             </el-container>
-            <CreateDocPopup ref="create_doc"/>
         </el-container>
     </div>
 

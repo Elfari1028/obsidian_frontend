@@ -14,7 +14,7 @@
 				v-model="visible1"
 				>
 				
-				<el-input v-model="inputUID" placeholder="请输入邀请的成员ID"></el-input>
+				<el-input v-model="inputUName" placeholder="请输入邀请的成员名称"></el-input>
 				<center>
 				<br>
 				<el-button type="primary" size="mini" @click="inviteNewMember">确定</el-button>
@@ -222,7 +222,7 @@ export default{
 		return {
 			isAdmin: true,
 			User_id: -1,
-			inputUID: '',
+			inputUName: '',
 			inputTID: '',
 			inputTName: '',
 			visible1: false,
@@ -273,7 +273,7 @@ export default{
 		},
 		inviteNewMember: function () {
 			
-			console.log('邀请成员，成员ID：'+this.inputUID)
+			console.log('邀请成员，成员ID：'+this.inputUName)
 			
 			this.visible1 = false
 			var _this = this
@@ -281,7 +281,7 @@ export default{
 			this.$axios
 				.post('teamwork/invite_members/', JSON.stringify({
 					team_id: _this.Team_id,
-					user_id: parseInt(_this.inputUID),
+					user_name: _this.inputUName,
 					inviter_id: _this.User_id
 				}))
 				.then((response) => {
@@ -298,7 +298,7 @@ export default{
 					console.log(err)
 				})
 				
-			this.inputUID = ''
+			this.inputUName = ''
 		},
 		applyForNewTeam: function () {
 			

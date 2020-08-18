@@ -52,7 +52,7 @@ export default {
 		toDocument(doc_id) {
 			console.log(doc_id)
 			this.$router.push({
-				path: '/document',
+				name:'DocumentView',
 				params: {
 					doc_id: doc_id
 				}

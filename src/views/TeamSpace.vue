@@ -26,7 +26,7 @@
 				<el-main v-if='isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
 					<el-scrollbar style="height: 100%">
 						<DocumentCardforGroupTrash v-for="(doc,index) in trashList" :key="index" :doc="doc"/>
-						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
+						<div v-if="trashList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
 					</el-scrollbar>
 				</el-main>
 
@@ -63,7 +63,7 @@
 									icon="el-icon-refresh"
 									@click="updateFileList"></el-button>
 									
-						<NewDocPopupButton/>
+						<NewDocPopupButton :belong_to_team='true' :team_id='parseInt(Team_id)' />
 
 						<br><br>
 
@@ -80,7 +80,6 @@
 				</el-aside>
 
 			</el-container>
-			<CreateDocPopup ref="create_doc" />
 		</el-container>
 	</div>
 </template>
@@ -112,66 +111,8 @@
 				spaceHeight: window.innerHeight - 80 + 'px',
 				searchList: [],
 				docType: 'isDefault',
-				docList: [
-					{
-						doc_id: 3321,
-						title: '团队空间b',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间a',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/01 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间j',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/9/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间f',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:04:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队空间w',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/11 20:03:02'
-					},
-				],
-				trashList: [
-					{
-						doc_id: 3321,
-						title: '团队回收站adsv',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 21:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队回收站kds',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:02'
-					},
-					{
-						doc_id: 3321,
-						title: '团队回收站sds',
-						team_id: 55443,
-						workspace: 'TEAM_DEBUG',
-						time: '2020/8/10 20:03:03'
-					},
-				]
+				docList: [],
+				trashList: []
 			}
 		},
 		methods: {
@@ -185,8 +126,9 @@
 					}))
 					.then(response => {
 						var res = response.data
-						_this.docList = res.doc_list
-
+						_this.docList = res.list
+						_this.searchList = _this.docList
+						
 						if (res.success === false) {
 							_this.$message.error(res.exc)
 						}
@@ -203,12 +145,13 @@
 				var _this = this
 				console.log('正在获取团队回收站文件')
 				this.$axios
-					.post('bin/get-team-docs' ,JSON.stringify({
+					.post('bin/get_team_docs' ,JSON.stringify({
 						team_id: _this.Team_id
 					}))
 					.then(response => {
 						var res = response.data
 						_this.trashList = res.doc_list
+						_this.searchList = _this.trashList
 
 						if (res.success === false) {
 							_this.$message.error(res.exc)
@@ -251,7 +194,11 @@
                 document.getElementById('trashCanButton').innerHTML = this.isTrashCan == true ? "<i class='el-icon-menu'></i>切换到团队主页面" : "<i class='el-icon-delete-solid'></i>切换到团队回收站"
             },
             handleSort(data) {
-                this.docList = data
+				if (this.isTrashCan){
+					this.trashList = data
+				} else{
+					this.docList = data
+				}
             },
         },
         created() {
@@ -372,5 +319,10 @@
         height: auto;
         padding: 10px;
     }
-
+	
+	.list_empty_notice {
+		color: darkgrey;
+		height: inherit;
+		padding-top: 20%;
+	}
 </style>
