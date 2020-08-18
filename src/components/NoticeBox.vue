@@ -1,6 +1,6 @@
 <template>
     <div class="notice">
-        <el-badge :is-dot="messageUnreadNum!==0">
+        <el-badge :is-dot="messageBot.getLength()!==0">
             <el-button circle type="info"
                        size="mini" icon="el-icon-message-solid"
                        @click="isVisible = !isVisible">
@@ -20,7 +20,8 @@
             <div :style="{height: spaceHeight}"
                  style="margin-top: 60px; margin-right: 20px; margin-left:20px;transition: 1s ">
                 <el-scrollbar style="height: 100%">
-                    <NoticeCard v-for="(message,index) in messageQueue" :key="index" :message="message"></NoticeCard>
+                    <NoticeCard v-for="(message,index) in messageBot.getList()" :key="index"
+                                :message="message"></NoticeCard>
                 </el-scrollbar>
             </div>
         </el-drawer>
@@ -39,9 +40,6 @@
                 isOpen: false,
                 isVisible: false,
                 isLoading: false,
-                messageMaxLength: 10,
-                messageUnreadNum: 0,
-                messageQueue: [],
                 messageBot: null,
                 spaceHeight: window.innerHeight - 80 + 'px',
             }
@@ -52,7 +50,7 @@
             },
         },
         created() {
-            this.messageBot = new NoticeRequest()
+            this.messageBot = NoticeRequest.getInstance()
             this.messageBot?.axiosPolling()
         },
         destroy() {
