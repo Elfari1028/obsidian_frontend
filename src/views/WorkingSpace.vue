@@ -39,11 +39,9 @@
     import $ from 'jquery'
     import DocumentCard from "@/components/DocumentCard";
     import DocumentSorter from "@/components/DocumentSorter";
-    import CreateDocPopup from "@/components/CreateDocPopup";
-
     export default {
         name: "WorkingSpace",
-        components: {CreateDocPopup, DocumentSorter, DocumentCard, AsideMenu, MenuBar, NewDocPopupButton},
+        components: { DocumentSorter, DocumentCard, AsideMenu, MenuBar, NewDocPopupButton},
         data() {
             return {
                 isScreenWide: false,
