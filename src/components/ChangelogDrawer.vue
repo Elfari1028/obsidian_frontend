@@ -13,11 +13,11 @@
             <ChangelogCard :changelog="item"/>
         </div>-->
 
-        <el-timeline :reverse="reverse">
+        <el-timeline>
           <el-timeline-item hide-timestamp	
             v-for="(activity, index) in changelogs"
             :key="index"
-            :timestamp="activity.change_time"
+            :timestamp="activity.time"
           >
           <ChangelogCard :changelog="activity"/>
           </el-timeline-item>
@@ -29,11 +29,12 @@
 
 <script>
 import ChangelogCard from './ChangelogCard';
+import Config from '@/config'
 export default {
   name: "ChangelogDrawer",
   components: {ChangelogCard},
   props: {
-    docID: {
+    doc_id: {
       type: Number,
       default: -1,
     },
@@ -50,73 +51,41 @@ export default {
     openDrawer() {
       this.drawer = true;
       this.loading = true;
-      this.setDemoData();
+      this.obtainData();
       this.loading = false;
-      // axios
-      //   .post("", { doc_id: this.docID })
-      //   .then(function (response) {
-      //     const res = response.data;
-      //     if (res.success === true) {
-      //       this.changelogs = response.data.list;
-      //       this.loading = false;
-      //     } else {
-      //       this.$notify({
-      //         title: "通信失败!",
-      //         type: "warning",
-      //         message: res.exc,
-      //         duration: 5000,
-      //       });
-      //       this.drawer = false;
-      //     }
-      //   })
-      //   .catch(function (error) {
-      //     this.drawer = false;
-      //     this.$notify({
-      //       title: "访问出错!",
-      //       type: "danger",
-      //       message: error,
-      //       duration: 5000,
-      //     });
-      //   });
-      this.changelogs = [
-        {
-          id: "-1",
-          change_time: "2020/09/07 12:00",
-          username: "username",
-          avatar:
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },
-        {
-          id: "-1",
-          change_time: "2020/09/07 12:00",
-          username: "username",
-          avatar:
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },
-        {
-          id: "-1",
-          change_time: "2020/09/07 12:00",
-          username: "username",
-          avatar:
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },
-        {
-          id: "-1",
-          change_time: "2020/09/07 12:00",
-          username: "username",
-          avatar:
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },
-        {
-          id: "-1",
-          change_time: "2020/09/07 12:00",
-          username: "username",
-          avatar:
-            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        },
-      ];
+
     },
-    setDemoData() {},
+    obtainData(){
+      this.$axios
+        .post("/doc/get_history/", { doc_id: this.doc_id },Config.axiosHeaders)
+        .then((response) =>{
+          const res = response.data;
+          if (res.success === true) {
+            this.changelogs = [];
+            var index = 0;
+            for(index = 0 ; index < res.history.length ; index++){
+              this.changelogs.push(res.history[index]);
+            }
+          } else {
+            this.$notify({
+              title: "通信失败!",
+              type: "warning",
+              message: res.exc,
+              duration: 5000,
+            });
+            this.drawer = false;
+          }
+        })
+        .catch((error)=> {
+          this.drawer = false;
+          this.$notify({
+            title: "访问出错!",
+            type: "danger",
+            message: error,
+            duration: 5000,
+          });
+        });
+    }
   },
 };
 </script>

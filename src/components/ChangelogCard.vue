@@ -7,7 +7,7 @@
         </div>
         <div class="changelog-info" :span="19">
           <div class="changelog-creator">{{changelogData.username}}</div>
-          <div class="changelog-time">于{{changelogData.change_time}}进行了编辑</div>
+          <div class="changelog-time">于{{changelogData.time}}进行了编辑</div>
         </div>
       </div>
     </div>
@@ -22,22 +22,11 @@ export default {
       type: Boolean,
       default: false,
     },
-    changelog: {
-      type: Object,
-      default: () => {
-        return {
-            id: "-1",
-            change_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-        };
-      },
-    },
+    changelog:Object,
   },
   data() {
     return {
-      changelogData: this.$props.changelog,
+      changelogData: this.changelog,
     };
   },
 };

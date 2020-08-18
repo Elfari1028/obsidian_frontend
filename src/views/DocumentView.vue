@@ -41,7 +41,7 @@
           </el-aside>
         </el-container>
       </el-container>
-      <ChangelogDrawer :docID="doc_id" ref="changelogDrawer" />
+      <ChangelogDrawer :doc_id="doc_id" ref="changelogDrawer" />
       <CommentDrawer :doc_id="this.doc_id" ref="commentDrawer" />
     </el-container>
   </div>
