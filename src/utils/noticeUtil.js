@@ -4,12 +4,17 @@ export default class NoticeRequest {
     static timer
     static messageQueue = []
     static messageMaxLength = 10
+    static messageBot = new NoticeRequest()
 
-    axiosPolling() {
+    static getInstance() {
+        return NoticeRequest.messageBot
+    }
+
+    async axiosPolling() {
         if (NoticeRequest.timer != null) {
             return
         }
-        axios.get('message/get/').then(res => {
+        await axios.get('message/get/').then(res => {
             if (res.data.success) {
                 const list = res.data.list
                 for (let i = 0; i < list.length; i++) {
@@ -79,5 +84,13 @@ export default class NoticeRequest {
 
     axiosStop() {
         clearTimeout(NoticeRequest.timer)
+    }
+
+    getList() {
+        return NoticeRequest.messageQueue
+    }
+
+    getLength() {
+        return NoticeRequest.messageQueue.length
     }
 }
