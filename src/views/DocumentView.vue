@@ -9,33 +9,48 @@
           <AsideMenu />
         </el-aside>
         <el-container>
-          <el-main id="doc-container">
+          <el-main id="doc-container" v-loading="boot_loading">
             <div id="doc-title"> 
               <el-input :value="doc_title_input" v-if="title_edit_mode===true" @input="update_title_input"></el-input>
               <div v-if="title_edit_mode===false">{{doc_title}}</div>
             </div>
-            <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===false" icon="el-icon-edit" @click="title_edit_mode=true"></el-button>   
-            <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===true" icon="el-icon-check" @click="update_title"></el-button>
-            <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===true" icon="el-icon-close" @click="cancel_update_title"></el-button>
-            <br/>
-            <DocEditor id="doc-editor" v-model="document" :doc_id="this.doc_id" :read_only="current_auth.edit===false" />
+            <div id="doc-title-edit" v-if="read_only==false">
+              <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===false" icon="el-icon-edit" @click="title_edit_mode=true"></el-button>   
+              <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===true" icon="el-icon-check" @click="update_title"></el-button>
+              <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===true" icon="el-icon-close" @click="cancel_update_title"></el-button>
+            </div>
+            <div id="doc-tag-container">
+             <el-tooltip class="item" effect="dark" placement="top-start" v-if="conflict_protection==true">
+               <div slot="content">正在有用户编辑这个文档。<br/>如果您认为没有他人可以编辑您的文档，您可能已在其他标签页打开编辑模式。<br/>如若没有，则请在2分钟后刷新，系统将为您解锁编辑模式。</div>
+               <el-button class="doc-tag" plain size="mini" type="danger">已有编辑者占用</el-button>
+             </el-tooltip>
+             <el-button class="doc-tag" plain size="mini"  v-if="this.current_auth.edit==false" type="warning">仅可读</el-button> 
+             <el-button class="doc-tag" plain size="mini"  v-if="this.current_auth.comment===true" >可评论</el-button>
+             <el-button class="doc-tag" plain size="mini"  v-else type="danger">不可评论</el-button> 
+              <el-tooltip class="item" effect="dark" placement="top-start" content="您拥有该文档的全部权限。" v-if="superuser===true">
+               <el-button class="doc-tag" plain size="mini"  v-if="superuser" type="success">全部权限</el-button> 
+             </el-tooltip>
+             <el-button class="doc-tag" plain size="mini"  v-if="belong_team==true" type="warning">团队文档</el-button>      
+             <el-button class="doc-tag" plain size="mini"  v-else type="warning">个人文档</el-button>
+             <el-button class="doc-tag" plain size="mini"  v-if="favorite" type="warning">已收藏</el-button>         
+            </div>
+            <DocEditor ref="doc_editor" id="doc-editor" v-model="document" :doc_id="this.doc_id" :read_only="read_only"/>
           </el-main>
-          <el-aside width="250px" id="aside_right">
+          <el-aside v-loading="boot_loading" width="250px" id="aside_right">
             <div id="bench_toolbar">
               <div id="toolbar_title">文档操作</div> 
               <el-divider></el-divider>
-              <el-button class="action-button"  type="success" icon="el-icon-lock" @click="save_document">保存文档</el-button>
+              <el-button v-if="read_only===false" class="action-button"  type="success" icon="el-icon-lock" @click="save_document">保存文档</el-button>
+              <el-button v-else class="action-button"  type="success" icon="el-icon-refresh" @click="refresh_document">刷新文档</el-button>
               <br/>
-            <el-button class="action-button"  type="warning" icon="el-icon-star-off" @click="updateFav">收藏文档</el-button>
+              <el-button class="action-button"  type="warning" icon="el-icon-star-off" @click="updateFav">收藏文档</el-button>
               <br/>
-            <el-button class="action-button"  type="primary"  icon="el-icon-chat-line-square" @click="openCommentDrawer">评论面板</el-button>        
+              <el-button v-if="current_auth.comment===true" class="action-button"  type="primary"  icon="el-icon-chat-line-square" @click="openCommentDrawer">评论面板</el-button>        
               <br/>
-              <!-- <el-button class="action-button" type="plain" plain icon="el-icon-refresh" @click="refreshDoc">刷新文档</el-button> -->
-              <!-- <br/> -->
               <el-button class="action-button"  type="plain" plain icon="el-icon-time" @click="openChangelogDrawer">编辑记录</el-button>
               <br/>
-              <AuthPopupButton :doc_id="this.doc_id" :belong_to_team="this.belong_team" :init_self_auth="this.self_auth" :init_team_auth="this.team_auth" />
-              <el-button class="action-button"  type="danger" plain icon="el-icon-delete" @click="deleteFile">删除文件</el-button>
+              <AuthPopupButton v-if="superuser" :doc_id="this.doc_id" :belong_to_team="this.belong_team" :init_self_auth="this.self_auth" :init_team_auth="this.team_auth" />
+              <el-button  v-if="superuser" class="action-button"  type="danger" plain icon="el-icon-delete" @click="deleteFile">删除文件</el-button>
               <br/>
             </div>
           </el-aside>
@@ -81,6 +96,9 @@ export default {
       title_edit_mode: false,
       failure_mode:false,
       timer:null,
+      conflict_protection:false,
+      read_only:true,
+      boot_loading:true,
     };
   },
   methods: {
@@ -149,7 +167,7 @@ export default {
           document: this.document},Config.axiosHeaders).then((response)=>{
             if(response.status === 200){
               if(response.data.success === true){
-                this.$message("自动保存成功");
+                this.$message("保存成功");
               }
               else this.on_save_document_fail(response.data.exc);
             }else this.on_save_document_fail(response.status);
@@ -161,15 +179,28 @@ export default {
       this.$message.error("保存错误！错误信息："+text);
     },
     refresh_document(){
+      this.$refs.doc_editor.setLoading(true);
       this.$axios.post("/doc/refresh_doc/",
-        {doc_id: this.doc_id},Config.axiosHeaders).then((response)=>{
+        {doc_id: this.doc_id, edit:this.current_auth.edit},Config.axiosHeaders).then((response)=>{
             if(response.status === 200){
               if(response.data.success === true){
-                this.$message("自动刷新成功");
+                this.$message("刷新成功");
+                this.doc_title = response.data.title;
+                this.document= response.data.doc;
+                
+                this.$refs.doc_editor.setLoading(false);
+                if(this.current_auth.edit===true && this.conflict_protection === true && response.data.conflict_protection === false){
+                  this.$notify({
+                    type:"warning",
+                    title: "文档已解除占用！",
+                    message:"刷新以进入编辑模式。"
+                    }
+                  );
+                }
               }
               else this.$message.error(response.data.exc);
             }else this.$message.error(response.status);
-          }).error((error)=>{
+          }).catch((error)=>{
             this.$message.error(error);
           });
     },
@@ -190,27 +221,29 @@ export default {
           });
     },
    preventNav(event){
+     if(this.read_only){
       this.save_document();
       event.preventDefault();
       event.returnValue = "";
+     }
     }
   },
   beforeMount(){
-    window.addEventListener("beforeunload", this.preventNav);
+    if(this.read_only===false)window.addEventListener("beforeunload", this.preventNav);
     this.$once("hook:beforeDestroy", () => {
-      this.save_document();
-      this.close_document();
+      if(this.read_only===false){this.save_document();
+      this.close_document();}
       console.log("closing document");
       window.removeEventListener("beforeunload", this.preventNav);
     })
   },
   beforeRouteLeave(to,from,next){
-    if (!window.confirm("确认离开页面？请确认您已保存内容。")) {
+    if(this.read_only===false){
+      if (!window.confirm("确认离开页面？请确认您已保存内容。")) {
         next(false);
         return;
       }
-    this.save_document();
-    this.close_document();
+    }
     next(true);
   },
   created() {  
@@ -229,11 +262,14 @@ export default {
             this.team_auth = res.team_auth;
             this.superuser = res.superuser;
             this.belong_team = res.belong_team;
-            console.log(this.document);
-            if(this.current_auth.edit === true)
-              this.timer=setInterval(this.save_document(),30000);
+            this.conflict_protection = res.conflict_protection;
+            this.read_only=(this.current_auth.edit===false||this.conflict_protection==true)==true?true:false;
+            this.boot_loading=false;
+            this.$refs.doc_editor.setLoading(false);
+            if(this.read_only===false)
+              this.timer=window.setInterval(()=>{this.save_document()},15000);
             else
-              this.timer=setInterval(this.refresh_document(),30000);
+              this.timer=window.setInterval(()=>{this.refresh_document();},7500);
           } else 
             this.onOpenFailure(response.data.exc);
         } else 
@@ -292,5 +328,15 @@ export default {
 }
 #doc-editor{
     margin-top:15px;
+}
+#doc-title-edit{
+  display: inline;
+}
+#doc-tag-container{
+  display: inline;
+  vertical-align: middle;
+}
+.doc-tag{
+  margin-left:10px;
 }
 </style>

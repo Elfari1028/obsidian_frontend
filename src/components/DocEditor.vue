@@ -1,6 +1,6 @@
 <template>
   <div class="ckedit">
-    <div class="ck-container">
+    <div class="ck-container" v-show="!loading">
       <ckeditor
         :editor="editor"
         :disabled="read_only===true"
@@ -12,6 +12,7 @@
         :config="editorConfig"
       ></ckeditor>
     </div>
+    <div class="ck-container-area" v-if="loading"><img style="width: auto; height:50%; margin-top:20%; height:auto" src="@/assets/loading/portal.gif"></div>
   </div>
 </template>
 
@@ -36,6 +37,7 @@ export default {
   },
   data() {
     return {
+      loading:true,
       editor: DecoupledEditor,
       editor_content: "",
       editorConfig: {
@@ -59,12 +61,18 @@ export default {
     };
   },
   methods: {
+    setLoading(val){
+      console.log(val);
+      this.loading=val;
+    },
     onFocus() {
       console.log(this.editorData);
       this.editor.ui.getEditableElement().classList.add("ck-container-area");
+      this.loading=false;
     },
     onBlur() {
       this.editor.ui.getEditableElement().classList.add("ck-container-area");
+      this.loading=false;
     },
     onReady(editor) {
       let self = this;
@@ -190,5 +198,10 @@ export default {
   margin-right: auto;
   margin-bottom: 0px;
   margin-left: auto;
+}
+.ck-container-area{
+  text-align: center;
+  vertical-align: middle;
+  height: 100%;
 }
 </style>

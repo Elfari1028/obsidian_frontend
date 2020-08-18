@@ -15,7 +15,7 @@
                    :modal="true"
                    :modal-append-to-body="true"
                    direction="rtl"
-                   z-index="1"
+                   z-index="3"
                    size="25%">
             <div :style="{height: spaceHeight}"
                  style="margin-top: 60px; margin-right: 20px; margin-left:20px;transition: 1s ">

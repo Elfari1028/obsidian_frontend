@@ -7,7 +7,7 @@
       :direction="direction"
       size='400px'
     >
-      <div class="DrawerContainer" v-if="loading===true"></div>
+      <div class="changlog-loading-container" v-if="loading===true"> <img style="max-width: 100%; height:auto" src="@/assets/loading/loading.gif"/> </div>
       <div class="container-active" v-else>
         <!-- <div class="changelog-list" v-for="item in changelogs" :key="item.primary">
             <ChangelogCard :changelog="item"/>
@@ -52,7 +52,6 @@ export default {
       this.drawer = true;
       this.loading = true;
       this.obtainData();
-      this.loading = false;
 
     },
     obtainData(){
@@ -66,6 +65,7 @@ export default {
             for(index = 0 ; index < res.history.length ; index++){
               this.changelogs.push(res.history[index]);
             }
+            this.loading=false;
           } else {
             this.$notify({
               title: "通信失败!",
@@ -94,5 +94,11 @@ export default {
 .container-active {
   height: 90vh;
   overflow-y: scroll;
+}
+:focus{
+    outline: none !important ; 
+    outline-width:  0px;
+  outline-color: transparent;
+  outline-style: none;
 }
 </style>>

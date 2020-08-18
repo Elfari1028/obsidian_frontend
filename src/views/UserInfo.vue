@@ -76,15 +76,13 @@
         },
         methods: {
             goBack() {
-                this.$router.push({
-                    name: 'WorkingSpace'
-                })
+              this.$router.go(-1);
             }
         },
         created: function () {
             this.userInfo.username = this.$route.params.username
             this.isLoading = true
-            this.$axios.post('', JSON.stringify({username: this.userInfo.username}), Config.axiosHeaders).then(res => {
+            this.$axios.post('/account/get_public_information/', JSON.stringify({username: this.userInfo.username}), Config.axiosHeaders).then(res => {
                 if (res.data.success) {
                     this.userInfo.email = res.data.email
                     this.userInfo.age = res.data.age
@@ -93,11 +91,11 @@
                     this.userInfo.tel = res.data.tel
                     this.userInfo.avatarUrl = Config.baseUrl.substring(0, Config.baseUrl.length - 1) + res.data.url
                 } else {
-                    this.$notify(res.data.exc)
+                    this.$message.error(res.data.exc)
                 }
             }).catch(err => {
                 console.log(err)
-                this.$notify('网络出现了些问题？')
+                this.$message.error('网络出现了些问题？')
             })
             this.isLoading = false
         }
