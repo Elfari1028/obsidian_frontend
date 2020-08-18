@@ -26,7 +26,7 @@
 				<el-main v-if='isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
 					<el-scrollbar style="height: 100%">
 						<DocumentCardforGroupTrash v-for="(doc,index) in trashList" :key="index" :doc="doc"/>
-						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
+						<div v-if="trashList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
 					</el-scrollbar>
 				</el-main>
 
@@ -63,7 +63,7 @@
 									icon="el-icon-refresh"
 									@click="updateFileList"></el-button>
 									
-						<NewDocPopupButton :belong_to_team='true' :team_id='Team_id' />
+						<NewDocPopupButton :belong_to_team='true' :team_id='parseInt(Team_id)' />
 
 						<br><br>
 
@@ -80,7 +80,6 @@
 				</el-aside>
 
 			</el-container>
-			<CreateDocPopup ref="create_doc" />
 		</el-container>
 	</div>
 </template>
@@ -185,7 +184,7 @@
 					}))
 					.then(response => {
 						var res = response.data
-						_this.docList = res.doc_list
+						_this.docList = res.list
 
 						if (res.success === false) {
 							_this.$message.error(res.exc)
@@ -203,7 +202,7 @@
 				var _this = this
 				console.log('正在获取团队回收站文件')
 				this.$axios
-					.post('bin/get-team-docs' ,JSON.stringify({
+					.post('bin/get_team_docs' ,JSON.stringify({
 						team_id: _this.Team_id
 					}))
 					.then(response => {
@@ -372,5 +371,10 @@
         height: auto;
         padding: 10px;
     }
-
+	
+	.list_empty_notice {
+		color: darkgrey;
+		height: inherit;
+		padding-top: 20%;
+	}
 </style>

@@ -18,7 +18,7 @@
     export default {
         name: "DocumentSorter",
         props:{
-            docList: Object
+            docList: Array
         },
         methods:{
             sortDocList: function (list, method) {
