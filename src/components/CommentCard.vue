@@ -4,77 +4,54 @@
     <div class="comment-container-inner">
       <div class="comment-info-row" ref="commentrow">
         <div class="comment-avatar" :span="5">
-          <el-avatar shape="circle" :size="50" :src="commentData.primary.avatar"></el-avatar>
+          <el-avatar shape="circle" :size="50" :src="commentData.comment.avatar"></el-avatar>
         </div>
         <div class="comment-info" :span="19">
-          <div class="comment-creator">{{commentData.primary.username}}</div>
-          <div class="comment-time">{{commentData.primary.create_time}}</div>
+          <div class="comment-creator">{{commentData.comment.username}}</div>
+          <div class="comment-time">{{commentData.comment.create_time}}</div>
         </div>
       </div>
       <div class="comment-frame">
         <div class="comment-reply" v-if="asReply===false&&commentData.reply!=null">
-          <CommentCard :comment="{primary:commentData.reply,reply:null}" :asReply="true" />
+          <CommentCard :comment="{comment:commentData.reply,reply:null}" :asReply="true" />
         </div>
-        <div class="comment-body">{{commentData.primary.content}}</div>
+        <div class="comment-body">{{commentData.comment.content}}</div>
       </div>
-      <div class="reply-button">
-        <el-button v-if="asReply===false" @click="onClickReply" type="primary">回复</el-button>
-      </div>
+      <el-popover placement="left" title="回复评论" width="330" v-model="visible">
+        <CommentCreateWindow v-on:reply-made="pass_signal" :doc_id="doc_id" :reply_to="this.comment.comment"/>
+        <div slot="reference"  class="reply-button"><el-button v-if="asReply===false"  type="primary">回复</el-button></div>
+      </el-popover>
     </div>
-    <CreateCommentPopup v-if="asReply===false" ref="comment_popup" />
     </el-card>
   <!-- </div> -->
 </template>
 
 <script>
-import CreateCommentPopup from "./CreateCommentPopup";
+import CommentCreateWindow from "./CommentCreateWindow";
 export default {
   name: "CommentCard",
-  components: {"CreateCommentPopup":CreateCommentPopup},
+  components: {CommentCreateWindow},
   props: {
+    doc_id: {type:Number,default:-1},
     asReply: {
       type: Boolean,
-      default: false,
+      default:false,
     },
-    comment: {
-      type: Object,
-      default: () => {
-        return {
-          primary: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-          reply: {
-            com_id: "-1",
-            content:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi sapien, porttitor ut imperdiet bibendum, consequat commodo massa. Vivamus a eleifend neque, ac malesuada neque. Nam eget eros gravida, ullamcorper tortor sed, viverra diam. Integer semper ante est, sed fringilla ante pellentesque ac. Phasellus sodales enim purus, eu fringilla quam sodales nec.",
-            create_time: "2020/09/07 12:00",
-            username: "username",
-            avatar:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1597314932665&di=d7bec76eeee1e537282d7ffbfea49908&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Fface%2F149d49a05a1b89c8e12825ab2d8bb5a02a6ddaa3.jpg",
-          },
-        };
-      },
-    },
+    comment: Object,
   },
   mounted: function () {
   
   },
   methods: {
+    pass_signal(){this.$emit("reply-made-pass");},
     onClickReply() {
-       this.$refs.comment_popup.openDialog();
-      // console.log(this.$refs.comment_popup);
-      // CreateCommentPopup.openDialog();
+      this.visible=true;
     },
   },
   data() {
     return {
       commentData: this.$props.comment,
+      visible:false,
     };
   },
 };
