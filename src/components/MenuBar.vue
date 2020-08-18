@@ -131,7 +131,7 @@
         background: rgb(220, 220, 220);
         border: 0;
         width: 100%;
-        z-index: 3;
+        z-index: 4;
         padding-top: 5px;
         padding-bottom: 5px;
         box-shadow: 2px 2px 5px 1px rgb(200, 200, 200);
