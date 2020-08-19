@@ -57,16 +57,12 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
+               <el-alert style="margin-bottom:10px;"  v-if="this.doc.team_id!==-1" type="warning" :closable="false" > <div slot="title">您在「{{doc.team_name}}」团队的文档</div></el-alert>
+               <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'" :closable="false" type="success"> <div slot="title"> 个人文档</div></el-alert>
+               <el-alert v-if="this.docType!=='isTrash'" type="info" :closable="false" show-icon> <div slot="title"> 最后修改于：{{doc.time}}</div></el-alert>
+               <el-alert v-else type="error" :closable="false" show-icon> <div slot="title"> 删除于：{{doc.delete_time}}</div></el-alert>
+
             <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
-				<span class="card_body_font card_body">
-					{{doc.team_name}}
-				</span>
-                <span v-if="this.docType!=='isTrash'" class="card_time_font card_body">
-					最后修改于：{{doc.time}}
-				</span>
-                <span v-if="this.docType==='isTrash'" class="card_time_font card_body">
-					删除于：{{doc.delete_time}}
-				</span>
             </div>
         </el-card>
     </div>
@@ -200,7 +196,7 @@
         display: block;
         float: left;
         width: 45%;
-        height: 100px;
+        height: 50%;
         margin: 10px;
     }
 
@@ -216,6 +212,7 @@
     }
 
     .card_time_font {
+        text-align: left;
         font-size: 10px;
         color: dimgray;
     }
