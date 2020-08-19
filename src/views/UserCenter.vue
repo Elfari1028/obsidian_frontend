@@ -226,11 +226,11 @@
                             if (res.data.success) {
                                 this.onEdit = !this.onEdit
                             } else {
-                                this.$notify(res.data.exc)
+                                this.$message(res.data.exc)
                             }
                         }).catch(err => {
                             console.log(err)
-                            this.$notify('网络出现了些问题？')
+                            this.$message('网络出现了些问题？')
                         })
                     }
                 })
@@ -308,11 +308,11 @@
                     this.userInfo.mood = res.data.mood
                     this.userInfo.tel = res.data.tel
                 } else {
-                    this.$notify(res.data.exc)
+                    this.$message(res.data.exc)
                 }
             }).catch(err => {
                 console.log(err)
-                this.$notify('网络出现了些问题？')
+                this.$message('网络出现了些问题？')
             })
             this.isLoading = false
         }
