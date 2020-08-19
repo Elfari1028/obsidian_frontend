@@ -2,17 +2,17 @@
 	<div id = 'Test'>
 		<p>This is page is for testing.</p>
 		
-		<GroupInit></GroupInit>
+		<GroupManage></GroupManage>
 	</div>
 </template>
 
 <script>
-import GroupInit from '../components/GroupInit.vue'	
+import GroupManage from '../components/GroupManage.vue'
 	
 export default {
 	name: 'Test',
 	components: {
-		GroupInit
+		GroupManage
 	}
 }
 </script>

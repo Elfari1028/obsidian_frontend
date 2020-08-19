@@ -14,8 +14,8 @@
             </span>
         </el-dialog>
         <el-card class="doc_item">
-            <div slot="header" style="height: 20px">
-                <i class="el-icon-document" style="float: left"></i>
+            <div slot="header" style="height: 20px; margin-left:10px, margin-right:10px;">
+                <i class="el-icon-document" style="cursor: pointer; float: left;" @click="toDocument(doc.doc_id)"></i>
                 <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
                 <el-dropdown trigger="click" style="float: right">
 					<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
@@ -57,16 +57,13 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
-				<span class="card_body_font card_body">
-					{{doc.team_name}}
-				</span>
-                <span v-if="this.docType!=='isTrash'" class="card_time_font card_body">
-					最后修改于：{{doc.time}}
-				</span>
-                <span v-if="this.docType==='isTrash'" class="card_time_font card_body">
-					删除于：{{doc.delete_time}}
-				</span>
+            <div class="card-content">
+               <div style="cursor: pointer" v-if="this.doc.team_id!==-1" @click="toTeam(doc.team_id)">
+                   <el-alert style="margin-bottom:10px;"   type="warning" :closable="false" > <div slot="title">您在「{{doc.team_name}}」团队的文档</div></el-alert>
+                </div>
+               <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'" :closable="false" type="success"> <div slot="title"> 个人文档</div></el-alert>
+               <el-alert v-if="this.docType!=='isTrash'" type="info" :closable="false" show-icon> <div slot="title"> 最后修改于：{{doc.time}}</div></el-alert>
+               <el-alert v-else type="error" :closable="false" show-icon> <div slot="title"> 删除于：{{doc.delete_time}}</div></el-alert>
             </div>
         </el-card>
     </div>
@@ -129,6 +126,9 @@
                     this.shareUrl = 'TEST_URL'
                     this.dialogVisible = true;
                 })
+            },
+            toTeam(team_id){
+                this.$router.push({name:'TeamSpace',params:{Team_id:team_id}})
             },
             toTrash(doc_id) {
                 console.log(doc_id)
@@ -201,8 +201,8 @@
         display: block;
         float: left;
         width: 45%;
-        height: 100px;
-        margin: 10px;
+        height: 50%;
+        margin: 10px;        
     }
 
     .card_header_font {
@@ -215,8 +215,12 @@
         display: block;
         margin: 5px;
     }
+    .card-content{
+        /* background-color: grey; */
+    }
 
     .card_time_font {
+        text-align: left;
         font-size: 10px;
         color: dimgray;
     }
@@ -224,6 +228,9 @@
     .card_body_font {
         font-size: 15px;
         color: dimgray;
+    }
+    .el-alert--info.is-light{
+        background-color: #FFFFFF ;
     }
 </style>
 
