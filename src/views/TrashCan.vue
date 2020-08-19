@@ -69,15 +69,6 @@
                     console.log(err)
                     this.docList = []
                     this.$message('网络出了些问题')
-                    for (let i = 0; i < 16; i++) {
-                        this.docList.push({
-                            doc_id: 3321,
-                            title: '个人回收站' + i,
-                            team_id: 55443,
-                            workspace: 'TEAM_DEBUG',
-                            time: '2020/8/10 20:03:' + i
-                        })
-                    }
                     this.isLoading = false;
                 })
             },
