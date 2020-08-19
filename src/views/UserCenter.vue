@@ -51,11 +51,12 @@
                                     <el-radio :label="true">女</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="电话">
+                            <el-form-item label="电话" prop="tel">
                                 <el-input :disabled="!onEdit" v-model="userInfo.tel" placeholder="未知"></el-input>
                             </el-form-item>
-                            <el-form-item label="年龄">
-                                <el-input :disabled="!onEdit" v-model="userInfo.age" placeholder="未知"></el-input>
+                            <el-form-item label="年龄" prop="age">
+                                <el-input size="small" width="50"
+                                          :disabled="!onEdit" v-model="userInfo.age" placeholder="未知"></el-input>
                             </el-form-item>
                             <el-form-item label="个人简介">
                                 <el-input :disabled="!onEdit" type="textarea" :rows="5" placeholder="这人没写……"
@@ -133,7 +134,14 @@
                 if (value !== this.passForm.new_password) {
                     callback(new Error('两次输入密码不一致'));
                 } else {
-                    callback();
+                    callback()
+                }
+            };
+            const validateNumber = (rule, value, callback) => {
+                if (value.search(/[^\d]/g) !== -1) {
+                    callback(new Error('请输入数字'))
+                } else {
+                    callback()
                 }
             };
             return {
@@ -162,6 +170,12 @@
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
                         {validator: validateEmail, trigger: 'blur'}
                     ],
+                    age: [
+                        {validator: validateNumber, trigger: 'change'}
+                    ],
+                    tel: [
+                        {validator: validateNumber, trigger: 'change'}
+                    ]
                 },
                 passRules: {
                     old_password: [
@@ -201,7 +215,14 @@
                 this.$refs['userInfo'].validate(valid => {
                     if (valid) {
                         console.log(this.userInfo)
-                        this.$axios.post('account/modify_information/', JSON.stringify(this.userInfo)).then(res => {
+                        this.$axios.post('account/modify_information/', JSON.stringify({
+                            username: this.userInfo.username,
+                            email: this.userInfo.email,
+                            sex: this.userInfo.sex,
+                            age: this.userInfo.age === '' ? -1 : this.userInfo.age,
+                            mood: this.userInfo.mood,
+                            tel: this.userInfo.tel,
+                        })).then(res => {
                             if (res.data.success) {
                                 this.onEdit = !this.onEdit
                             } else {
@@ -306,20 +327,20 @@
         padding: 10px;
     }
 
-    /deep/ #info_form input{
-        cursor: text!important;
+    /deep/ #info_form input {
+        cursor: text !important;
     }
 
-    /deep/ #info_form textarea{
-        cursor: text!important;
+    /deep/ #info_form textarea {
+        cursor: text !important;
     }
 
-    /deep/ #info_form span{
-        cursor: default!important;
+    /deep/ #info_form span {
+        cursor: default !important;
     }
 
-    /deep/ #info_form span::after{
-        cursor: default!important;
+    /deep/ #info_form span::after {
+        cursor: default !important;
     }
 
     #info_form {
