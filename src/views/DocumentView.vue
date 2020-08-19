@@ -295,7 +295,8 @@
                     })
             },
             deleteFile() {
-                this.close_document().then(()=>{ this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
+                this.close_document();
+                this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
                     .then(res => {
                         if (res.data.success) {
                             this.isDeleted = true
@@ -310,7 +311,7 @@
                         console.log(err)
                         this.$message.error('网络出了些问题?请重新打开文档。')
                         this.$router.push({name:"WorkingSpace"});
-                    })});
+                    });
             }
         },
         beforeMount() {
