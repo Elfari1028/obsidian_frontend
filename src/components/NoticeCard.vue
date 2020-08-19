@@ -1,5 +1,5 @@
 <template>
-    <el-tooltip effect="light" :content="toolMessage" placement="bottom-end" :open-delay="400">
+    <el-tooltip effect="light" :content="toolMessage" placement="left" :open-delay="400">
         <el-card class="notice_item" :shadow="messageItem.is_read?'never':'always'" @click.native="readMessage">
             <div slot="header" style="height: 20px">
                 <span :class="(messageItem.is_read?'card_is_read':'card_not_read')+' card_header_font'">{{messageItem.title}}</span>
