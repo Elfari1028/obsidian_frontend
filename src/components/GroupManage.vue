@@ -1,5 +1,5 @@
 <template>
-	<div id = 'GroupManage' :style="{height: getHeight()}">
+	<div id = 'GroupManage'>
 		<div id = 'forAll'>
 			<el-divider content-position="left">当前团队ID</el-divider>
 			<center><h3>{{Team_id}}</h3></center>

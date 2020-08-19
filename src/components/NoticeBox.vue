@@ -3,7 +3,7 @@
         <el-badge :is-dot="showDot>0">
             <el-button circle type="info"
                        size="mini" icon="el-icon-message-solid"
-                       @click="isVisible = !isVisible">
+                       @click="openDrawer">
             </el-button>
         </el-badge>
         <el-drawer :title="'通知'"
@@ -19,7 +19,7 @@
                    size="25%">
             <div :style="{height: spaceHeight}"
                  style="margin-top: 60px; margin-right: 20px; margin-left:20px;transition: 1s ">
-                <el-scrollbar style="height: 100%">
+                <el-scrollbar style="height: 100%" v-if="!forceRefresh">
                     <NoticeCard v-for="(message,index) in messageList" :key="index"
                                 :message="message"></NoticeCard>
                 </el-scrollbar>
@@ -34,14 +34,17 @@
 
     export default {
         name: "Notice",
+        inject: ['reload'],
         components: {NoticeCard},
         data() {
             return {
+                forceRefresh: false,
                 isOpen: false,
                 showDot: false,
                 isVisible: false,
                 isLoading: false,
                 messageBot: null,
+                onCreate: true,
                 messageList: [],
                 spaceHeight: window.innerHeight - 80 + 'px',
             }
@@ -50,11 +53,24 @@
             handleClose() {
                 this.isVisible = false;
             },
+            openDrawer() {
+                this.drawerUpdate()
+                this.isVisible = !this.isVisible
+            },
+            drawerUpdate() {
+                this.forceRefresh = true
+                this.messageList = this.messageBot?.getList()
+                this.$nextTick(() => {
+                    this.forceRefresh = false
+                })
+            }
         },
         created() {
+            this.onCreate = true;
             this.messageBot = NoticeRequest.getInstance()
-            this.messageBot?.axiosPolling()
+            this.messageBot?.noticeInit()
             this.messageList = this.messageBot?.getList()
+            this.onCreate = false;
         },
         destroy() {
             this.messageBot?.axiosStop()
@@ -67,10 +83,18 @@
             }
         },
         watch: {
-            'messageBot.messageQueue': {
-                handler(val, oldVal) {
-                    console.log(oldVal)
-                    this.messageList = val
+            'messageBot.newMessageList': {
+                handler(val) {
+                    for (let i = 0; i < val.length; i++) {
+                        this.$notify({
+                            title: val[i].type,
+                            message: val[i].content,
+                            duration: 2000
+                        })
+                    }
+                    if (val.length !== 0) {
+                        this.drawerUpdate()
+                    }
                 },
                 deep: true
             },
@@ -78,7 +102,14 @@
                 handler(val, oldVal) {
                     console.log(oldVal)
                     this.showDot = val > 0
-                }
+                },
+                deep: true
+            },
+            'messageBot.messageQueue': {
+                handler() {
+                    this.messageList = this.messageBot?.getList()
+                },
+                deep: true
             }
         }
     }

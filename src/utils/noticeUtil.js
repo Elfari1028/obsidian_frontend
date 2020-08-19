@@ -3,7 +3,8 @@ import axios from 'axios'
 export default class NoticeRequest {
     static timer
     messageQueue = []
-    static messageMaxLength = 10
+    newMessageList = []
+    static messageMaxLength = 12
     static messageBot = new NoticeRequest()
     messageUnreadLength
 
@@ -11,17 +12,17 @@ export default class NoticeRequest {
         return NoticeRequest.messageBot
     }
 
-    async axiosPolling() {
+    async noticeInit() {
         if (NoticeRequest.timer != null) {
             return
         }
         await axios.get('message/get/').then(res => {
             if (res.data.success) {
-                this.messageQueue = []
+                let temp = []
                 const list = res.data.list
                 this.messageUnreadLength = res.data.unread_num
                 for (let i = 0; i < list.length; i++) {
-                    this.queuePush({
+                    this.queuePush(temp, {
                         message_id: list[i].message_id,
                         sender: list[i].sender,
                         type: list[i].type,
@@ -30,7 +31,49 @@ export default class NoticeRequest {
                         is_read: list[i].is_read
                     })
                 }
-                this.sortMessages()
+                this.sortMessages(temp)
+                this.messageQueue = temp
+                NoticeRequest.timer = setTimeout(() => {
+                    NoticeRequest.timer = null
+                    this.axiosPolling()
+                }, 5000)
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    async axiosPolling() {
+        if (NoticeRequest.timer != null) {
+            return
+        }
+        await axios.get('message/get/').then(res => {
+            if (res.data.success) {
+                let temp = []
+                const list = res.data.list
+                this.messageUnreadLength = res.data.unread_num
+                for (let i = 0; i < list.length; i++) {
+                    this.queuePush(temp, {
+                        message_id: list[i].message_id,
+                        sender: list[i].sender,
+                        type: list[i].type,
+                        content: list[i].content,
+                        time: list[i].create_time,
+                        is_read: list[i].is_read
+                    })
+                }
+                this.sortMessages(temp)
+                let newTemp = []
+                for (let i = 0; i < temp.length; i++) {
+                    if (typeof (this.messageQueue.find(function (curVal) {
+                        return curVal.message_id === temp[i].message_id
+                    })) == "undefined") {
+                        this.queuePush(newTemp, temp[i])
+                    }
+                }
+                this.newMessageList = newTemp
+                this.messageQueue = temp
+
                 NoticeRequest.timer = setTimeout(() => {
                     NoticeRequest.timer = null
                     this.axiosPolling()
@@ -46,8 +89,8 @@ export default class NoticeRequest {
         })
     }
 
-    sortMessages() {
-        this.messageQueue.sort((a, b) => {
+    sortMessages(queue) {
+        queue.sort((a, b) => {
             let x = a.is_read ? -1 : 1
             let y = b.is_read ? -1 : 1
             if (x > y)
@@ -63,15 +106,15 @@ export default class NoticeRequest {
         })
     }
 
-    queuePush(Object) {
-        this.messageQueue.unshift(Object)
-        if (this.messageQueue.length > NoticeRequest.messageMaxLength) {
-            this.queuePop()
+    queuePush(queue, Object) {
+        queue.unshift(Object)
+        if (queue.length > NoticeRequest.messageMaxLength) {
+            this.queuePop(queue)
         }
     }
 
-    queuePop() {
-        return this.messageQueue.pop()
+    queuePop(queue) {
+        return queue.pop()
     }
 
     axiosStop() {
@@ -79,7 +122,7 @@ export default class NoticeRequest {
     }
 
     getList() {
-        return this.messageQueue
+        return this.messageQueue.slice()
     }
 
     getUnreadLength() {
