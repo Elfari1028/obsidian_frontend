@@ -2,6 +2,8 @@
     <el-tooltip effect="light" :content="toolMessage" placement="left" :open-delay="400">
         <el-card class="notice_item" :shadow="messageItem.is_read?'never':'always'" @click.native="readMessage">
             <div slot="header" style="height: 20px">
+                <!-- <i class="el-icon-cancel" v-if="messageItem.is_read===false" style="cursor: pointer; float: right;" @click="readMessage"></i> -->
+                <el-button v-if="messageItem.is_read===false" style="float: right; padding: 3px 0" icon="el-icon-close" @click="readMessage"></el-button>
                 <span :class="(messageItem.is_read?'card_is_read':'card_not_read')+' card_header_font'">{{messageItem.title}}</span>
             </div>
             <div>

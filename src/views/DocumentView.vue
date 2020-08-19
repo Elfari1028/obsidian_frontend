@@ -212,6 +212,9 @@
             },
             on_save_document_fail(text) {
                 this.$message.error("保存错误！错误信息：" + text);
+                if(text==="文件不存在"){
+                    this.$router.push({name:"WorkingSpace"});
+                }
             },
             refresh_document() {
                 // this.$refs.doc_editor.setLoading(false);
@@ -293,20 +296,22 @@
                     })
             },
             deleteFile() {
-                this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
+                this.close_document().then(()=>{ this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
                     .then(res => {
                         if (res.data.success) {
                             this.isDeleted = true
                             this.$message.success('文件已移入回收站')
                             this.$router.push({name: 'WorkingSpace'})
                         } else {
-                            this.$message.error(res.data.exc)
+                            this.$message.error(res.data.exc+"请重新打开文档重试。")
+                            this.$router.push({name:"WorkingSpace"});
                         }
                     })
                     .catch(err => {
                         console.log(err)
-                        this.$message.error('网络出了些问题?')
-                    })
+                        this.$message.error('网络出了些问题?请重新打开文档。')
+                        this.$router.push({name:"WorkingSpace"});
+                    })});
             }
         },
         beforeMount() {
