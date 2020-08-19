@@ -138,6 +138,7 @@
 						_this.$message.error('获取团队文件出了点问题')
 						console.log(err)
 						_this.isLoading = false
+						this.$router.push('/WorkingSpace')
 					})
 			},
 			loadTrashList: function () {
