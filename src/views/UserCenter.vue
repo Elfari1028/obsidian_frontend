@@ -103,7 +103,7 @@
     import MenuBar from "@/components/MenuBar";
     import AsideMenu from "@/components/AsideMenu";
     import Config from "@/config";
-    import {encryption} from "@/utils/encryptUtils";
+    import {encryptForm} from "@/utils/encryptUtils";
     import {updateStatus} from "@/utils/axiosUtils";
 
     export default {
@@ -228,7 +228,7 @@
             commitPassword() {
                 this.$refs['passForm'].validate(valid => {
                     if (valid) {
-                        encryption(this.passForm, this.encodePassForm)
+                        encryptForm(this.passForm, this.encodePassForm)
                         console.log(this.encodePassForm)
                         this.$axios.post('account/modify_password/', JSON.stringify(this.encodePassForm), Config.axiosHeaders)
                             .then(res => {

@@ -42,6 +42,7 @@
 
 <script>
 import Config from "@/config";
+import {encryptData} from "@/utils/encryptUtils";
 	
 export default {
 	name: 'DocumentCardforGroupTrash',
@@ -54,7 +55,7 @@ export default {
 			this.$router.push({
 				name:'DocumentView',
 				params: {
-					doc_id: doc_id
+					doc_id: encryptData((doc_id).toString())
 				}
 			})
 		},

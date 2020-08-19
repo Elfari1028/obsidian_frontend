@@ -96,6 +96,7 @@
     import ChangelogDrawer from "@/components/ChangelogDrawer";
     import AuthPopupButton from "@/components/AuthPopupButton";
     import Config from "@/config"
+    import {decryptData} from "@/utils/encryptUtils";
 
     export default {
         name: "DocumentView",
@@ -311,7 +312,7 @@
             next(true);
         },
         created() {
-            this.doc_id=parseInt(this.$route.params.doc_id);
+            this.doc_id=parseInt(decryptData(this.$route.params.doc_id));
             this.doc_title_input = this.doc_title;
             this.$axios.post("/doc/open_one_doc/",{doc_id:this.doc_id},Config.axiosHeaders).then((response)=> {
                 if (response.status === 200) {
