@@ -49,7 +49,7 @@
                     </el-dropdown-menu>
 
                     <el-dropdown-menu v-if="this.docType==='isTrash'" slot="dropdown">
-                        <el-dropdown-item @click.native="restoreDocument(doc.doc_id)">恢复
+                        <el-dropdown-item @click.native="restoreDocument(doc.doc_id,doc.team_id)">恢复
                         </el-dropdown-item>
                         <el-dropdown-item @click.native="delDocument(doc.doc_id)"
                                           style="color: #ff0000">删除
@@ -141,9 +141,9 @@
                     }
                 })
             },
-            restoreDocument(doc_id) {
-                console.log(doc_id)
-                this.$axios.post('bin/recover_doc/', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
+            restoreDocument(doc_id,team_id) {
+                //console.log(doc_id)
+                this.$axios.post('bin/recover_doc/', JSON.stringify({doc_id: doc_id,team_id: team_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success) {
                         this.$alert("文件已恢复")
                         this.reload()

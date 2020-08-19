@@ -87,7 +87,7 @@
                 handler(val) {
                     for (let i = 0; i < val.length; i++) {
                         this.$notify({
-                            title: val[i].type,
+                            title: '新消息',
                             message: val[i].content,
                             duration: 5000
                         })
