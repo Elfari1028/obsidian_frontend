@@ -89,7 +89,7 @@
                         this.$notify({
                             title: val[i].type,
                             message: val[i].content,
-                            duration: 2000
+                            duration: 5000
                         })
                     }
                     if (val.length !== 0) {
