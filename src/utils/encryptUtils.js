@@ -2,11 +2,17 @@ import CryptoJS from "crypto-js";
 
 export function encryption(sourceForm, resultForm) {
     let key = generateKey()
-    for(let formKey in sourceForm)
-    {
+    for (let formKey in sourceForm) {
         resultForm[formKey] = encrypt(sourceForm[formKey], key)
     }
     resultForm.key = key
+}
+
+export function decryption(sourceForm, resultForm) {
+    let key = sourceForm.key
+    for (let formKey in sourceForm && formKey !== 'key') {
+        resultForm[formKey] = decrypt(sourceForm[formKey], key)
+    }
 }
 
 function generateKey() {
@@ -28,4 +34,15 @@ function encrypt(data, key) {
         mode: CryptoJS.mode.CBC,
         padding: CryptoJS.pad.ZeroPadding
     }).toString()
+}
+
+function decrypt(data, key) {
+    let iv = CryptoJS.MD5(key).toString().substring(0, 16);
+    key = CryptoJS.enc.Utf8.parse(key)
+    iv = CryptoJS.enc.Utf8.parse(iv)
+    return CryptoJS.AES.decrypt(data, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.ZeroPadding
+    })
 }
