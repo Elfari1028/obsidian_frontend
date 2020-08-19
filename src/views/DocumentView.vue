@@ -296,7 +296,7 @@
             },
             deleteFile() {
                 this.close_document();
-                this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
+                this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
                     .then(res => {
                         if (res.data.success) {
                             this.isDeleted = true
