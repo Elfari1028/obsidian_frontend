@@ -242,7 +242,6 @@
                 });
             },
             close_document() {
-                clearInterval(this.timer);
                 this.$axios.post("/doc/close_doc/",
                     {
                         doc_id: this.doc_id,
@@ -317,6 +316,7 @@
         beforeMount() {
             if (this.read_only === false) window.addEventListener("beforeunload", this.preventNav);
             this.$once("hook:beforeDestroy", () => {
+                clearInterval(this.timer);
                 if (this.read_only === false) {
                     this.save_document();
                     this.close_document();

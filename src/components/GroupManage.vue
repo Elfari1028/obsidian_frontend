@@ -156,8 +156,8 @@
 						>
 				
 						<template slot-scope="scope">
-							<el-avatar >
-								<img :src="scope.row.user_avatar" style="width: 100%; height: 100%;">
+							<el-avatar  style="cursor: pointer;" >
+								<img :src="scope.row.user_avatar" @click="toUser(scope.row.user_name);" style="width: 100%; height: 100%;">
 							</el-avatar>
 						</template>
 				
@@ -282,6 +282,9 @@ export default{
 		}
 	},
 	methods: {
+		toUser(username){
+			this.$router.push({name:'UserInfo',params:{username:username}});
+		},
 		getHeight: function () {
 			if (this.isAdmin) {
 				return '460px'

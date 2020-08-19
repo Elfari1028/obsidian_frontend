@@ -1,7 +1,7 @@
 <template>
   <!-- <div class="changelog-container-outer"> -->
     <div class="changelog-container-inner">
-      <div class="changelog-info-row" @click="jumpToUser" ref="changelogrow">
+      <div class="changelog-info-row" style="cursor: pointer;" @click="jumpToUser" ref="changelogrow">
         <div class="changelog-avatar" :span="5">
           <el-avatar shape="circle" :size="50" :src="changelogData.avatar"></el-avatar>
         </div>

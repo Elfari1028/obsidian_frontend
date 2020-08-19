@@ -2,7 +2,7 @@
   <!-- <div class="comment-container-outer"> -->
     <el-card class="comment-container-outer">
     <div class="comment-container-inner">
-      <div class="comment-info-row" @click="jumpToUser" ref="commentrow">
+      <div class="comment-info-row" style="cursor: pointer;" @click="jumpToUser" ref="commentrow">
         <div class="comment-avatar" :span="5">
           <el-avatar shape="circle" :size="50" :src="commentData.comment.avatar"></el-avatar>
         </div>
