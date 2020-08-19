@@ -55,7 +55,7 @@ export default {
 			this.$router.push({
 				name:'DocumentView',
 				params: {
-					doc_id: encryptData(doc_id)
+					doc_id: encryptData((doc_id).toString())
 				}
 			})
 		},

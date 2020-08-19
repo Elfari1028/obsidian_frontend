@@ -122,7 +122,7 @@
                         if (response.data.success === true) {
                             let doc_id = response.data.doc;
                             referer.$router.push({
-                                name: 'DocumentView', params: {doc_id: encryptData(doc_id)},
+                                name: 'DocumentView', params: {doc_id: encryptData((doc_id).toString())},
                             });
                         } else
                             referer.$notify({

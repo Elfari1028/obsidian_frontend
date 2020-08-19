@@ -96,6 +96,7 @@
     import ChangelogDrawer from "@/components/ChangelogDrawer";
     import AuthPopupButton from "@/components/AuthPopupButton";
     import Config from "@/config"
+    import {decryptData} from "@/utils/encryptUtils";
 
     export default {
         name: "DocumentView",
@@ -311,7 +312,7 @@
             next(true);
         },
         created() {
-            this.doc_id=parseInt(this.$route.params.doc_id);
+            this.doc_id=parseInt(decryptData(this.$route.params.doc_id));
             this.doc_title_input = this.doc_title;
             this.$axios.post("/doc/open_one_doc/",{doc_id:this.doc_id},Config.axiosHeaders).then((response)=> {
                 if (response.status === 200) {
@@ -380,36 +381,29 @@
         margin-bottom: 10px;
     }
 
-#aside_right {
-    border-left: 1px solid #DEDFE6;
-    height: auto;
-    padding: 10px;
-}
-#doc-title{
-    margin-left:15px;
-    text-align: left;
-    font-size: 35px;
-    vertical-align:middle;
-    text-align: right;
-    display: inline-block;
-}
-#edit-button{
-    display: inline-block;
-    vertical-align:middle;
-    text-align: right;
-    margin-left: 15px;
-}
-#doc-editor{
-    margin-top:15px;
-}
-#doc-title-edit{
-  display: inline;
-}
-#doc-tag-container{
-  display: inline;
-  vertical-align: middle;
-}
-.doc-tag{
-  margin-left:10px;
-}
+    #aside_right {
+        border-left: 1px solid #DEDFE6;
+        height: auto;
+        padding: 10px;
+    }
+
+    #doc-title {
+        margin-left: 15px;
+        text-align: left;
+        font-size: 35px;
+        vertical-align: middle;
+        text-align: right;
+        display: inline-block;
+    }
+
+    #edit-button {
+        display: inline-block;
+        vertical-align: middle;
+        text-align: right;
+        margin-left: 15px;
+    }
+
+    #doc-editor {
+        margin-top: 15px;
+    }
 </style>
