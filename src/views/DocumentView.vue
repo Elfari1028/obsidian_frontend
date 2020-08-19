@@ -381,29 +381,36 @@
         margin-bottom: 10px;
     }
 
-    #aside_right {
-        border-left: 1px solid #DEDFE6;
-        height: auto;
-        padding: 10px;
-    }
-
-    #doc-title {
-        margin-left: 15px;
-        text-align: left;
-        font-size: 35px;
-        vertical-align: middle;
-        text-align: right;
-        display: inline-block;
-    }
-
-    #edit-button {
-        display: inline-block;
-        vertical-align: middle;
-        text-align: right;
-        margin-left: 15px;
-    }
-
-    #doc-editor {
-        margin-top: 15px;
-    }
+#aside_right {
+    border-left: 1px solid #DEDFE6;
+    height: auto;
+    padding: 10px;
+}
+#doc-title{
+    margin-left:15px;
+    text-align: left;
+    font-size: 35px;
+    vertical-align:middle;
+    text-align: right;
+    display: inline-block;
+}
+#edit-button{
+    display: inline-block;
+    vertical-align:middle;
+    text-align: right;
+    margin-left: 15px;
+}
+#doc-editor{
+    margin-top:15px;
+}
+#doc-title-edit{
+  display: inline;
+}
+#doc-tag-container{
+  display: inline;
+  vertical-align: middle;
+}
+.doc-tag{
+  margin-left:10px;
+}
 </style>
