@@ -208,6 +208,7 @@
                 template_list: [
                     {template_id: 0, title: "空白模板", intro: "创建一个空白文档"},
                 ],
+                template_select: '',
                 team_auth: {read: true, edit: false, comment: true, share: true},
             };
         },
