@@ -121,7 +121,7 @@
 				var _this = this
 				console.log('正在获取团队文件')
 				this.$axios
-					.post('doc/list_all_team_docs' ,JSON.stringify({
+					.post('doc/list_all_team_docs/' ,JSON.stringify({
 						team_id: _this.Team_id
 					}))
 					.then(response => {
@@ -146,7 +146,7 @@
 				var _this = this
 				console.log('正在获取团队回收站文件')
 				this.$axios
-					.post('bin/get_team_docs' ,JSON.stringify({
+					.post('bin/get_team_docs/' ,JSON.stringify({
 						team_id: _this.Team_id
 					}))
 					.then(response => {

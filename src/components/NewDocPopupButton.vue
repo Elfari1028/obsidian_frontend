@@ -203,6 +203,7 @@
         },
         data() {
             return {
+                template_select: 0,
                 title: "",
                 visible: false,
                 template_list: [

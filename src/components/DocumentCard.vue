@@ -15,7 +15,7 @@
         </el-dialog>
         <el-card class="doc_item">
             <div slot="header" style="height: 20px">
-                <i class="el-icon-document" style="float: left"></i>
+                <i class="el-icon-document" style="cursor: pointer; float: left;" @click="toDocument(doc.doc_id)"></i>
                 <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
                 <el-dropdown trigger="click" style="float: right">
 					<span class="el-dropdown-link" style="font-weight: bold;cursor: pointer">
@@ -57,13 +57,13 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-               <el-alert style="margin-bottom:10px;"  v-if="this.doc.team_id!==-1" type="warning" :closable="false" > <div slot="title">您在「{{doc.team_name}}」团队的文档</div></el-alert>
+               <div style="cursor: pointer" v-if="this.doc.team_id!==-1" @click="toTeam(doc.team_id)">
+                   <el-alert style="margin-bottom:10px;"   type="warning" :closable="false" > <div slot="title">您在「{{doc.team_name}}」团队的文档</div></el-alert>
+                </div>
                <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'" :closable="false" type="success"> <div slot="title"> 个人文档</div></el-alert>
                <el-alert v-if="this.docType!=='isTrash'" type="info" :closable="false" show-icon> <div slot="title"> 最后修改于：{{doc.time}}</div></el-alert>
                <el-alert v-else type="error" :closable="false" show-icon> <div slot="title"> 删除于：{{doc.delete_time}}</div></el-alert>
-
-            <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
-            </div>
+            
         </el-card>
     </div>
 </template>
@@ -125,6 +125,9 @@
                     this.shareUrl = 'TEST_URL'
                     this.dialogVisible = true;
                 })
+            },
+            toTeam(team_id){
+                this.$router.push({name:'TeamSpace',params:{Team_id:team_id}})
             },
             toTrash(doc_id) {
                 console.log(doc_id)
