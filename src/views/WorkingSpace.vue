@@ -10,7 +10,7 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
-                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
+                        <DocumentCard context="isWorkingSpace" v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
                     </el-scrollbar>
                 </el-main><!--主体-->

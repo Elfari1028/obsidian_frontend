@@ -58,17 +58,26 @@
                 </el-dropdown>
             </div>
             <div class="card-content">
-                <div style="cursor: pointer" v-if="this.doc.team_id!==-1&&this.context!=='isTeamSpace'"
+                <div style="cursor: pointer" v-if="
+                this.doc.team_id!==-1 && this.context!=='isTeamSpace' && (this.doc.creator === this.$store.getters.getUsername
+                ||this.context==='isWorkingSpace')"
                      @click="toTeam(doc.team_id)">
                     <el-alert style="margin-bottom:10px;" type="warning" :closable="false">
                         <div slot="title">您在「{{doc.team_name}}」团队的文档</div>
                     </el-alert>
                 </div>
+                <el-alert style="margin-bottom:10px;"
+                          v-else-if="this.doc.team_id!==-1&&this.docType!=='isTrash'&&(this.context==='isTeamSpace'||this.context==='isCollections'||this.context==='isHistory')"
+                          :closable="false" :type="doc.creator === this.$store.getters.getUsername?'success':'warning'">
+                    <div slot="title">由「{{doc.creator === this.$store.getters.getUsername?'您':doc.creator}}」创建的文档
+                    </div>
+                </el-alert>
                 <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'&&this.context!=='isTeamSpace'"
                           :closable="false" type="success">
                     <div slot="title"> 个人文档</div>
                 </el-alert>
-                <el-alert v-if="this.docType!=='isTrash'&&this.context==='isTeamSpace'" type="info" :closable="false" show-icon>
+                <el-alert v-if="this.docType!=='isTrash'&&this.context==='isTeamSpace'" type="info" :closable="false"
+                          show-icon>
                     <div slot="title"> 创建于：{{doc.create_time}}</div>
                 </el-alert>
                 <el-alert v-if="this.docType!=='isTrash'" type="info" :closable="false" show-icon>
@@ -106,7 +115,6 @@
             }
         },
         mounted() {
-
         },
         methods: {
             toDocument(doc_id) {

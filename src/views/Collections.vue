@@ -10,7 +10,7 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
-                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc"
+                        <DocumentCard context="isCollections" v-for="(doc,index) in docList" :key="index" :doc="doc"
                                       :doc-type="'isCollection'"/>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">收藏夹空空如也</div>
                     </el-scrollbar>
