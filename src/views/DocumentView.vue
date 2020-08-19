@@ -28,26 +28,24 @@
                                         v-if="conflict_protection==true">
                                 <div slot="content">正在有用户编辑这个文档。<br/>如果您认为没有他人可以编辑您的文档，您可能已在其他标签页打开编辑模式。<br/>如若没有，则请在2分钟后刷新，系统将为您解锁编辑模式。
                                 </div>
-                                <el-button class="doc-tag" plain size="mini" type="danger">已有编辑者占用</el-button>
+                                <el-button class="doc-tag" plain size="mini" type="danger">🛑 已有编辑者占用</el-button>
                             </el-tooltip>
                             <el-button class="doc-tag" plain size="mini" v-if="this.current_auth.edit==false"
-                                       type="warning">仅可读
+                                       type="warning">👀 仅可读
                             </el-button>
-                            <el-button class="doc-tag" plain size="mini" v-if="this.current_auth.comment===true">可评论
+                            <el-button class="doc-tag" plain size="mini" type="info" v-if="this.current_auth.comment===true">💬 可评论
                             </el-button>
-                            <el-button class="doc-tag" plain size="mini" v-else type="danger">不可评论</el-button>
+                            <el-button class="doc-tag" plain size="mini" v-else type="danger">🈲 不可评论</el-button>
                             <el-tooltip class="item" effect="dark" placement="top-start" content="您拥有该文档的全部权限。"
                                         v-if="superuser===true">
-                                <el-button class="doc-tag" plain size="mini" v-if="superuser" type="success">全部权限
+                                <el-button class="doc-tag" plain size="mini" v-if="superuser" type="success">👑 全部权限
                                 </el-button>
                             </el-tooltip>
-                            <el-button class="doc-tag" plain size="mini" v-if="belong_team==true" type="warning">团队文档
+                            <el-button class="doc-tag" plain size="mini" v-if="belong_team==true" type="warning">👨🏾‍🤝‍👨🏼 团队「{{this.team_name}}」
                             </el-button>
-                            <el-button class="doc-tag" plain size="mini" v-else type="warning">个人文档</el-button>
-                            <el-button class="doc-tag" plain size="mini" v-if="favorite" type="warning">已收藏</el-button>
+                            <el-button class="doc-tag" plain size="mini" v-else type="warning">😎 个人文档</el-button>
                         </div>
-                        <DocEditor ref="doc_editor" id="doc-editor" v-model="document" :doc_id="this.doc_id"
-                                   :read_only="read_only"/>
+                        <DocEditor id="doc-editor" v-model="doc_content" :doc_id="this.doc_id" :read_only="read_only" />
                     </el-main>
                     <el-aside v-loading="boot_loading" width="250px" id="aside_right">
                         <div id="bench_toolbar">
@@ -60,8 +58,11 @@
                                        @click="refresh_document">刷新文档
                             </el-button>
                             <br/>
-                            <el-button class="action-button" type="warning" icon="el-icon-star-off" @click="updateFav">
+                            <el-button class="action-button" v-if="!this.favorite" type="warning" icon="el-icon-star-off" @click="updateFav">
                                 收藏文档
+                            </el-button>
+                            <el-button class="action-button" v-else type="warning" icon="el-icon-star-on" @click="revokeFav">
+                                取消收藏
                             </el-button>
                             <br/>
                             <el-button v-if="current_auth.comment===true" class="action-button" type="primary"
@@ -113,7 +114,7 @@
             return {
                 doc_id: 0,
                 doc_title: "",
-                document: "",
+                doc_content: "",
                 creator: null,
                 favorite: false,
                 current_auth: {read: false, edit: false, comment: false},
@@ -129,6 +130,7 @@
                 conflict_protection: false,
                 read_only: true,
                 boot_loading: true,
+                team_name:null,
             };
         },
         methods: {
@@ -193,11 +195,11 @@
 
             },
             save_document() {
-                console.log(this.document);
+                console.log(this.doc_content);
                 this.$axios.post("/doc/auto_save_doc/",
                     {
                         doc_id: this.doc_id,
-                        document: this.document
+                        document: this.doc_content
                     }, Config.axiosHeaders).then((response) => {
                     if (response.status === 200) {
                         if (response.data.success === true) {
@@ -212,15 +214,15 @@
                 this.$message.error("保存错误！错误信息：" + text);
             },
             refresh_document() {
-                this.$refs.doc_editor.setLoading(false);
+                // this.$refs.doc_editor.setLoading(false);
                 this.$axios.post("/doc/refresh_doc/",
                     {doc_id: this.doc_id, edit: this.current_auth.edit}, Config.axiosHeaders).then((response) => {
                     if (response.status === 200) {
                         if (response.data.success === true) {
                             // this.$message("刷新成功");
                             this.doc_title = response.data.title;
-                            this.document = response.data.doc;
-                            this.$refs.doc_editor.setLoading(false);
+                            this.doc_content = response.data.doc;
+                            // this.$refs.doc_editor.setLoading(false);
                             if (this.current_auth.edit === true && this.conflict_protection === true && response.data.conflict_protection === false) {
                                 this.$notify({
                                         type: "warning",
@@ -241,7 +243,7 @@
                 this.$axios.post("/doc/close_doc/",
                     {
                         doc_id: this.doc_id,
-                        document: this.document
+                        document: this.doc_content
                     }, Config.axiosHeaders).then((response) => {
                     if (response.status === 200) {
                         if (response.data.success === true) {
@@ -264,6 +266,22 @@
                 this.$axios.post('favorite/add/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
                     .then(res => {
                         if (res.data.success) {
+                            this.favorite=true;
+                            this.$message.success('收藏成功')
+                        } else {
+                            this.$message.error(res.data.exc)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        this.$message.error('网络出了些问题?')
+                    })
+            },
+            revokeFav(){
+                this.$axios.post('favorite/cancel/', JSON.stringify({doc_id: this.doc_id}), Config.axiosHeaders)
+                    .then(res => {
+                        if (res.data.success) {
+                            this.favorite=false;
                             this.$message.success('收藏成功')
                         } else {
                             this.$message.error(res.data.exc)
@@ -319,7 +337,7 @@
                     if (response.data.success === true) {
                         let res = response.data;
                         this.doc_title = res.title;
-                        this.document = res.document;
+                        this.doc_content = res.document;
                         this.creator = res.creator;
                         this.favorite = res.favorite;
                         this.current_auth = res.superuser?{read:true,edit:true,comment:true}:res.current_auth;
@@ -327,10 +345,12 @@
                         this.team_auth = res.team_auth;
                         this.superuser = res.superuser;
                         this.belong_team = res.belong_team;
+                        this.team_name = res.team_name;
                         this.conflict_protection = res.conflict_protection;
                         this.read_only=(this.current_auth.edit===false||this.conflict_protection==true)==true?true:false;
                         this.boot_loading=false;
-                        this.$refs.doc_editor.setLoading(false);
+                        // this.$refs.doc_editor.setLoading(false);
+                        console.log(this.current_auth);
                         if(this.read_only===false)
                             this.timer=window.setInterval(()=>{this.save_document()},30000);
                         else

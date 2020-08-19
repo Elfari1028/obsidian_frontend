@@ -116,16 +116,8 @@
             },
             shareDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
-                    if (res.data.success) {
-                        this.shareUrl = res.data.url;
-                        this.dialogVisible = true;
-                    }
-                }).catch(err => {
-                    console.log(err)
-                    this.shareUrl = 'TEST_URL'
-                    this.dialogVisible = true;
-                })
+                this.shareUrl = "http://"+window.location.host+"/#/document/"+encryptData((doc_id).toString());
+                this.dialogVisible = true;
             },
             toTeam(team_id){
                 this.$router.push({name:'TeamSpace',params:{Team_id:team_id}})
