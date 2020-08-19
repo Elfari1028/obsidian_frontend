@@ -112,7 +112,7 @@
         components: {AsideMenu, MenuBar},
         data() {
             const validateEmail = (rule, value, callback) => {
-                const pattern = /[a-zA-Z][a-zA-Z0-9_]{3,17}@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/g;
+                const pattern = /[a-zA-Z0-9][a-zA-Z0-9_]{0,18}@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/g;
                 if (pattern.test(value)) {
                     callback();
                 } else {
