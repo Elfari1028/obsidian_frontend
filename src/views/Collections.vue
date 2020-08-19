@@ -66,7 +66,7 @@
                             this.docList.push(list[i])
                         }
                     } else {
-                        this.$notify(res.data.exc)
+                        this.$notify({message:res.data.exc});
                     }
                     this.isLoading = false
                 }).catch(err => {

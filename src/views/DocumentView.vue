@@ -58,7 +58,7 @@
                                        @click="refresh_document">刷新文档
                             </el-button>
                             <br/>
-                            <el-button class="action-button" v-if="!this.favorite" type="warning" icon="el-icon-star-off" @click="updateFav">
+                            <el-button class="action-button" v-if="this.favorite===false" type="warning" icon="el-icon-star-off" @click="updateFav">
                                 收藏文档
                             </el-button>
                             <el-button class="action-button" v-else type="warning" icon="el-icon-star-on" @click="revokeFav">
@@ -282,7 +282,7 @@
                     .then(res => {
                         if (res.data.success) {
                             this.favorite=false;
-                            this.$message.success('收藏成功')
+                            this.$message.warning('已取消收藏')
                         } else {
                             this.$message.error(res.data.exc)
                         }
