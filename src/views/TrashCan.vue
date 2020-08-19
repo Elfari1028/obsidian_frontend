@@ -57,7 +57,7 @@
         methods: {
             updateList() {
                 this.isLoading = true
-                this.$axios.get('bin/get_private_docs').then(res => {
+                this.$axios.get('bin/get_private_docs/').then(res => {
                     console.log(res)
                     this.docList = []
                     const list = res.data.list
@@ -90,7 +90,7 @@
                     cancelButtonText: '取消',
                     type: "warning"
                 }).then(() => {
-                    this.$axios.get('recyclebin/clear_all_doc/')
+                    this.$axios.get('bin/clear_all_docs/')
                         .then(res => {
                             if (res.data.success) {
                                 this.docList = []

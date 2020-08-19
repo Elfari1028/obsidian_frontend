@@ -10,12 +10,12 @@
         </el-aside>
         <el-container>
           <el-main id="doc-container" v-loading="boot_loading">
-            <div id="doc-title"> 
+            <div id="doc-title">
               <el-input :value="doc_title_input" v-if="title_edit_mode===true" @input="update_title_input"></el-input>
               <div v-if="title_edit_mode===false">{{doc_title}}</div>
             </div>
             <div id="doc-title-edit" v-if="read_only==false">
-              <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===false" icon="el-icon-edit" @click="title_edit_mode=true"></el-button>   
+              <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===false" icon="el-icon-edit" @click="title_edit_mode=true"></el-button>
               <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===true" icon="el-icon-check" @click="update_title"></el-button>
               <el-button id="edit-button" size="small" type="plain" v-if="title_edit_mode===true" icon="el-icon-close" @click="cancel_update_title"></el-button>
             </div>
@@ -24,28 +24,28 @@
                <div slot="content">正在有用户编辑这个文档。<br/>如果您认为没有他人可以编辑您的文档，您可能已在其他标签页打开编辑模式。<br/>如若没有，则请在2分钟后刷新，系统将为您解锁编辑模式。</div>
                <el-button class="doc-tag" plain size="mini" type="danger">已有编辑者占用</el-button>
              </el-tooltip>
-             <el-button class="doc-tag" plain size="mini"  v-if="this.current_auth.edit==false" type="warning">仅可读</el-button> 
+             <el-button class="doc-tag" plain size="mini"  v-if="this.current_auth.edit==false" type="warning">仅可读</el-button>
              <el-button class="doc-tag" plain size="mini"  v-if="this.current_auth.comment===true" >可评论</el-button>
-             <el-button class="doc-tag" plain size="mini"  v-else type="danger">不可评论</el-button> 
+             <el-button class="doc-tag" plain size="mini"  v-else type="danger">不可评论</el-button>
               <el-tooltip class="item" effect="dark" placement="top-start" content="您拥有该文档的全部权限。" v-if="superuser===true">
-               <el-button class="doc-tag" plain size="mini"  v-if="superuser" type="success">全部权限</el-button> 
+               <el-button class="doc-tag" plain size="mini"  v-if="superuser" type="success">全部权限</el-button>
              </el-tooltip>
-             <el-button class="doc-tag" plain size="mini"  v-if="belong_team==true" type="warning">团队文档</el-button>      
+             <el-button class="doc-tag" plain size="mini"  v-if="belong_team==true" type="warning">团队文档</el-button>
              <el-button class="doc-tag" plain size="mini"  v-else type="warning">个人文档</el-button>
-             <el-button class="doc-tag" plain size="mini"  v-if="favorite" type="warning">已收藏</el-button>         
+             <el-button class="doc-tag" plain size="mini"  v-if="favorite" type="warning">已收藏</el-button>
             </div>
             <DocEditor ref="doc_editor" id="doc-editor" v-model="document" :doc_id="this.doc_id" :read_only="read_only"/>
           </el-main>
           <el-aside v-loading="boot_loading" width="250px" id="aside_right">
             <div id="bench_toolbar">
-              <div id="toolbar_title">文档操作</div> 
+              <div id="toolbar_title">文档操作</div>
               <el-divider></el-divider>
               <el-button v-if="read_only===false" class="action-button"  type="success" icon="el-icon-lock" @click="save_document">保存文档</el-button>
               <el-button v-else class="action-button"  type="success" icon="el-icon-refresh" @click="refresh_document">刷新文档</el-button>
               <br/>
               <el-button class="action-button"  type="warning" icon="el-icon-star-off" @click="updateFav">收藏文档</el-button>
               <br/>
-              <el-button v-if="current_auth.comment===true" class="action-button"  type="primary"  icon="el-icon-chat-line-square" @click="openCommentDrawer">评论面板</el-button>        
+              <el-button v-if="current_auth.comment===true" class="action-button"  type="primary"  icon="el-icon-chat-line-square" @click="openCommentDrawer">评论面板</el-button>
               <br/>
               <el-button class="action-button"  type="plain" plain icon="el-icon-time" @click="openChangelogDrawer">编辑记录</el-button>
               <br/>
@@ -121,9 +121,9 @@ export default {
       this.$axios.post("/doc/modify_title/",{doc_id:this.doc_id,new_title:this.doc_title_input},Config.axiosHeaders).then((response) => {
           if (response.status === 200) {
             if (response.data.success === true) {
-              this.doc_title = this.doc_title_input;   
+              this.doc_title = this.doc_title_input;
               this.$message.confirm("修改成功！");
-              return; 
+              return;
             }
             else{
               this.doc_title_input = this.doc_title;
@@ -159,7 +159,7 @@ export default {
     update_title_input(text){
       this.doc_title_input=text;
       // console.log(text);
-    
+
     },
     save_document(){
       console.log(this.document);
@@ -247,11 +247,11 @@ export default {
     }
     next(true);
   },
-  created() {  
+  created() {
     this.doc_id=parseInt(this.$route.params.doc_id);
     this.doc_title_input = this.doc_title;
     this.$axios.post("/doc/open_one_doc/",{doc_id:this.doc_id},Config.axiosHeaders).then((response)=> {
-        if (response.status === 200) {  
+        if (response.status === 200) {
           if (response.data.success === true) {
             let res = response.data;
             this.doc_title = res.title;

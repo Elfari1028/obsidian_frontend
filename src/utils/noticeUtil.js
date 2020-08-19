@@ -2,9 +2,10 @@ import axios from 'axios'
 
 export default class NoticeRequest {
     static timer
-    static messageQueue = []
+    messageQueue = []
     static messageMaxLength = 10
     static messageBot = new NoticeRequest()
+    messageUnreadLength
 
     static getInstance() {
         return NoticeRequest.messageBot
@@ -16,7 +17,9 @@ export default class NoticeRequest {
         }
         await axios.get('message/get/').then(res => {
             if (res.data.success) {
+                this.messageQueue = []
                 const list = res.data.list
+                this.messageUnreadLength = res.data.unread_num
                 for (let i = 0; i < list.length; i++) {
                     this.queuePush({
                         message_id: list[i].message_id,
@@ -33,7 +36,6 @@ export default class NoticeRequest {
                     this.axiosPolling()
                 }, 5000)
             } else {
-                console.log(res.data.exc)
                 if (NoticeRequest.timer != null) {
                     clearTimeout(NoticeRequest.timer)
                 }
@@ -41,21 +43,11 @@ export default class NoticeRequest {
             }
         }).catch(err => {
             console.log(err)
-            for (let i = 0; i < 9; i++) {
-                this.queuePush({
-                    message_id: i,
-                    sender: 'DEBUG_SENDER' + i,
-                    type: 'DEBUG_TYPE' + i,
-                    content: 'DEBUG_CONTENT' + i * i,
-                    time: '2020/8/18 11:25:' + i,
-                    is_read: i % 2 === 0
-                })
-            }
         })
     }
 
     sortMessages() {
-        NoticeRequest.messageQueue.sort((a, b) => {
+        this.messageQueue.sort((a, b) => {
             let x = a.is_read ? -1 : 1
             let y = b.is_read ? -1 : 1
             if (x > y)
@@ -72,14 +64,14 @@ export default class NoticeRequest {
     }
 
     queuePush(Object) {
-        NoticeRequest.messageQueue.unshift(Object)
-        if (NoticeRequest.messageQueue.length > NoticeRequest.messageMaxLength) {
+        this.messageQueue.unshift(Object)
+        if (this.messageQueue.length > NoticeRequest.messageMaxLength) {
             this.queuePop()
         }
     }
 
     queuePop() {
-        return NoticeRequest.messageQueue.pop()
+        return this.messageQueue.pop()
     }
 
     axiosStop() {
@@ -87,10 +79,10 @@ export default class NoticeRequest {
     }
 
     getList() {
-        return NoticeRequest.messageQueue
+        return this.messageQueue
     }
 
-    getLength() {
-        return NoticeRequest.messageQueue.length
+    getUnreadLength() {
+        return this.messageUnreadLength
     }
 }

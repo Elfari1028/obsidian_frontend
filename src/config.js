@@ -7,4 +7,5 @@ export default class Config {
             'Content-Type': 'application/json;charset=UTF-8'
         }
     }
+    static avatarUploadUrl = 'http://127.0.0.1:8000/account/upload_avatar/'
 }

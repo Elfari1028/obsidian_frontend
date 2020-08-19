@@ -59,10 +59,13 @@
             </div>
             <div style="cursor: pointer" @click="toDocument(doc.doc_id)">
 				<span class="card_body_font card_body">
-					{{doc.workspace}}
+					{{doc.team_name}}
 				</span>
-                <span class="card_time_font card_body">
+                <span v-if="this.docType!=='isTrash'" class="card_time_font card_body">
 					最后修改于：{{doc.time}}
+				</span>
+                <span v-if="this.docType==='isTrash'" class="card_time_font card_body">
+					删除于：{{doc.delete_time}}
 				</span>
             </div>
         </el-card>
@@ -83,6 +86,7 @@
             docType: String,
             doc: Object,
         },
+        inject: ["reload"],
         data() {
             return {
                 shareUrl: '',
@@ -96,7 +100,7 @@
             toDocument(doc_id) {
                 console.log(doc_id);
                 this.$router.push({
-                    name:'DocumentView',
+                    name: 'DocumentView',
                     params: {
                         doc_id: doc_id
                     }
@@ -130,6 +134,7 @@
                 this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success) {
                         this.$alert("文件已移入回收站")
+                        this.reload()
                     } else {
                         this.$alert(res.data.exc)
                     }
@@ -137,9 +142,10 @@
             },
             restoreDocument(doc_id) {
                 console.log(doc_id)
-                this.$axios.post('bin/recover_doc', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
+                this.$axios.post('bin/recover_doc/', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success) {
                         this.$alert("文件已恢复")
+                        this.reload()
                     } else {
                         this.$alert(res.data.exc)
                     }
@@ -152,9 +158,10 @@
                     cancelButtonText: '取消',
                     type: "warning"
                 }).then(() => {
-                    this.$axios.post('bin/delete_doc', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
+                    this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                         if (res.data.success) {
                             this.$alert("文件已删除")
+                            this.reload()
                         } else {
                             this.$alert(res.data.exc)
                         }

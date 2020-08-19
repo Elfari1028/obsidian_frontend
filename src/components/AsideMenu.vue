@@ -33,7 +33,7 @@
                     <span v-for="Team in Team_list" :key=Team.Team_id>
                         <el-menu-item v-bind:index="'/TeamSpace/'+Team.team_id">{{ Team.team_name }}</el-menu-item>
 					</span>
-					
+
                     <span style="margin-bottom: 10px">
                             <el-popover placement="right" trigger="manual" v-model="visible">
                                 <GroupInit></GroupInit>
@@ -42,7 +42,7 @@
                                 </el-menu-item>
                             </el-popover>
 					</span>
-					
+
                 </el-menu-item-group>
 
             </el-submenu>
@@ -63,65 +63,29 @@
 </template>
 
 <script>
-	import GroupInit from './GroupInit.vue'	
+    import GroupInit from './GroupInit.vue'
+
     export default {
         name: "AsideMenu",
-		components: {
-			GroupInit
-		},
-		data () {
-			return {
-				Team_list: [
-					{
-						team_id: 123,
-						team_name: '火锅小分队'
-					},
-					{
-						team_id: 234,
-						team_name: '烧烤小分队'
-					}
-				],
-				User_id: '',
-				isLoading: false,
+        components: {
+            GroupInit
+        },
+        data() {
+            return {
+                Team_list: [],
+                User_id: '',
+                isLoading: false,
                 visible: false
-			}
-		},
+            }
+        },
         methods: {
-            handleOpen() {
-                console.log(this.$route.path)
-            },
             handleClose() {
                 // console.log("test");
                 // if(this.$route.name=="DocumentView"){
                 //     this.$route.methods.preventNav();
                 // }
             },
-            /*
-			loadTeamList: function () {
-				console.log('加载团队列表')
-				
-				var _this = this
-				
-				this.$axios
-					.post('获取团队列表接口', JSON.stringify({
-						User_id: _this.User_id
-					}))
-					.then((response) => {
-						var res = response.data
-						
-						_this.Team_list = res.Team_list
-						
-						if (res.success === false) {
-							_this.$message.error(res.exc)
-						}
-					})
-					.catch(err => {
-						_this.$message.error('获取团队列表出了点问题')
-						console.log(err)
-					})
-				
-			},*/
-			getTeamList() {
+            getTeamList() {
                 console.log('获取团队列表')
                 this.isLoading = true
                 this.$axios.get('account/get_my_teams/').then(res => {
