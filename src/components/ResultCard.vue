@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-dialog
-                title="分享文件"
+                title="分享文档"
                 :append-to-body="true"
                 :visible.sync="dialogVisible"
                 width="500px">
@@ -134,7 +134,7 @@
                 console.log(doc_id)
                 this.$axios.post('doc/put_into_recycle_bin/', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success) {
-                        this.$alert("文件已移入回收站")
+                        this.$alert("文档已移入回收站")
                         this.reload()
                     } else {
                         this.$alert(res.data.exc)
@@ -145,7 +145,7 @@
                 //console.log(doc_id)
                 this.$axios.post('bin/recover_doc/', JSON.stringify({doc_id: doc_id,team_id: team_id}), Config.axiosHeaders).then(res => {
                     if (res.data.success) {
-                        this.$alert("文件已恢复")
+                        this.$alert("文档已恢复")
                         this.reload()
                     } else {
                         this.$alert(res.data.exc)
@@ -161,7 +161,7 @@
                 }).then(() => {
                     this.$axios.post('bin/delete_doc/', JSON.stringify({doc_id: doc_id}), Config.axiosHeaders).then(res => {
                         if (res.data.success) {
-                            this.$alert("文件已删除")
+                            this.$alert("文档已删除")
                             this.reload()
                         } else {
                             this.$alert(res.data.exc)

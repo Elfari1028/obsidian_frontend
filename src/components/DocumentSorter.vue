@@ -2,7 +2,7 @@
     <el-dropdown trigger="click" @command="handleCommand">
         <el-button type="info">
             <i class='el-icon-s-fold'></i>
-            对当前文件排序
+            对当前文档排序
         </el-button>
 
         <el-dropdown-menu slot="dropdown">

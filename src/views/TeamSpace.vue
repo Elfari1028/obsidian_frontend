@@ -119,7 +119,7 @@
 			loadDocList: function () {
 				this.isLoading = true
 				var _this = this
-				console.log('正在获取团队文件')
+				console.log('正在获取团队文档')
 				this.$axios
 					.post('doc/list_all_team_docs/' ,JSON.stringify({
 						team_id: _this.Team_id
@@ -144,7 +144,7 @@
 			loadTrashList: function () {
 				this.isLoading = true
 				var _this = this
-				console.log('正在获取团队回收站文件')
+				console.log('正在获取团队回收站文档')
 				this.$axios
 					.post('bin/get_team_docs/' ,JSON.stringify({
 						team_id: _this.Team_id
@@ -160,7 +160,7 @@
 						_this.isLoading = false
 					})
 					.catch(err => {
-						_this.$message.error('获取团队回收站文件出了点问题')
+						_this.$message.error('获取团队回收站文档出了点问题')
 						console.log(err)
 						_this.isLoading = false
 					})
@@ -177,13 +177,13 @@
 			},
 			switchTrashCan: function () {
 				if (!this.isTrashCan) {
-					//获取回收站文件
+					//获取回收站文档
 
 					this.loadTrashList()
 					this.searchList = this.trashList
 					this.docType = "isTrash"
 				} else {
-					//获取团队文件
+					//获取团队文档
 
                     this.loadDocList()
                     this.searchList = this.docList
@@ -225,7 +225,7 @@
                     console.log(err)
                 })
 
-            //获取团队文件
+            //获取团队文档
             this.loadDocList()
 
             this.searchList = this.docList

@@ -85,7 +85,7 @@
                 this.docList = data
             },
             emptyTrash() {
-                this.$confirm('此操作将清空回收站中所有文件，是否继续？', '警告', {
+                this.$confirm('此操作将清空回收站中所有文档，是否继续？', '警告', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: "warning"

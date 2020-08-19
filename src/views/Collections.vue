@@ -76,7 +76,7 @@
                     for (let i = 0; i < 16; i++) {
                         this.docList.push({
                             doc_id: 3321,
-                            title: '收藏文件' + i,
+                            title: '收藏文档' + i,
                             team_id: 55443,
                             workspace: '团队名',
                             time: '2020/8/10 20:03:' + i

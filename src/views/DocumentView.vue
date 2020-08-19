@@ -76,7 +76,7 @@
                             <AuthPopupButton v-if="superuser" :doc_id="this.doc_id" :belong_to_team="this.belong_team"
                                              :init_self_auth="self_auth" :init_team_auth="team_auth"/>
                             <el-button v-if="superuser" class="action-button" type="danger" plain icon="el-icon-delete"
-                                       @click="deleteFile">删除文件
+                                       @click="deleteFile">删除文档
                             </el-button>
                             <br/>
                         </div>
@@ -299,7 +299,7 @@
                     .then(res => {
                         if (res.data.success) {
                             this.isDeleted = true
-                            this.$message.success('文件已移入回收站')
+                            this.$message.success('文档已移入回收站')
                             this.$router.push({name: 'WorkingSpace'})
                         } else {
                             this.$message.error(res.data.exc+"请重新打开文档重试。")

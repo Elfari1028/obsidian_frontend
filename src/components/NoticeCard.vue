@@ -88,7 +88,7 @@
                         break
                     }
                     case 6: {
-                        this.toolMessage = '团队中的个人文件还会保留在工作台哦'
+                        this.toolMessage = '团队中的个人文档还会保留在工作台哦'
                         this.messageItem.title = '团队已解散'
                     }
                 }
