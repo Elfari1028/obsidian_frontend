@@ -230,7 +230,7 @@
                                 this.$notify({
                                         type: "warning",
                                         title: "文档已解除占用！",
-                                        message: "刷新以进入编辑模式。",
+                                        message: "刷新浏览器页面(F5)以进入编辑模式。",
                                         duration: 750,
                                     }
                                 );
@@ -358,7 +358,7 @@
                         // this.$refs.doc_editor.setLoading(false);
                         console.log(this.current_auth);
                         if(this.read_only===false)
-                            this.timer=window.setInterval(()=>{this.save_document()},30000);
+                            this.timer=window.setInterval(()=>{this.save_document()},15000);
                         else
                             this.timer=window.setInterval(()=>{this.refresh_document();},1000);
                     } else
