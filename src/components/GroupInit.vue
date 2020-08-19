@@ -105,18 +105,7 @@ export default {
 			visible2: false,
 			visible4: false,
 			visible5: false,
-			invitationData: [
-				{
-					Team_name: '前端团队',
-					Team_id: 321,
-					User_name: '张三'
-				},
-				{
-					Team_name: '火锅小分队',
-					Team_id: 897,
-					User_name: '李四'
-				}
-			]
+			invitationData: []
 		}
 	},
 	methods: {

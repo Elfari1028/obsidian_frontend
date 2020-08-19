@@ -114,21 +114,21 @@
             const validateEmail = (rule, value, callback) => {
                 const pattern = /[a-zA-Z0-9][a-zA-Z0-9_]{0,18}@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/g;
                 if (pattern.test(value)) {
-                    callback();
+                    this.$axios.post('account/email_used/', JSON.stringify({email: value}), Config.axiosHeaders)
+                        .then(res => {
+                            console.log(res.data)
+                            if (res.data.success === true) {
+                                callback();
+                            } else callback(new Error(res.data.exc));
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            callback(new Error('网络好像出问题了'))
+                        })
                 } else {
                     callback(new Error('邮箱地址格式错误'))
                 }
-                this.$axios.post('account/email_used/', JSON.stringify({email: value}), Config.axiosHeaders)
-                    .then(res => {
-                        console.log(res.data)
-                        if (res.data.success === true) {
-                            callback();
-                        } else callback(new Error("res.data.exc"));
-                    })
-                    .catch(err => {
-                        console.log(err)
-                        callback(new Error('网络好像出问题了'))
-                    })
+
             };
             const validatePassword = (rule, value, callback) => {
                 if (value !== this.passForm.new_password) {
