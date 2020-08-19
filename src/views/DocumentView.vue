@@ -80,6 +80,7 @@ export default {
     ChangelogDrawer: ChangelogDrawer,
     AuthPopupButton,
   },
+  inject:['reload'],
   data() {
     return {
       doc_id: 0,
@@ -278,6 +279,11 @@ export default {
       .catch((error) => {
         this.onOpenFailure(error);
       });
+  },
+  beforeRouteUpdate(to, from, next) {
+      console.log(to, from, next)
+      next()
+      this.reload()
   },
 };
 </script>

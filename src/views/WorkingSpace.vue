@@ -27,7 +27,6 @@
                     </div>
                 </el-aside>
             </el-container>
-            <CreateDocPopup ref="create_doc"/>
         </el-container>
     </div>
 
@@ -52,9 +51,6 @@
             }
         },
         methods: {
-            openCreateDocPopup() {
-                this.$refs.create_doc.openDialog();
-            },
             updateList() {
                 this.isLoading = true
                 this.$axios.get('doc/list_all_my_docs/').then(res => {
