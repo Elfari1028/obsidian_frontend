@@ -29,18 +29,18 @@
                             </el-form-item>
                             <el-form-item label="性别">
                                 <el-radio-group :disabled="true" v-model="userInfo.sex">
-                                    <el-radio :label="0">男</el-radio>
-                                    <el-radio :label="1">女</el-radio>
+                                    <el-radio :label="false">男</el-radio>
+                                    <el-radio :label="true">女</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="电话">
-                                <el-input :readonly="true" v-model="userInfo.tel"></el-input>
+                                <el-input :disabled="true" v-model="userInfo.tel" placeholder="未知"></el-input>
                             </el-form-item>
                             <el-form-item label="年龄">
-                                <el-input :readonly="true" v-model="userInfo.age"></el-input>
+                                <el-input :disabled="true" v-model="userInfo.age" placeholder="未知"></el-input>
                             </el-form-item>
                             <el-form-item label="个人简介">
-                                <el-input :readonly="true" type="textarea" :rows="5" resize="none"
+                                <el-input :disabled="true" type="textarea" :rows="5" placeholder="这人没写……"
                                           v-model="userInfo.mood" maxlength="50" show-word-limit></el-input>
                             </el-form-item>
                         </el-form>
@@ -76,7 +76,7 @@
         },
         methods: {
             goBack() {
-              this.$router.go(-1);
+                this.$router.go(-1);
             }
         },
         created: function () {
@@ -85,7 +85,7 @@
             this.$axios.post('/account/get_public_information/', JSON.stringify({username: this.userInfo.username}), Config.axiosHeaders).then(res => {
                 if (res.data.success) {
                     this.userInfo.email = res.data.email
-                    this.userInfo.age = res.data.age
+                    this.userInfo.age = res.data.age === -1 ? '' : res.data.age
                     this.userInfo.sex = res.data.sex
                     this.userInfo.mood = res.data.mood
                     this.userInfo.tel = res.data.tel
@@ -113,21 +113,26 @@
         padding: 10px;
     }
 
-    #aside_right {
-        border-left: 1px solid #DEDFE6;
-        height: auto;
-        padding: 10px;
-    }
-
-    .list_empty_notice {
-        color: darkgrey;
-        height: inherit;
-        padding-top: 20%;
-    }
-
     #info_form {
+        cursor: default !important;
         width: 45%;
         min-width: 400px;
         margin-left: 30px;
+    }
+
+    /deep/ #info_form input{
+        cursor: text!important;
+    }
+
+    /deep/ #info_form textarea{
+        cursor: text!important;
+    }
+
+    /deep/ #info_form span{
+        cursor: default!important;
+    }
+
+    /deep/ #info_form span::after{
+        cursor: default!important;
     }
 </style>
