@@ -110,7 +110,7 @@ export default {
                       if (response.status === 200) {
                         if (response.data.success === true)
                           resolve({
-                            default: response.data.path,
+                            default: "http://"+window.location.host+response.data.path,
                           });
                         else reject("操作异常！错误信息:" + response.data.exc);
                       } else {
