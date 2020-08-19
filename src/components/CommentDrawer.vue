@@ -115,8 +115,8 @@ export default {
   max-height: 18%;
 }
 .comment-list-container {
-  height: 65%;
-  max-height: 65%;
+  min-height: 70%;
+  max-height: 70%;
   overflow-y: scroll;
 }
 </style>>
