@@ -1,7 +1,8 @@
 <template>
   <div class="CommentDrawer" style="outline: none; outline-style: none;">
-    <el-drawer title="评论" :visible.sync="drawer" :direction="direction">
+    <el-drawer :with-header="false" :visible.sync="drawer" :direction="direction">
       <!-- <div class="DrawerContainer" v-if="loading===fe"></div> -->
+      <div style="height:25px;margin-top: 10px">评论</div>
       <div id="comment-container" v-if="loading===false">
         <div class="comment-list-container">
           <div class="comment-list-item" v-for="item in comments" :key="item.comment.com_id">
@@ -114,8 +115,8 @@ export default {
   max-height: 18%;
 }
 .comment-list-container {
-  height: 70%;
-  max-height: 70%;
+  height: 65%;
+  max-height: 65%;
   overflow-y: scroll;
 }
 </style>>
