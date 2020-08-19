@@ -4,6 +4,9 @@
 			<el-divider content-position="left">当前团队ID</el-divider>
 			<center><h3>{{Team_id}}</h3></center>
 			
+			<el-divider content-position="left">当前团队简介</el-divider>
+			<center id = 'info'><h3>{{Team_info}}</h3></center>
+			
 			<el-divider content-position="left">个人团队管理</el-divider>
 		
 			<!-- 邀请新成员 -->
@@ -203,6 +206,44 @@
 			
 			</el-popconfirm>
 			
+			<br><br>
+			<!-- 更改团队简介 -->
+			<el-popover
+				placement='bottom'
+				trigger="click"
+				style="margin: 6px;"
+				v-model="visible6"
+				>
+				
+				<el-input v-model="inputTInfo" placeholder="请输入团队简介"></el-input>
+				<center>
+				<br>
+				<el-button type="primary" size="mini" @click="changeTeamInfo">确定</el-button>
+				</center>
+				
+				<el-button slot="reference" type="warning" size="small" round>更改团队简介</el-button>
+			
+			</el-popover>
+			
+			<!-- 更改团队名称 -->
+			
+			<el-popover
+				placement='bottom'
+				trigger="click"
+				style="margin: 6px;"
+				v-model="visible7"
+				>
+				
+				<el-input v-model="inputChangeTeamName" placeholder="请输入团队名称"></el-input>
+				<center>
+				<br>
+				<el-button type="primary" size="mini" @click="changeTeamName">确定</el-button>
+				</center>
+				
+				<el-button slot="reference" type="warning" size="small" round>更改团队名称</el-button>
+			
+			</el-popover>
+			
 		</div>
 
 	</div>
@@ -218,6 +259,7 @@
 export default{
 	name: 'GroupManage',
 	props: ['Team_id'],
+	inject: ['reload'],
 	data () {
 		return {
 			isAdmin: true,
@@ -225,11 +267,16 @@ export default{
 			inputUName: '',
 			inputTID: '',
 			inputTName: '',
+			inputTInfo: '',
+			inputChangeTeamName: '',
+			Team_info: '',
 			visible1: false,
 			visible2: false,
 			visible3: false,
 			visible4: false,
 			visible5: false,
+			visible6: false,
+			visible7: false,
 			ApplyUserData: [],
 			invitationData: []
 		}
@@ -237,9 +284,9 @@ export default{
 	methods: {
 		getHeight: function () {
 			if (this.isAdmin) {
-				return '350px'
+				return '460px'
 			} else {
-				return '255px'
+				return '330px'
 			}
 		},
 		createNewTeam: function () {
@@ -531,7 +578,88 @@ export default{
 					_this.$message.error('拒绝邀请出了点问题')
 					console.log(err)
 				})
-		}
+		},
+		getTeamInfo: function () {
+			var _this = this
+			console.log('正在获取团队简介')
+			this.$axios
+				.post('teamwork/get_team_intro/', JSON.stringify({
+					team_id: _this.Team_id
+				}))
+				.then((response) => {
+					var res = response.data
+					_this.Team_info = res.team_info
+					_this.inputTInfo = _this.Team_info
+					
+					if (this.Team_info === '' ||this.Team_info === null ) {
+						this.Team_info = '无'
+					}
+					
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					}
+				})
+				.catch(err => {
+					_this.$message.error('获取团队简介出了点问题')
+					console.log(err)
+				})
+		},
+		changeTeamInfo: function () {
+			var _this = this
+			console.log('正在更改团队简介' + this.inputTInfo)
+			this.$axios
+				.post('teamwork/edit_team_intro/', JSON.stringify({
+					team_id: _this.Team_id,
+					team_info: _this.inputTInfo
+				}))
+				.then((response) => {
+					var res = response.data
+					_this.getTeamInfo()
+			
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('更改团队简介成功')
+					}
+				})
+				.catch(err => {
+					_this.$message.error('更改团队简介出了点问题')
+					console.log(err)
+				})
+				
+			this.visible6 = false
+		},
+		changeTeamName: function () {
+			var _this = this
+			console.log('正在更改团队名称' + this.inputChangeTeamName)
+			
+			if (this.inputChangeTeamName === '' ||this.inputChangeTeamName === null){
+				this.$message.error('团队名称不能为空')
+				return
+			}
+			
+			this.$axios
+				.post('teamwork/rename_team/', JSON.stringify({
+					team_id: _this.Team_id,
+					team_name: _this.inputChangeTeamName
+				}))
+				.then((response) => {
+					var res = response.data
+			
+					if (res.success === false) {
+						_this.$message.error(res.exc)
+					} else {
+						_this.$message.success('更改团队名称成功')
+						_this.reload()
+					}
+				})
+				.catch(err => {
+					_this.$message.error('团队名称重复')
+					console.log(err)
+				})
+				
+			this.visible7 = false
+		},
 	},
 	created () {
 		console.log('this team id:' + this.Team_id)
@@ -578,6 +706,8 @@ export default{
 				console.log(err)
 			})
 			
+		//获取团队简介
+		this.getTeamInfo()
 	}
 }
 </script>
