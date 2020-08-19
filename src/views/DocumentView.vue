@@ -258,7 +258,7 @@
                 });
             },
             preventNav(event) {
-                if (this.read_only) {
+                if (this.read_only===false) {
                     this.save_document();
                     event.preventDefault();
                     event.returnValue = "";
