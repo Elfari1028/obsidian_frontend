@@ -14,7 +14,7 @@
             </span>
         </el-dialog>
         <el-card class="doc_item">
-            <div slot="header" style="height: 20px">
+            <div slot="header" style="height: 20px; margin-left:10px, margin-right:10px;">
                 <i class="el-icon-document" style="cursor: pointer; float: left;" @click="toDocument(doc.doc_id)"></i>
                 <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
                 <el-dropdown trigger="click" style="float: right">
@@ -57,13 +57,14 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
+            <div class="card-content">
                <div style="cursor: pointer" v-if="this.doc.team_id!==-1" @click="toTeam(doc.team_id)">
                    <el-alert style="margin-bottom:10px;"   type="warning" :closable="false" > <div slot="title">您在「{{doc.team_name}}」团队的文档</div></el-alert>
                 </div>
                <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'" :closable="false" type="success"> <div slot="title"> 个人文档</div></el-alert>
                <el-alert v-if="this.docType!=='isTrash'" type="info" :closable="false" show-icon> <div slot="title"> 最后修改于：{{doc.time}}</div></el-alert>
                <el-alert v-else type="error" :closable="false" show-icon> <div slot="title"> 删除于：{{doc.delete_time}}</div></el-alert>
-            
+            </div>
         </el-card>
     </div>
 </template>
@@ -201,7 +202,7 @@
         float: left;
         width: 45%;
         height: 50%;
-        margin: 10px;
+        margin: 10px;        
     }
 
     .card_header_font {
@@ -214,6 +215,9 @@
         display: block;
         margin: 5px;
     }
+    .card-content{
+        /* background-color: grey; */
+    }
 
     .card_time_font {
         text-align: left;
@@ -224,6 +228,9 @@
     .card_body_font {
         font-size: 15px;
         color: dimgray;
+    }
+    .el-alert--info.is-light{
+        background-color: #FFFFFF ;
     }
 </style>
 
