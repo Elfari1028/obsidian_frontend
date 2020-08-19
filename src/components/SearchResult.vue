@@ -2,15 +2,8 @@
 	<div :style="{height: spaceHeight}" style="margin: 10px;">
 		<el-scrollbar id='SearchResult' style="height: 100%">
 		
-<!-- 
-									使用两个ResultCard是为了修复组件复用的bug
--->
-		<div v-if='!isTrash'>
+		<div>
 		<ResultCard v-for="(doc,index) in docList" :key="index" :doc='doc' :docType='docType'></ResultCard>
-		</div>
-		
-		<div v-if='isTrash'>
-		<ResultCardforTrash v-for="(doc,index) in docList" :key="index" :doc='doc'></ResultCardforTrash>
 		</div>
 		
 		</el-scrollbar>
@@ -25,7 +18,6 @@
 	*/
    
 import ResultCard from './ResultCard.vue'	
-import ResultCardforTrash from'./ResultCardforTrash.vue'
 	
 export default {
 	name: 'SearchResult',
@@ -40,7 +32,7 @@ export default {
 		}
 	},
 	components: {
-		ResultCard, ResultCardforTrash
+		ResultCard
 	},
 	created() {
 		if (this.docType === 'isTrash'){

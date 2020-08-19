@@ -2,7 +2,6 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import WorkingSpace from "@/views/WorkingSpace";
 import Login from "@/views/Login";
-import Test from "@/views/Test.vue"
 import TrashCan from "@/views/TrashCan";
 import History from "@/views/History";
 import Collections from "@/views/Collections";
@@ -45,11 +44,6 @@ const routes = [
             title: "回收站",
             isLogin: true,
         }
-    },
-    {
-        path: "/Test",
-        name: "Test",
-        component: Test
     },
     {
         path: "/History",

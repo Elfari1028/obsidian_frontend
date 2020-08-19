@@ -25,7 +25,7 @@
 				<!-- 回收站 -->
 				<el-main v-if='isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
 					<el-scrollbar style="height: 100%">
-						<DocumentCardforGroupTrash v-for="(doc,index) in trashList" :key="index" :doc="doc"/>
+						<DocumentCard v-for="(doc,index) in trashList" :key="index" :doc="doc" :doc-type="'isTrash'"/>
 						<div v-if="trashList.length===0 && !isLoading" class="list_empty_notice">回收站空空如也</div>
 					</el-scrollbar>
 				</el-main>
@@ -90,14 +90,14 @@
 	import MemberCard from "@/components/MemberCard.vue"
 	import GroupManage from "@/components/GroupManage.vue"
 	import DocumentCard from "@/components/DocumentCard.vue"
-	import DocumentCardforGroupTrash from "@/components/DocumentCardforGroupTrash.vue"
+	// import DocumentCardforGroupTrash from "@/components/DocumentCardforGroupTrash.vue"
 	import DocumentSorter from "@/components/DocumentSorter.vue"
 	import NewDocPopupButton from "@/components/NewDocPopupButton"
 	import $ from 'jquery'
 
 	export default {
 		name: "TeamSpace",
-		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, DocumentCardforGroupTrash, NewDocPopupButton, DocumentSorter},
+		components: {AsideMenu, MenuBar, MemberCard, GroupManage, DocumentCard, NewDocPopupButton, DocumentSorter},
 		inject:['reload'],
 		data() {
 			return {
