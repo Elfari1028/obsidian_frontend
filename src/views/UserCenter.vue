@@ -47,18 +47,18 @@
                             </el-form-item>
                             <el-form-item label="性别">
                                 <el-radio-group :disabled="!onEdit" v-model="userInfo.sex">
-                                    <el-radio :label="0">男</el-radio>
-                                    <el-radio :label="1">女</el-radio>
+                                    <el-radio :label="false">男</el-radio>
+                                    <el-radio :label="true">女</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="电话">
-                                <el-input :disabled="!onEdit" v-model="userInfo.tel"></el-input>
+                                <el-input :disabled="!onEdit" v-model="userInfo.tel" placeholder="未知"></el-input>
                             </el-form-item>
                             <el-form-item label="年龄">
-                                <el-input :disabled="!onEdit" v-model="userInfo.age"></el-input>
+                                <el-input :disabled="!onEdit" v-model="userInfo.age" placeholder="未知"></el-input>
                             </el-form-item>
                             <el-form-item label="个人简介">
-                                <el-input :disabled="!onEdit" type="textarea" :rows="5"
+                                <el-input :disabled="!onEdit" type="textarea" :rows="5" placeholder="这人没写……"
                                           v-model="userInfo.mood" maxlength="50" show-word-limit></el-input>
                             </el-form-item>
                             <el-form-item>
@@ -282,8 +282,8 @@
                     console.log(res.data)
                     this.userInfo.username = res.data.username
                     this.userInfo.email = res.data.email
-                    this.userInfo.age = res.data.age
-                    this.userInfo.sex = res.data.sex ? 1 : 0
+                    this.userInfo.age = res.data.age === -1 ? '' : res.data.age
+                    this.userInfo.sex = res.data.sex
                     this.userInfo.mood = res.data.mood
                     this.userInfo.tel = res.data.tel
                 } else {
@@ -304,6 +304,22 @@
         border-right: 1px solid #DEDFE6;
         height: auto;
         padding: 10px;
+    }
+
+    /deep/ #info_form input{
+        cursor: text!important;
+    }
+
+    /deep/ #info_form textarea{
+        cursor: text!important;
+    }
+
+    /deep/ #info_form span{
+        cursor: default!important;
+    }
+
+    /deep/ #info_form span::after{
+        cursor: default!important;
     }
 
     #info_form {
