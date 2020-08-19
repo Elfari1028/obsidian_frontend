@@ -63,13 +63,11 @@
 </script>
 
 <style>
-    .comment-create-frame {
-        position: absolute;
-        bottom: 3%;
-        width: 90%;
-        margin-bottom: 100px;
-        margin-top: 30px;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
+.comment-create-frame{
+    height: 20%;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 50px;
+}
 </style>
