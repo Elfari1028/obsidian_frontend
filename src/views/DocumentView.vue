@@ -315,7 +315,6 @@
             }
         },
         beforeMount() {
-            if (this.read_only === false) window.addEventListener("beforeunload", this.preventNav);
             this.$once("hook:beforeDestroy", () => {
                 clearInterval(this.timer);
                 if (this.read_only === false) {
@@ -328,6 +327,7 @@
         },
         beforeRouteLeave(to, from, next) {
             if (this.read_only === false && this.isDeleted === false) {
+                console.log(this.read_only)
                 if (!window.confirm("确认离开页面？请确认您已保存内容。")) {
                     next(false);
                     return;
@@ -353,7 +353,8 @@
                         this.belong_team = res.belong_team;
                         this.team_name = res.team_name;
                         this.conflict_protection = res.conflict_protection;
-                        this.read_only=(this.current_auth.edit===false||this.conflict_protection==true)==true?true:false;
+                        this.read_only=(this.current_auth.edit===false||this.conflict_protection===true)===true?true:false;
+                        window.addEventListener("beforeunload", this.preventNav);
                         this.boot_loading=false;
                         // this.$refs.doc_editor.setLoading(false);
                         console.log(this.current_auth);
