@@ -61,7 +61,7 @@
     import MenuBar from "../components/MenuBar";
     import {updateStatus} from "@/utils/axiosUtils"
     import Config from "@/config"
-    import {encryption} from "@/utils/encryptUtils"
+    import {encryptForm} from "@/utils/encryptUtils"
     //import {getToken} from "../utils/auth";
 
     export default {
@@ -164,7 +164,7 @@
         methods: {
 
             submitLogin: function () {
-                encryption(this.loginForm, this.encryptLogin)
+                encryptForm(this.loginForm, this.encryptLogin)
                 console.log(this.encryptLogin)
                 this.$axios.post('account/login1/', JSON.stringify(this.encryptLogin), Config.axiosHeaders)
                     .then(res => {
@@ -182,7 +182,7 @@
             submitRegister: function () {
                 this.$refs['registerForm'].validate(valid => {
                     if (valid) {
-                        encryption(this.registerForm, this.encryptRegister)
+                        encryptForm(this.registerForm, this.encryptRegister)
                         console.log(this.encryptRegister)
                         this.$axios.post('account/register1/', JSON.stringify(this.encryptRegister), Config.axiosHeaders)
                             .then(res => {

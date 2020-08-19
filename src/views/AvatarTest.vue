@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import {decryption, encryption} from "@/utils/encryptUtils";
+    import {decryptData, encryptData,} from "@/utils/encryptUtils";
 
     export default {
         name: "AvatarTest",
@@ -33,12 +33,12 @@
         },
         methods: {
             submit() {
-                encryption(this.sourceForm, this.resultForm)
-                console.log(this.sourceForm)
-                console.log(this.resultForm)
-                decryption(this.resultForm, this.testForm)
-                console.log(this.resultForm)
-                console.log(this.sourceForm)
+                this.resultForm.email = encryptData(this.sourceForm.email)
+                console.log(this.sourceForm.email)
+                console.log(this.resultForm.email)
+                this.testForm.email = decryptData(this.resultForm.email)
+                console.log(this.resultForm.email)
+                console.log(this.testForm.email)
             }
         }
     }
