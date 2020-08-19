@@ -1,8 +1,8 @@
 <template>
-  <div class="CommentDrawer">
-    <el-drawer title="评论" v-loading="loading" :visible.sync="drawer" :direction="direction">
+  <div class="CommentDrawer" style="outline: none; outline-style: none;">
+    <el-drawer title="评论" :visible.sync="drawer" :direction="direction">
       <!-- <div class="DrawerContainer" v-if="loading===fe"></div> -->
-      <div id="comment-container">
+      <div id="comment-container" v-if="loading===false">
         <div class="comment-list-container">
           <div class="comment-list-item" v-for="item in comments" :key="item.comment.com_id">
             <CommentCard v-on:reply-made-pass="obtainData" :doc_id="doc_id" :comment="item" />
@@ -10,6 +10,7 @@
         </div>
         <CommentCreateWindow v-on:reply-made="obtainData" class="container-input" :doc_id="this.doc_id" :reply_to="null" />
       </div>
+      <div id="comment-loading-container" v-else> <img style="max-width: 100%; height:auto" src="@/assets/loading/loading.gif"> </div>
     </el-drawer>
   </div>
 </template>
@@ -43,7 +44,6 @@ export default {
       this.drawer = true;
       this.loading = true;
       this.obtainData();
-      this.loading = false;
     },
     obtainData() {
       console.log("sending");
@@ -94,6 +94,17 @@ export default {
 </script>
 
 <style>
+.el-drawer.rtl{
+    outline: none;
+  outline-style: none;
+  outline-color: transparent;
+}
+:focus{
+    outline: none !important ; 
+    outline-width:  0px;
+  outline-color: transparent;
+  outline-style: none;
+}
 #comment-container {
   height: 95vh;
   overflow-y: hidden;

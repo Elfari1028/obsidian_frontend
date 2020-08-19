@@ -23,13 +23,15 @@
           <el-switch
             class="auth-switch"
             v-model="team_auth.read"
+            @change="onReadChange"
             active-color="#67C23A"
             inactive-color="#909399"
             inactive-text="阅读"
           ></el-switch>
           <el-switch
             class="auth-switch"
-            v-model="team_auth.write"
+            v-model="team_auth.edit"
+            @change="onEditChange"
             active-color="#67C23A"
             inactive-color="#909399"
             inactive-text="编辑"
@@ -37,6 +39,7 @@
           <el-switch
             class="auth-switch"
             v-model="team_auth.comment"
+            @change="onCommentChange"
             active-color="#67C23A"
             inactive-color="#909399"
             inactive-text="评论"
@@ -73,6 +76,25 @@ export default {
     },
   },
   methods: {
+    onReadChange(val){
+      this.team_auth.read=val;
+      if(val===false){
+        this.team_auth.edit=false;
+        this.team_auth.comment=false;
+      }
+    },
+    onEditChange(val){
+      this.team_auth.edit=val;
+      if(val===true){
+        this.team_auth.read=true;
+      }
+    },
+    onCommentChange(val){
+      this.team_auth.comment=val;
+      if(val===true){
+        this.team_auth.comment=true;
+      }
+    },
     createDocument() {
       let referer = this;
       console.log({       
@@ -184,22 +206,6 @@ export default {
       template_list: [
         { template_id: 0, title: "空白模板", intro: "创建一个空白文档" },
       ],
-      template_select: 0,
-      options: [
-        {
-          value: "HTML",
-          label: "HTML",
-        },
-        {
-          value: "CSS",
-          label: "CSS",
-        },
-        {
-          value: "JavaScript",
-          label: "JavaScript",
-        },
-      ],
-      value: [],
       team_auth: { read: true, edit: false, comment: true, share:true },
     };
   },
