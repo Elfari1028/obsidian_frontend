@@ -36,7 +36,7 @@ Vue.prototype.$store = store;
 Vue.prototype.$config = Config;
 
 //axios.defaults.baseURL = "";
-axios.defaults.baseURL = "http://127.0.0.1:8000/";
+axios.defaults.baseURL = "http://39.97.104.62/api/";
 axios.defaults.withCredentials = true;
 Vue.prototype.$cookies.config('1d');
 
