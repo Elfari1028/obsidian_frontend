@@ -10,7 +10,7 @@
                 </el-aside><!--左边栏-->
                 <el-main :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
                     <el-scrollbar style="height: 100%">
-                        <DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isHistory'"/>
+                        <DocumentCard context="isHistory" v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isHistory'"/>
                         <div v-if="docList.length===0 && !isLoading" class="list_empty_notice">快去找几个文档看看</div>
                     </el-scrollbar>
                 </el-main><!--主体-->

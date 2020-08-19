@@ -14,7 +14,7 @@
             </span>
         </el-dialog>
         <el-card class="doc_item">
-            <div slot="header" style="height: 20px; margin-left:10px, margin-right:10px;">
+            <div slot="header" style="height: 20px; margin-left:10px; margin-right:10px;">
                 <i class="el-icon-document" style="cursor: pointer; float: left;" @click="toDocument(doc.doc_id)"></i>
                 <span class="card_header_font" @click="toDocument(doc.doc_id)">{{doc.title}}</span>
                 <el-dropdown trigger="click" style="float: right">
@@ -58,12 +58,34 @@
                 </el-dropdown>
             </div>
             <div class="card-content">
-               <div style="cursor: pointer" v-if="this.doc.team_id!==-1" @click="toTeam(doc.team_id)">
-                   <el-alert style="margin-bottom:10px;"   type="warning" :closable="false" > <div slot="title">您在「{{doc.team_name}}」团队的文档</div></el-alert>
+                <div style="cursor: pointer" v-if="
+                this.doc.team_id!==-1 && this.context!=='isTeamSpace' && (this.doc.creator === this.$store.getters.getUsername
+                ||this.context==='isWorkingSpace')"
+                     @click="toTeam(doc.team_id)">
+                    <el-alert style="margin-bottom:10px;" type="warning" :closable="false">
+                        <div slot="title">您在「{{doc.team_name}}」团队的文档</div>
+                    </el-alert>
                 </div>
-               <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'" :closable="false" type="success"> <div slot="title"> 个人文档</div></el-alert>
-               <el-alert v-if="this.docType!=='isTrash'" type="info" :closable="false" show-icon> <div slot="title"> 最后修改于：{{doc.time}}</div></el-alert>
-               <el-alert v-else type="error" :closable="false" show-icon> <div slot="title"> 删除于：{{doc.delete_time}}</div></el-alert>
+                <el-alert style="margin-bottom:10px;"
+                          v-else-if="this.doc.team_id!==-1&&this.docType!=='isTrash'&&(this.context==='isTeamSpace'||this.context==='isCollections'||this.context==='isHistory')"
+                          :closable="false" :type="doc.creator === this.$store.getters.getUsername?'success':'warning'">
+                    <div slot="title">由「{{doc.creator === this.$store.getters.getUsername?'您':doc.creator}}」创建的文档
+                    </div>
+                </el-alert>
+                <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'&&this.context!=='isTeamSpace'"
+                          :closable="false" type="success">
+                    <div slot="title"> 个人文档</div>
+                </el-alert>
+                <el-alert v-if="this.docType!=='isTrash'&&this.context==='isTeamSpace'" type="info" :closable="false"
+                          show-icon>
+                    <div slot="title"> 创建于：{{doc.create_time}}</div>
+                </el-alert>
+                <el-alert v-if="this.docType!=='isTrash'" type="info" :closable="false" show-icon>
+                    <div slot="title"> 最后修改于：{{doc.time}}</div>
+                </el-alert>
+                <el-alert v-else type="error" :closable="false" show-icon>
+                    <div slot="title"> 删除于：{{doc.delete_time}}</div>
+                </el-alert>
             </div>
         </el-card>
     </div>
@@ -83,6 +105,7 @@
         props: {
             docType: String,
             doc: Object,
+            context: String,
         },
         inject: ["reload"],
         data() {
@@ -92,7 +115,6 @@
             }
         },
         mounted() {
-
         },
         methods: {
             toDocument(doc_id) {
@@ -119,8 +141,8 @@
                 this.shareUrl = "http://"+window.location.host+"/#/document/"+encryptData((doc_id).toString());
                 this.dialogVisible = true;
             },
-            toTeam(team_id){
-                this.$router.push({name:'TeamSpace',params:{Team_id:team_id}})
+            toTeam(team_id) {
+                this.$router.push({name: 'TeamSpace', params: {Team_id: team_id}})
             },
             toTrash(doc_id) {
                 console.log(doc_id)
@@ -194,7 +216,7 @@
         float: left;
         width: 45%;
         height: 50%;
-        margin: 10px;        
+        margin: 10px;
     }
 
     .card_header_font {
@@ -207,7 +229,8 @@
         display: block;
         margin: 5px;
     }
-    .card-content{
+
+    .card-content {
         /* background-color: grey; */
     }
 
@@ -221,8 +244,9 @@
         font-size: 15px;
         color: dimgray;
     }
-    .el-alert--info.is-light{
-        background-color: #FFFFFF ;
+
+    .el-alert--info.is-light {
+        background-color: #FFFFFF;
     }
 </style>
 

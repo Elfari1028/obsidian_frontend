@@ -16,7 +16,7 @@
 				<el-main v-if='!isTrashCan' :style="{height: spaceHeight}" v-loading="isLoading" :disabled="isLoading">
 
 					<el-scrollbar style="height: 100%">
-						<DocumentCard v-for="(doc,index) in docList" :key="index" :doc="doc" :doc-type="'isDefault'"/>
+						<DocumentCard v-for="(doc,index) in docList" :context="'isTeamSpace'" :key="index" :doc="doc" :doc-type="'isDefault'"/>
 						<div v-if="docList.length===0 && !isLoading" class="list_empty_notice">工作台空空如也</div>
 					</el-scrollbar>
 

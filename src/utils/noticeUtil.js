@@ -19,6 +19,7 @@ export default class NoticeRequest {
         await axios.get('message/get/').then(res => {
             if (res.data.success) {
                 let temp = []
+                console.log(res.data)
                 const list = res.data.list
                 this.messageUnreadLength = res.data.unread_num
                 for (let i = 0; i < list.length; i++) {
@@ -28,7 +29,9 @@ export default class NoticeRequest {
                         type: list[i].type,
                         content: list[i].content,
                         time: list[i].create_time,
-                        is_read: list[i].is_read
+                        is_read: list[i].is_read,
+                        doc_id: list[i].doc_id,
+                        team_id: list[i].team_id
                     })
                 }
                 this.sortMessages(temp)
@@ -59,7 +62,9 @@ export default class NoticeRequest {
                         type: list[i].type,
                         content: list[i].content,
                         time: list[i].create_time,
-                        is_read: list[i].is_read
+                        is_read: list[i].is_read,
+                        doc_id: list[i].doc_id,
+                        team_id: list[i].team_id
                     })
                 }
                 this.sortMessages(temp)
@@ -108,7 +113,7 @@ export default class NoticeRequest {
 
     queuePush(queue, Object) {
         queue.unshift(Object)
-        if (queue.length > NoticeRequest.messageMaxLength) {
+        if (queue.length > NoticeRequest.messageMaxLength && this.messageUnreadLength < NoticeRequest.messageMaxLength) {
             this.queuePop(queue)
         }
     }
@@ -125,7 +130,7 @@ export default class NoticeRequest {
         return this.messageQueue.slice()
     }
 
-    getUnreadLength() {
-        return this.messageUnreadLength
+    static readDoc() {
+        NoticeRequest.getInstance().messageUnreadLength -= 1
     }
 }
