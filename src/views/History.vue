@@ -56,7 +56,7 @@
             updateHistory() {
                 this.isLoading = true
                 this.$axios.get('doc/get_recent_read/').then(res => {
-                    console.log(res)
+                    //console.log(res)
                     this.docList = []
                     const list = res.data.list
                     for (let i = 0; i < list.length; i++) {
@@ -67,15 +67,6 @@
                     console.log(err)
                     this.docList = []
                     this.$message('网络出了些问题')
-                    for (let i = 0; i < 16; i++) {
-                        this.docList.push({
-                            doc_id: 3321,
-                            title: '最近浏览' + i,
-                            team_id: 55443,
-                            workspace: 'TEAM_DEBUG',
-                            time: '2020/8/10 20:03:' + i
-                        })
-                    }
                     this.isLoading = false;
                 })
             },

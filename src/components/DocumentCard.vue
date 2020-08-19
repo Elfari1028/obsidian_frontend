@@ -67,9 +67,9 @@
                     </el-alert>
                 </div>
                 <el-alert style="margin-bottom:10px;"
-                          v-else-if="this.doc.team_id!==-1&&this.docType!=='isTrash'&&(this.context==='isTeamSpace'||this.context==='isCollections'||this.context==='isHistory')"
+                          v-else-if="this.docType!=='isTrash'&&this.docType!=='isDefault'&&((this.doc.team_id!==-1&&(this.context==='isTeamSpace'||this.context==='isCollections'||this.context==='isHistory'))||(this.doc.team_id ===-1&&this.doc.creator!==userName))"
                           :closable="false" :type="doc.creator === this.$store.getters.getUsername?'success':'warning'">
-                    <div slot="title">由「{{doc.creator === this.$store.getters.getUsername?'您':doc.creator}}」创建的文档
+                    <div slot="title">由「{{doc.creator === userName?'您':doc.creator}}」创建的文档
                     </div>
                 </el-alert>
                 <el-alert style="margin-bottom:10px;" v-else-if="this.docType!=='isTrash'&&this.context!=='isTeamSpace'"
@@ -110,6 +110,7 @@
         inject: ["reload"],
         data() {
             return {
+                userName: this.$store.getters.getUsername,
                 shareUrl: '',
                 dialogVisible: false
             }
