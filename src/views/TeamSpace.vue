@@ -135,7 +135,7 @@
 						_this.isLoading = false
 					})
 					.catch(err => {
-						_this.$message.error('获取团队文件出了点问题')
+						_this.$message.error('你不在该团队中')
 						console.log(err)
 						_this.isLoading = false
 						this.$router.push('/WorkingSpace')
