@@ -102,7 +102,7 @@
 		data() {
 			return {
 				Team_id: -1,
-				Team_name: '火锅小分队',
+				Team_name: '',
 				isScreenWide: false,
 				isLoading: false,
 				dialogVisible: false,
